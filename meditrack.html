@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dead(line) at MediTrack</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;500;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:#0a0a0f;
+  color:#e8e8f0;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* PARTICLES */
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.particle{position:absolute;width:3px;height:3px;background:rgba(180,0,0,0.4);border-radius:50%;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-100px) rotate(720deg);opacity:0}}
+
+/* FOG */
+.fog{position:fixed;bottom:0;left:0;width:200%;height:200px;background:linear-gradient(transparent,rgba(20,0,0,0.6));pointer-events:none;z-index:1;animation:fogmove 8s ease-in-out infinite alternate}
+@keyframes fogmove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* MAIN CONTAINER */
+#app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem}
+
+/* TITLE SCREEN */
+#title-screen{text-align:center;max-width:700px;animation:fadeIn 1.5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+.horror-title{
+  font-family:'Creepster',cursive;
+  font-size:clamp(3rem,8vw,6rem);
+  color:#cc0000;
+  text-shadow:0 0 30px rgba(255,0,0,0.7),0 0 60px rgba(255,0,0,0.3);
+  line-height:1.1;
+  animation:flicker 3s infinite
+}
+@keyframes flicker{0%,95%,100%{opacity:1}96%{opacity:0.4}97%{opacity:1}98%{opacity:0.2}99%{opacity:1}}
+
+.horror-sub{font-family:'Creepster',cursive;font-size:clamp(1.2rem,3vw,1.8rem);color:#ff4444;margin:0.5rem 0 2rem;letter-spacing:2px}
+
+.story-text{font-size:1rem;color:#aaa;line-height:1.8;margin-bottom:2rem;border-left:3px solid #cc0000;padding-left:1rem;text-align:left}
+
+.btn-horror{
+  display:inline-block;padding:1rem 2.5rem;
+  background:linear-gradient(135deg,#8b0000,#cc0000);
+  color:#fff;font-size:1.1rem;font-weight:600;
+  border:none;border-radius:4px;cursor:pointer;
+  text-transform:uppercase;letter-spacing:2px;
+  box-shadow:0 0 20px rgba(200,0,0,0.5);
+  transition:all 0.3s;position:relative;overflow:hidden
+}
+.btn-horror:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(200,0,0,0.8)}
+.btn-horror:active{transform:scale(0.98)}
+
+/* GAME SCREEN */
+#game-screen{width:100%;max-width:800px;display:none;animation:slideIn 0.5s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+
+/* PROGRESS */
+.progress-bar-wrap{margin-bottom:1.5rem}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:6px}
+.progress-track{height:6px;background:#1a1a2e;border-radius:3px;overflow:hidden;border:1px solid #333}
+.progress-fill{height:100%;background:linear-gradient(90deg,#8b0000,#cc0000,#ff4444);border-radius:3px;transition:width 0.8s ease;animation:pulse-bar 2s infinite}
+@keyframes pulse-bar{0%,100%{box-shadow:0 0 5px rgba(200,0,0,0.5)}50%{box-shadow:0 0 15px rgba(200,0,0,0.9)}}
+
+.act-dots{display:flex;gap:6px;justify-content:center;margin-top:8px}
+.act-dot{width:8px;height:8px;border-radius:50%;background:#222;border:1px solid #444;transition:all 0.4s}
+.act-dot.done{background:#cc0000;border-color:#cc0000;box-shadow:0 0 8px rgba(200,0,0,0.6)}
+.act-dot.active{background:#ff4444;border-color:#ff4444;box-shadow:0 0 12px rgba(255,68,68,0.8);transform:scale(1.3)}
+
+/* SCENE CARD */
+.scene-card{background:#0f0f1a;border:1px solid #2a0000;border-radius:12px;overflow:hidden;box-shadow:0 0 40px rgba(139,0,0,0.2)}
+
+.scene-header{background:linear-gradient(135deg,#1a0000,#0f0f1a);padding:1.25rem 1.5rem;border-bottom:1px solid #2a0000;display:flex;align-items:center;gap:1rem}
+
+.dana-avatar{width:52px;height:52px;border-radius:50%;background:#1a0000;border:2px solid #cc0000;display:flex;align-items:center;justify-content:center;font-size:1.6rem;flex-shrink:0;box-shadow:0 0 15px rgba(200,0,0,0.4);transition:all 0.5s}
+
+.dana-info{flex:1}
+.dana-name{font-size:13px;font-weight:600;color:#cc0000;text-transform:uppercase;letter-spacing:1px}
+.dana-status{font-size:11px;color:#555;margin-top:2px}
+
+.act-badge{font-size:11px;padding:4px 10px;background:#1a0000;border:1px solid #440000;border-radius:20px;color:#cc0000;font-family:'Creepster',cursive;letter-spacing:1px}
+
+/* CHAT BUBBLE */
+.chat-area{padding:1.5rem;min-height:120px}
+.chat-bubble{background:#1a0a0a;border:1px solid #2a0000;border-radius:0 12px 12px 12px;padding:1rem 1.25rem;font-size:0.95rem;line-height:1.7;color:#ddd;position:relative;max-width:90%}
+.chat-bubble::before{content:'';position:absolute;top:0;left:-8px;border:8px solid transparent;border-top:0;border-right-color:#2a0000;border-bottom:0}
+
+.typing-cursor{display:inline-block;width:2px;height:1em;background:#cc0000;margin-left:2px;animation:blink 0.7s infinite;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* SITUATION */
+.situation{padding:0 1.5rem 1rem;font-size:0.88rem;color:#888;line-height:1.6;border-left:2px solid #330000;margin:0 1.5rem 1rem;padding-left:1rem}
+
+/* CHOICES */
+.choices-area{padding:0 1.5rem 1.5rem}
+.choices-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.75rem}
+.choices{display:flex;flex-direction:column;gap:0.6rem}
+
+.choice-btn{
+  padding:0.85rem 1.25rem;
+  background:#0a0a15;
+  border:1px solid #2a2a3e;
+  border-radius:8px;
+  color:#ccc;
+  font-size:0.9rem;
+  cursor:pointer;
+  text-align:left;
+  transition:all 0.25s;
+  position:relative;overflow:hidden
+}
+.choice-btn:hover{background:#1a1a2e;border-color:#444;color:#fff;transform:translateX(4px)}
+.choice-btn.correct{background:#001a00;border-color:#00aa44;color:#00ff66;animation:correctPulse 0.5s ease}
+.choice-btn.wrong{background:#1a0000;border-color:#aa0000;color:#ff4444;animation:shake 0.4s ease}
+.choice-btn.reveal{background:#001a00;border-color:#004422;color:#00aa44}
+.choice-btn.disabled{pointer-events:none;opacity:0.5}
+
+@keyframes correctPulse{0%{transform:scale(1)}50%{transform:scale(1.02);box-shadow:0 0 20px rgba(0,200,80,0.4)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* FEEDBACK */
+.feedback-area{margin:0 1.5rem 1.5rem;padding:1rem;border-radius:8px;font-size:0.9rem;line-height:1.6;display:none}
+.feedback-area.correct{background:#001500;border:1px solid #004422;color:#00cc55}
+.feedback-area.wrong{background:#150000;border:1px solid #440000;color:#ff6666}
+
+.feedback-icon{font-size:1.4rem;margin-bottom:0.5rem;display:block}
+
+/* NEXT BTN */
+.next-wrap{padding:0 1.5rem 1.5rem;display:none}
+
+/* SCORE FLASH */
+.score-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Creepster',cursive;font-size:5rem;color:#00ff66;text-shadow:0 0 40px rgba(0,255,100,0.8);pointer-events:none;z-index:999;animation:scoreAnim 0.8s ease forwards;display:none}
+@keyframes scoreAnim{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
+
+.wrong-flash{position:fixed;inset:0;background:rgba(150,0,0,0.15);pointer-events:none;z-index:998;display:none;animation:wrongAnim 0.4s ease forwards}
+@keyframes wrongAnim{0%{opacity:1}100%{opacity:0}}
+
+/* SCORE DISPLAY */
+.score-strip{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1.5rem;background:#0a0a0f;border-top:1px solid #1a1a2e;font-size:13px;color:#555}
+.score-strip span{color:#cc0000;font-weight:600}
+
+/* END SCREEN */
+#end-screen{width:100%;max-width:700px;display:none;text-align:center;animation:fadeIn 1s ease}
+.end-card{background:#0f0f1a;border:1px solid #2a0000;border-radius:16px;padding:3rem 2rem;box-shadow:0 0 60px rgba(139,0,0,0.3)}
+.trophy{font-size:5rem;animation:trophySpin 1s ease;display:block;margin-bottom:1rem}
+@keyframes trophySpin{from{transform:rotateY(0deg) scale(0.5)}to{transform:rotateY(360deg) scale(1)}}
+.end-title{font-family:'Creepster',cursive;font-size:3rem;margin-bottom:0.5rem}
+.end-sub{color:#888;margin-bottom:2rem;font-size:1rem}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:2rem 0}
+.stat-box{background:#0a0a15;border:1px solid #2a0000;border-radius:8px;padding:1rem}
+.stat-num{font-family:'Creepster',cursive;font-size:2.5rem;color:#cc0000}
+.stat-label{font-size:12px;color:#666;margin-top:4px}
+.rank-badge{display:inline-block;padding:0.5rem 1.5rem;border-radius:20px;font-weight:600;font-size:0.9rem;margin-bottom:1rem}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;width:8px;height:8px;pointer-events:none;z-index:9999;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  .horror-title{font-size:2.5rem}
+  .scene-header{padding:1rem}
+  .chat-area,.choices-area{padding:1rem}
+  .feedback-area,.next-wrap{margin:0 1rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+<div class="fog"></div>
+<div id="score-flash" class="score-flash">+1</div>
+<div id="wrong-flash" class="wrong-flash"></div>
+
+<div id="app">
+
+  <!-- TITLE SCREEN -->
+  <div id="title-screen">
+    <div class="horror-title">Dead(line)<br>at MediTrack</div>
+    <div class="horror-sub">⚠ An Excel Horror Story ⚠</div>
+    <div class="story-text">
+      It's your first day as a junior analyst at MediTrack Analytics.<br>
+      The data is corrupted. The board presentation is in 2 hours.<br>
+      Your manager Dana is <em>unraveling</em>.<br><br>
+      Only your Excel skills stand between the company... and total chaos.
+    </div>
+    <button class="btn-horror" onclick="startGame()">⚰ Begin Your First Day ⚰</button>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="game-screen">
+    <div class="progress-bar-wrap">
+      <div class="progress-label">
+        <span id="act-label">Act 1 of 7</span>
+        <span id="score-label">Score: 0</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      <div class="act-dots" id="act-dots"></div>
+    </div>
+
+    <div class="scene-card">
+      <div class="scene-header">
+        <div class="dana-avatar" id="dana-avatar">😰</div>
+        <div class="dana-info">
+          <div class="dana-name">Dana Reeves</div>
+          <div class="dana-status" id="dana-status">Senior Manager · Stress Level: CRITICAL</div>
+        </div>
+        <div class="act-badge" id="act-badge">ACT I</div>
+      </div>
+
+      <div class="chat-area">
+        <div class="chat-bubble" id="chat-bubble"></div>
+      </div>
+
+      <div class="situation" id="situation"></div>
+
+      <div class="choices-area">
+        <div class="choices-label">⚡ What do you do?</div>
+        <div class="choices" id="choices"></div>
+      </div>
+
+      <div class="feedback-area" id="feedback-area">
+        <span class="feedback-icon" id="feedback-icon"></span>
+        <span id="feedback-text"></span>
+      </div>
+
+      <div class="next-wrap" id="next-wrap">
+        <button class="btn-horror" onclick="nextScene()" style="width:100%;text-align:center">
+          Continue the Horror →
+        </button>
+      </div>
+
+      <div class="score-strip">
+        <span>🩸 MediTrack Analytics</span>
+        <span>First Attempts: <span id="first-count">0</span> / <span id="total-count">0</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- END SCREEN -->
+  <div id="end-screen">
+    <div class="end-card">
+      <span class="trophy" id="trophy-emoji">🏆</span>
+      <div class="end-title" id="end-title" style="color:#cc0000"></div>
+      <div class="end-sub" id="end-sub"></div>
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-num" id="final-score"></div>
+          <div class="stat-label">First-try correct answers</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num" id="final-pct"></div>
+          <div class="stat-label">Accuracy rate</div>
+        </div>
+      </div>
+      <div class="rank-badge" id="rank-badge"></div>
+      <br><br>
+      <button class="btn-horror" onclick="restartGame()">🔄 Face the Curse Again</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var scenes=[
+  {
+    act:"ACT I",
+    topic:"Math & Stats",
+    avatar:"😰",
+    status:"Stress Level: CRITICAL",
+    dana:"You're finally here. GOOD. I need you to tell me the typical patient balance RIGHT NOW. The CEO is breathing down my neck. Our data has one patient with a $14,000 bill and it's throwing everything off. What formula do I use?",
+    situation:"The CEO wants the 'typical' balance — one that fairly represents most patients, not skewed by extreme outliers like that $14K case.",
+    correct:1,
+    choices:[
+      {text:"=AVERAGE() — adds everything up and divides by count",wrong:"The $14,000 outlier just dragged your average WAY up. The CEO is confused. Dana is mortified. The board thinks you're incompetent."},
+      {text:"=MEDIAN() — finds the middle value, ignoring outliers",right:"EXACTLY. The median sits in the middle — that monster $14K bill can't touch it. Dana exhales for the first time today."},
+      {text:"=MODE() — finds the most common value",wrong:"Mode finds the most repeated value. Unless dozens of patients owe the exact same amount, this returns an error. Dana stares at you blankly."},
+      {text:"=COUNT() — counts the number of patients",wrong:"That tells you HOW MANY patients there are, not what they owe. Dana puts her head on the desk."}
+    ]
+  },
+  {
+    act:"ACT II",
+    topic:"Date & Time",
+    avatar:"😤",
+    status:"Stress Level: VOLCANIC",
+    dana:"The overdue accounts report is STATIC. Someone hardcoded today's date as a value and now it's three months out of date! I need a formula that automatically updates every single day. Fix. This. NOW.",
+    situation:"The report needs a date formula that refreshes automatically whenever the workbook opens — no manual updates, ever.",
+    correct:0,
+    choices:[
+      {text:"=TODAY() — returns today's date, updates automatically",right:"YES. TODAY() recalculates every time the workbook opens. No hardcoding. No stale dates. Dana actually smiles. It's terrifying."},
+      {text:"=NOW() — returns current date AND time",wrong:"NOW() works but adds a timestamp too. The report now shows '8/18/2026 2:47 PM' everywhere. Dana says it looks unprofessional. She's not wrong."},
+      {text:"Just type today's date manually",wrong:"...You just did the exact thing that broke it in the first place. Dana closes her laptop and stares out the window in silence."},
+      {text:"=DATE(2026,8,18) — hardcoded date formula",wrong:"Still hardcoded! This will be wrong again tomorrow. Dana adds you to the list of things haunting her nightmares."}
+    ]
+  },
+  {
+    act:"ACT III",
+    topic:"Logic & Lookup",
+    avatar:"😱",
+    status:"Stress Level: SUPERNATURAL",
+    dana:"I need every patient automatically flagged. Over $10,000? CRITICAL. Over $5,000? PRIORITY. Everyone else? STANDARD. I cannot do this by hand for 500 patients. There has to be a formula. PLEASE tell me there's a formula.",
+    situation:"Three categories based on balance thresholds. The formula needs to test multiple conditions in sequence and return the right label.",
+    correct:2,
+    choices:[
+      {text:"=IF(M6>5000, 'Priority', 'Standard') — simple two-outcome IF",wrong:"This only gives you two categories. All the $10,000+ patients get labeled Priority instead of Critical. The board presentation is a disaster."},
+      {text:"=VLOOKUP() — look up the patient in a reference table",wrong:"VLOOKUP looks up existing values in a table — it doesn't evaluate conditions and assign categories. Dana looks at you like you suggested using a ouija board."},
+      {text:'=IF(M6>10000,"Critical",IF(M6>5000,"Priority","Standard")) — nested IF',right:"Three tiers, tested in order. Critical catches the biggest first, Priority catches the middle, Standard handles the rest. Dana prints it immediately."},
+      {text:"=IFS() with all three conditions",right_alt:true,wrong:"IFS works too — but you need a catch-all condition at the end or it errors on some rows. Dana asks why half the column shows #N/A."}
+    ]
+  },
+  {
+    act:"ACT IV",
+    topic:"Text Functions",
+    avatar:"🤯",
+    status:"Stress Level: POSSESSED",
+    dana:"I just opened the patient data and I think I'm going to be sick. Names in ALL CAPS. Random spaces before names. Phone numbers with '1-' prefixes that shouldn't be there. The board presentation is in 90 minutes. WHAT DO WE DO.",
+    situation:"Multiple text problems at once. Which combination of functions cleans up ALL CAPS names, removes extra spaces, AND strips the '1-' prefix from phone numbers?",
+    correct:1,
+    choices:[
+      {text:"=UPPER() to fix names, =TRIM() for spaces, =LEFT() for phones",wrong:"UPPER makes everything MORE capitalized, not less. The names go from 'CASEY' to... still 'CASEY'. Dana is not impressed with your logic."},
+      {text:"=PROPER() for names, =TRIM() for spaces, =SUBSTITUTE() for phones",right:"PROPER() fixes the caps. TRIM() kills the rogue spaces. SUBSTITUTE() surgically removes '1-' from every phone number. Dana calls you a wizard. You accept this."},
+      {text:"=LOWER() for names, =LEN() for spaces, =RIGHT() for phones",wrong:"LOWER makes names all lowercase — 'casey wright' looks worse than 'CASEY WRIGHT'. LEN measures length, it doesn't clean spaces. Back to the drawing board."},
+      {text:"Just use Find & Replace manually",wrong:"For 500 rows? Dana watches you clicking through each cell. She quietly starts updating her resume."}
+    ]
+  },
+  {
+    act:"ACT V",
+    topic:"Goal Seek",
+    avatar:"😵",
+    status:"Stress Level: BEYOND MORTAL UNDERSTANDING",
+    dana:"The CFO just called. The monthly loan payment CANNOT exceed $1,200. Not one dollar more. We have a $122,000 business loan. The interest rate is 11.2%. I need to know the maximum term that keeps us under $1,200. I needed this answer five minutes ago.",
+    situation:"You know the target output ($1,200 monthly payment) and need to find the input (loan term) that produces it. The PMT formula is already set up in the model.",
+    correct:2,
+    choices:[
+      {text:"Use the PMT formula and keep guessing different terms",wrong:"You try 10 years... $1,340. Too high. 12 years... $1,198. You got lucky after 8 guesses. Dana points out Goal Seek would have done this in 0.3 seconds."},
+      {text:"Use Scenario Manager to save a few term options",wrong:"Scenario Manager saves named combinations — but you'd still have to guess which terms to test. You don't know the answer, you need Excel to FIND it."},
+      {text:"Use Goal Seek — set payment cell to $1,200, change the term cell",right:"Goal Seek works backward from the answer. You set the target, tell it which cell to change, and Excel finds the exact term. Dana sees 12.3 years appear. She weeps with relief."},
+      {text:"Build a Data Table of all possible terms",wrong:"A data table shows you many results — but you'd still have to scan through them to find $1,200. Goal Seek finds the exact value directly. Faster, cleaner."}
+    ]
+  },
+  {
+    act:"ACT VI",
+    topic:"Data Tables",
+    avatar:"👻",
+    status:"Stress Level: HAUNTED",
+    dana:"The board wants to see EVERY possible payment scenario. Every interest rate from 6% to 16%. Every term: 5, 7, 10, 15, and 20 years. All combinations. In one grid. They want to see how the payment changes across EVERYTHING. Can Excel actually do that?",
+    situation:"You need a complete grid showing monthly payments for every combination of interest rate AND loan term — that's multiple inputs affecting one output.",
+    correct:3,
+    choices:[
+      {text:"Run Goal Seek 50 times for each combination",wrong:"That's 55 manual Goal Seek operations. Dana watches you work. An hour passes. She leaves to lie down on the floor of her office."},
+      {text:"Create a one-variable data table for interest rates",wrong:"One-variable tables only vary ONE input. You need both rate AND term to vary simultaneously. You'd need 5 separate tables. The board is not amused."},
+      {text:"Use Scenario Manager with best/worst/likely cases",wrong:"Scenario Manager handles 3-5 named scenarios — not a full grid of 55 combinations. The board wanted to see EVERYTHING, not three cherry-picked cases."},
+      {text:"Create a two-variable data table — rates down, terms across",right:"Rates down the left column, terms across the top row, PMT formula in the corner. Excel fills all 55 cells instantly. The board gasps. Dana cries happy tears for the first time."}
+    ]
+  },
+  {
+    act:"ACT VII",
+    topic:"Financial Model",
+    avatar:"💀",
+    status:"Stress Level: FINAL BOSS",
+    dana:"THE MODEL IS BROKEN. I changed the interest rate from 11.2% to 8.5% and NOTHING UPDATED. The monthly payment, total interest, everything — still showing the old numbers. The board presentation is in 15 MINUTES. What is WRONG with this model?",
+    situation:"The model has inputs and outputs but changing an input doesn't update the outputs. This is the classic model-building failure.",
+    correct:0,
+    choices:[
+      {text:"Someone hard-coded the rate inside the formula instead of referencing the input cell",right:"FOUND IT. The PMT formula says =PMT(0.112/12,...) instead of =PMT(B2/12,...). Changing cell B2 does nothing because the formula ignores it. Fix the reference. Everything updates. Dana collapses into her chair."},
+      {text:"The workbook needs to be saved and reopened",wrong:"Saving and reopening won't fix a formula that references the wrong cell. The model is structurally broken, not just stale. Dana loses another year of her life."},
+      {text:"The cells are formatted as text instead of numbers",wrong:"Text format could cause issues but wouldn't cause THIS specific symptom — where the model seems to work but ignores input changes. The problem is in the formula logic itself."},
+      {text:"There are too many formulas and Excel is confused",wrong:"Excel doesn't get confused by formula count. This answer reveals a fundamental misunderstanding of how Excel works. Dana stares at you. You stare back. Neither of you speaks."}
+    ]
+  }
+];
+
+var current=0, score=0, firstTries=0, answered=false, totalAnswered=0;
+
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  buildDots();
+  renderScene();
+}
+
+function buildDots(){
+  var d=document.getElementById('act-dots');
+  d.innerHTML='';
+  for(var i=0;i<scenes.length;i++){
+    d.innerHTML+='<div class="act-dot" id="dot-'+i+'"></div>';
+  }
+}
+
+function updateDots(){
+  for(var i=0;i<scenes.length;i++){
+    var el=document.getElementById('dot-'+i);
+    el.className='act-dot'+(i<current?' done':i===current?' active':'');
+  }
+}
+
+function renderScene(){
+  var s=scenes[current];
+  answered=false;
+  document.getElementById('feedback-area').style.display='none';
+  document.getElementById('next-wrap').style.display='none';
+  document.getElementById('act-label').textContent='Act '+(current+1)+' of '+scenes.length;
+  document.getElementById('score-label').textContent='Score: '+score;
+  document.getElementById('act-badge').textContent=s.act;
+  document.getElementById('dana-avatar').textContent=s.avatar;
+  document.getElementById('dana-status').textContent=s.topic+' · '+s.status;
+  document.getElementById('situation').textContent=s.situation;
+  document.getElementById('progress-fill').style.width=((current/scenes.length)*100)+'%';
+  updateDots();
+  typeText('chat-bubble', s.dana, function(){
+    renderChoices(s);
+  });
+}
+
+function typeText(id, text, cb){
+  var el=document.getElementById(id);
+  el.innerHTML='<span class="typing-cursor"></span>';
+  var i=0;
+  var interval=setInterval(function(){
+    if(i<text.length){
+      el.innerHTML=text.substring(0,i+1)+'<span class="typing-cursor"></span>';
+      i++;
+    } else {
+      el.innerHTML=text;
+      clearInterval(interval);
+      if(cb) cb();
+    }
+  }, 18);
+}
+
+function renderChoices(s){
+  var c=document.getElementById('choices');
+  c.innerHTML='';
+  var order=shuffleIdx(s.choices.length);
+  for(var i=0;i<order.length;i++){
+    (function(idx){
+      var btn=document.createElement('button');
+      btn.className='choice-btn';
+      btn.textContent=s.choices[idx].text;
+      btn.style.animationDelay=(i*0.08)+'s';
+      btn.onclick=function(){pick(idx,btn,s)};
+      c.appendChild(btn);
+    })(order[i]);
+  }
+}
+
+function shuffleIdx(n){
+  var a=[];for(var i=0;i<n;i++)a.push(i);
+  for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}
+  return a;
+}
+
+function pick(idx, btn, s){
+  if(answered) return;
+  answered=true;
+  totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  var allBtns=document.querySelectorAll('.choice-btn');
+  allBtns.forEach(function(b){b.classList.add('disabled')});
+
+  var isCorrect=(idx===s.correct);
+  var fb=document.getElementById('feedback-area');
+  var fi=document.getElementById('feedback-icon');
+  var ft=document.getElementById('feedback-text');
+  fb.style.display='block';
+
+  if(isCorrect){
+    btn.classList.add('correct');
+    fb.className='feedback-area correct';
+    fi.textContent='✅';
+    ft.textContent=s.choices[idx].right;
+    score++;
+    firstTries++;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('dana-avatar').textContent='😅';
+    showScoreFlash();
+  } else {
+    btn.classList.add('wrong');
+    fb.className='feedback-area wrong';
+    fi.textContent='💀';
+    ft.textContent=s.choices[idx].wrong;
+    showWrongFlash();
+    // reveal correct
+    allBtns.forEach(function(b){
+      if(b.textContent===s.choices[s.correct].text) b.classList.add('reveal');
+    });
+  }
+
+  document.getElementById('next-wrap').style.display='block';
+  if(current===scenes.length-1){
+    document.querySelector('#next-wrap .btn-horror').textContent='See Your Fate →';
+  }
+}
+
+function showScoreFlash(){
+  var el=document.getElementById('score-flash');
+  el.style.display='block';
+  el.style.animation='none';
+  el.offsetHeight;
+  el.style.animation='scoreAnim 0.8s ease forwards';
+  setTimeout(function(){el.style.display='none'},800);
+  launchConfetti();
+}
+
+function showWrongFlash(){
+  var el=document.getElementById('wrong-flash');
+  el.style.display='block';
+  el.style.animation='none';
+  el.offsetHeight;
+  el.style.animation='wrongAnim 0.4s ease forwards';
+  setTimeout(function(){el.style.display='none'},400);
+}
+
+function launchConfetti(){
+  var colors=['#cc0000','#ff4444','#ff8800','#ffcc00','#00cc44'];
+  for(var i=0;i<30;i++){
+    (function(){
+      var el=document.createElement('div');
+      el.className='confetti-piece';
+      el.style.left=Math.random()*100+'vw';
+      el.style.background=colors[Math.floor(Math.random()*colors.length)];
+      el.style.borderRadius=Math.random()>0.5?'50%':'0';
+      el.style.animationDuration=(Math.random()*1.5+0.8)+'s';
+      el.style.animationDelay=(Math.random()*0.3)+'s';
+      document.body.appendChild(el);
+      setTimeout(function(){el.remove()},2500);
+    })();
+  }
+}
+
+function nextScene(){
+  current++;
+  if(current>=scenes.length){
+    showEnd();
+  } else {
+    document.getElementById('game-screen').style.animation='none';
+    document.getElementById('game-screen').offsetHeight;
+    document.getElementById('game-screen').style.animation='slideIn 0.5s ease';
+    renderScene();
+  }
+}
+
+function showEnd(){
+  document.getElementById('game-screen').style.display='none';
+  document.getElementById('end-screen').style.display='block';
+  var pct=Math.round((firstTries/scenes.length)*100);
+  document.getElementById('final-score').textContent=firstTries+'/'+scenes.length;
+  document.getElementById('final-pct').textContent=pct+'%';
+  var trophy,title,sub,rank,rankColor;
+  if(firstTries===7){
+    trophy='🏆';title='LEGENDARY ANALYST';rankColor='#ffcc00';
+    sub='Perfect score. Every formula, first try. Dana promoted you on the spot. The board gave you a standing ovation. The curse is broken.';
+    rank='⭐ Excel Master — Promoted to Senior Analyst';
+  } else if(firstTries>=5){
+    trophy='🎖️';title='CRISIS AVERTED';rankColor='#00cc44';
+    sub='Strong work under pressure. A few stumbles, but you pulled through. Dana is relieved. The board presentation went ahead. MediTrack lives another day.';
+    rank='✅ Solid Analyst — Ready for Real Projects';
+  } else if(firstTries>=3){
+    trophy='😅';title='SURVIVED... BARELY';rankColor='#ff8800';
+    sub='You made it through, but the curse took its toll. Dana has some notes. Review the topics you missed before the next crisis hits.';
+    rank='📚 Junior Analyst — Review Recommended';
+  } else {
+    trophy='💀';title='THE CURSE WINS';rankColor='#cc0000';
+    sub='MediTrack has fallen. Dana is updating her resume. But every great analyst failed before they succeeded — go back and face the curse again.';
+    rank='🔄 Apprentice — Try Again, You\'ve Got This';
+  }
+  document.getElementById('trophy-emoji').textContent=trophy;
+  document.getElementById('end-title').textContent=title;
+  document.getElementById('end-title').style.color=rankColor;
+  document.getElementById('end-sub').textContent=sub;
+  var rb=document.getElementById('rank-badge');
+  rb.textContent=rank;
+  rb.style.background=rankColor+'22';
+  rb.style.color=rankColor;
+  rb.style.border='1px solid '+rankColor+'44';
+  if(firstTries>=5) launchConfetti();
+}
+
+function restartGame(){
+  current=0;score=0;firstTries=0;answered=false;totalAnswered=0;
+  document.getElementById('first-count').textContent='0';
+  document.getElementById('total-count').textContent='0';
+  document.getElementById('end-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  buildDots();renderScene();
+}
+
+// PARTICLE CANVAS
+var canvas=document.getElementById('particles');
+var ctx=canvas.getContext('2d');
+var pts=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+for(var i=0;i<60;i++){
+  pts.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,
+    vx:(Math.random()-0.5)*0.4,vy:-Math.random()*0.6-0.2,
+    size:Math.random()*2+0.5,opacity:Math.random()*0.4+0.1,
+    color:Math.random()>0.7?'180,0,0':'100,0,150'});
+}
+function animParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(function(p){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.y<-10)p.y=canvas.height+10;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fillStyle='rgba('+p.color+','+p.opacity+')';ctx.fill();
+  });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+</script>
+</body>
+</html>
