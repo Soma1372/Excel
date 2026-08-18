@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dead(line) at MediTrack</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0a0a0f;color:#e8e8f0;min-height:100vh;overflow-x:hidden}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.fog{position:fixed;bottom:0;left:0;width:200%;height:180px;background:linear-gradient(transparent,rgba(20,0,0,0.5));pointer-events:none;z-index:1;animation:fogmove 8s ease-in-out infinite alternate}
+@keyframes fogmove{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+#app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem}
+
+/* TITLE */
+#title-screen{text-align:center;max-width:700px;animation:fadeIn 1.5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.horror-title{font-family:'Creepster',cursive;font-size:clamp(3rem,8vw,5.5rem);color:#cc0000;text-shadow:0 0 30px rgba(255,0,0,0.7),0 0 60px rgba(255,0,0,0.3);line-height:1.1;animation:flicker 3s infinite}
+@keyframes flicker{0%,95%,100%{opacity:1}96%{opacity:0.4}97%{opacity:1}98%{opacity:0.2}99%{opacity:1}}
+.horror-sub{font-family:'Creepster',cursive;font-size:clamp(1.1rem,3vw,1.6rem);color:#ff4444;margin:0.5rem 0 2rem;letter-spacing:2px}
+.story-text{font-size:0.95rem;color:#aaa;line-height:1.8;margin-bottom:2rem;border-left:3px solid #cc0000;padding-left:1rem;text-align:left}
+.btn-horror{display:inline-block;padding:1rem 2.5rem;background:linear-gradient(135deg,#8b0000,#cc0000);color:#fff;font-size:1rem;font-weight:600;border:none;border-radius:4px;cursor:pointer;text-transform:uppercase;letter-spacing:2px;box-shadow:0 0 20px rgba(200,0,0,0.5);transition:all 0.3s}
+.btn-horror:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(200,0,0,0.8)}
+.btn-horror:active{transform:scale(0.98)}
+
+/* GAME */
+#game-screen{width:100%;max-width:820px;display:none;animation:slideIn 0.5s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+.progress-bar-wrap{margin-bottom:1.25rem}
+.progress-label{display:flex;justify-content:space-between;font-size:12px;color:#666;margin-bottom:6px}
+.progress-track{height:6px;background:#1a1a2e;border-radius:3px;overflow:hidden;border:1px solid #333}
+.progress-fill{height:100%;background:linear-gradient(90deg,#8b0000,#cc0000,#ff4444);border-radius:3px;transition:width 0.8s ease;box-shadow:0 0 8px rgba(200,0,0,0.6)}
+.act-dots{display:flex;gap:5px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.act-dot{width:8px;height:8px;border-radius:50%;background:#222;border:1px solid #444;transition:all 0.4s}
+.act-dot.done{background:#cc0000;border-color:#cc0000;box-shadow:0 0 6px rgba(200,0,0,0.6)}
+.act-dot.active{background:#ff4444;border-color:#ff4444;box-shadow:0 0 10px rgba(255,68,68,0.8);transform:scale(1.3)}
+.scene-card{background:#0f0f1a;border:1px solid #2a0000;border-radius:12px;overflow:hidden;box-shadow:0 0 40px rgba(139,0,0,0.2)}
+.scene-header{background:linear-gradient(135deg,#1a0000,#0f0f1a);padding:1rem 1.5rem;border-bottom:1px solid #2a0000;display:flex;align-items:center;gap:1rem}
+.dana-avatar{width:50px;height:50px;border-radius:50%;background:#1a0000;border:2px solid #cc0000;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;box-shadow:0 0 12px rgba(200,0,0,0.4);transition:all 0.5s}
+.dana-name{font-size:13px;font-weight:600;color:#cc0000;text-transform:uppercase;letter-spacing:1px}
+.dana-status{font-size:11px;color:#555;margin-top:2px}
+.act-badge{font-size:11px;padding:4px 10px;background:#1a0000;border:1px solid #440000;border-radius:20px;color:#cc0000;font-family:'Creepster',cursive;letter-spacing:1px;white-space:nowrap}
+.type-tag{font-size:10px;padding:3px 8px;border-radius:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px}
+.chat-area{padding:1.25rem 1.5rem;min-height:100px}
+.chat-bubble{background:#1a0a0a;border:1px solid #2a0000;border-radius:0 12px 12px 12px;padding:0.9rem 1.1rem;font-size:0.92rem;line-height:1.7;color:#ddd;max-width:95%}
+.typing-cursor{display:inline-block;width:2px;height:1em;background:#cc0000;margin-left:2px;animation:blink 0.7s infinite;vertical-align:text-bottom}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.situation{padding:0 1.5rem 1rem;font-size:0.85rem;color:#888;line-height:1.6;border-left:2px solid #330000;margin:0 1.5rem 1rem;padding-left:1rem}
+.q-area{padding:0 1.5rem 1.5rem}
+.q-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:2px;margin-bottom:0.75rem;display:flex;align-items:center;gap:8px}
+
+/* MULTIPLE CHOICE */
+.choices{display:flex;flex-direction:column;gap:0.55rem}
+.choice-btn{padding:0.8rem 1.1rem;background:#0a0a15;border:1px solid #2a2a3e;border-radius:8px;color:#ccc;font-size:0.88rem;cursor:pointer;text-align:left;transition:all 0.25s;font-family:'Inter',sans-serif}
+.choice-btn:hover{background:#1a1a2e;border-color:#444;color:#fff;transform:translateX(4px)}
+.choice-btn.correct{background:#001a00;border-color:#00aa44;color:#00ff66;animation:correctPulse 0.5s ease;pointer-events:none}
+.choice-btn.wrong{background:#1a0000;border-color:#aa0000;color:#ff4444;animation:shake 0.4s ease;pointer-events:none}
+.choice-btn.reveal{background:#001500;border-color:#004422;color:#00aa44;pointer-events:none}
+.choice-btn.disabled{pointer-events:none;opacity:0.5}
+@keyframes correctPulse{0%{transform:scale(1)}50%{transform:scale(1.02);box-shadow:0 0 20px rgba(0,200,80,0.4)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* FILL IN BLANK */
+.formula-display{background:#0a0a15;border:1px solid #333;border-radius:8px;padding:1rem 1.25rem;font-family:monospace;font-size:1rem;color:#ccc;margin-bottom:1rem;line-height:2}
+.blank-input{background:#1a1a2e;border:1px solid #444;border-radius:4px;padding:4px 10px;color:#fff;font-family:monospace;font-size:0.95rem;width:140px;text-align:center;outline:none;transition:border 0.2s}
+.blank-input:focus{border-color:#cc0000;box-shadow:0 0 8px rgba(200,0,0,0.3)}
+.blank-input.correct-input{border-color:#00aa44;background:#001500;color:#00ff66}
+.blank-input.wrong-input{border-color:#aa0000;background:#1a0000;color:#ff4444;animation:shake 0.4s ease}
+.submit-btn{margin-top:0.75rem;padding:0.7rem 1.5rem;background:#1a0000;border:1px solid #cc0000;border-radius:6px;color:#cc0000;font-size:0.9rem;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif}
+.submit-btn:hover{background:#cc0000;color:#fff}
+.hint-text{font-size:12px;color:#555;margin-top:0.5rem}
+
+/* FIX THE BUG */
+.code-display{background:#0a0a15;border:1px solid #333;border-radius:8px;padding:1rem 1.25rem;font-family:monospace;font-size:1rem;line-height:2;margin-bottom:0.75rem}
+.code-part{padding:2px 6px;border-radius:4px;cursor:pointer;transition:all 0.2s;display:inline-block}
+.code-part:hover{background:#2a1a1a;border:1px solid #cc0000}
+.code-part.selected{background:#2a1a1a;border:1px solid #cc0000;color:#ff4444}
+.code-part.correct-part{background:#001500;border:1px solid #00aa44;color:#00ff66;pointer-events:none}
+.code-part.wrong-part{background:#1a0000;border:1px solid #aa0000;animation:shake 0.4s ease}
+.bug-hint{font-size:12px;color:#555;margin-bottom:0.75rem}
+
+/* DRAG & DROP */
+.drag-container{display:flex;gap:1rem;flex-wrap:wrap}
+.drag-source{flex:1;min-width:200px}
+.drag-target{flex:1;min-width:200px}
+.drag-label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem}
+.drag-items{display:flex;flex-direction:column;gap:0.4rem;min-height:120px}
+.drag-item{padding:0.65rem 1rem;background:#0a0a15;border:1px solid #2a2a3e;border-radius:6px;font-size:0.85rem;color:#ccc;cursor:grab;transition:all 0.2s;user-select:none}
+.drag-item:hover{border-color:#cc0000;color:#fff;transform:translateX(2px)}
+.drag-item.dragging{opacity:0.4}
+.drop-zone{min-height:48px;border:1px dashed #333;border-radius:6px;padding:0.5rem;display:flex;flex-direction:column;gap:0.4rem;transition:border 0.2s;background:#0a0a0f}
+.drop-zone.drag-over{border-color:#cc0000;background:#1a0000}
+.drop-zone .drag-item{cursor:grab}
+.drop-zone.correct-zone{border-color:#00aa44;background:#001500}
+.drop-zone.wrong-zone{border-color:#aa0000;background:#1a0000}
+.drop-zone-label{font-size:11px;color:#444;text-align:center;padding:0.5rem;display:none}
+.drop-zone:empty .drop-zone-label{display:block}
+.check-drops-btn{margin-top:0.75rem;padding:0.7rem 1.5rem;background:#1a0000;border:1px solid #cc0000;border-radius:6px;color:#cc0000;font-size:0.9rem;cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif}
+.check-drops-btn:hover{background:#cc0000;color:#fff}
+
+/* SLIDER */
+.slider-wrap{margin-bottom:1.25rem}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:0.75rem}
+.slider-row label{font-size:13px;color:#888;width:120px;flex-shrink:0}
+.slider-row input[type=range]{flex:1}
+.slider-row .val{font-size:14px;font-weight:600;color:#cc0000;width:70px;text-align:right}
+.result-display{background:#0a0a15;border:1px solid #333;border-radius:8px;padding:1rem;text-align:center;margin-bottom:1rem}
+.result-num{font-family:'Creepster',cursive;font-size:2.5rem;color:#cc0000}
+.result-label{font-size:12px;color:#666;margin-top:4px}
+.slider-question{font-size:0.9rem;color:#ccc;margin-bottom:0.75rem;line-height:1.6}
+
+/* SPOT THE DIFF */
+.models-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:0.75rem}
+.model-card{background:#0a0a15;border:2px solid #2a2a3e;border-radius:8px;padding:1rem;cursor:pointer;transition:all 0.3s}
+.model-card:hover{border-color:#cc0000;transform:scale(1.02)}
+.model-card.selected{border-color:#cc0000}
+.model-card.correct-model{border-color:#00aa44;background:#001500}
+.model-card.wrong-model{border-color:#aa0000;background:#1a0000;animation:shake 0.4s ease}
+.model-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.75rem;color:#888}
+.model-table{width:100%;border-collapse:collapse;font-size:11px}
+.model-table td{padding:4px 6px;border:1px solid #1a1a2e;color:#aaa}
+.model-table .cell-label{color:#666;font-size:10px}
+.model-table .cell-formula{color:#4488ff;font-family:monospace;font-size:10px}
+.model-table .cell-hardcode{color:#ff4444;font-family:monospace;font-size:10px}
+.model-table .cell-value{color:#aaa;font-family:monospace;font-size:10px}
+
+/* TRUE/FALSE RAPID */
+.tf-question{font-size:0.95rem;color:#ddd;line-height:1.6;margin-bottom:1rem;padding:1rem;background:#0a0a15;border:1px solid #2a2a3e;border-radius:8px}
+.tf-buttons{display:flex;gap:0.75rem}
+.tf-btn{flex:1;padding:0.75rem;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;border:1px solid;transition:all 0.2s;font-family:'Inter',sans-serif}
+.tf-true{background:#001a00;border-color:#004422;color:#00aa44}
+.tf-true:hover{background:#004422;color:#00ff66}
+.tf-false{background:#1a0000;border-color:#440000;color:#aa0000}
+.tf-false:hover{background:#440000;color:#ff4444}
+.tf-btn.correct-tf{background:#001500;border-color:#00aa44;color:#00ff66;animation:correctPulse 0.5s ease}
+.tf-btn.wrong-tf{background:#1a0000;border-color:#aa0000;color:#ff4444;animation:shake 0.4s ease}
+.tf-progress{display:flex;gap:6px;margin-bottom:1rem}
+.tf-dot{width:10px;height:10px;border-radius:50%;background:#222;border:1px solid #444;transition:all 0.3s}
+.tf-dot.tf-correct{background:#00aa44}
+.tf-dot.tf-wrong{background:#aa0000}
+
+/* SEQUENCE */
+.seq-items{display:flex;flex-direction:column;gap:0.4rem;margin-bottom:0.75rem}
+.seq-item{padding:0.65rem 1rem;background:#0a0a15;border:1px solid #2a2a3e;border-radius:6px;font-size:0.85rem;color:#ccc;cursor:grab;display:flex;align-items:center;gap:8px;transition:all 0.2s;user-select:none}
+.seq-item:hover{border-color:#cc0000}
+.seq-item.dragging{opacity:0.3}
+.seq-num{width:22px;height:22px;border-radius:50%;background:#1a0000;border:1px solid #440000;display:flex;align-items:center;justify-content:center;font-size:11px;color:#cc0000;font-weight:600;flex-shrink:0}
+.seq-correct{border-color:#00aa44;background:#001500;color:#00ff66}
+.seq-correct .seq-num{background:#002200;border-color:#00aa44;color:#00ff66}
+.seq-wrong{border-color:#aa0000;background:#1a0000;color:#ff4444;animation:shake 0.4s ease}
+
+/* FEEDBACK */
+.feedback-area{margin:0 1.5rem 1.5rem;padding:1rem;border-radius:8px;font-size:0.88rem;line-height:1.6;display:none}
+.feedback-area.correct{background:#001500;border:1px solid #004422;color:#00cc55}
+.feedback-area.wrong{background:#150000;border:1px solid #440000;color:#ff6666}
+.feedback-icon{font-size:1.3rem;margin-bottom:0.4rem;display:block}
+.next-wrap{padding:0 1.5rem 1.5rem;display:none}
+.score-strip{display:flex;justify-content:space-between;align-items:center;padding:0.65rem 1.5rem;background:#0a0a0f;border-top:1px solid #1a1a2e;font-size:12px;color:#555}
+.score-strip span{color:#cc0000;font-weight:600}
+
+/* EFFECTS */
+.score-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Creepster',cursive;font-size:5rem;color:#00ff66;text-shadow:0 0 40px rgba(0,255,100,0.8);pointer-events:none;z-index:999;animation:scoreAnim 0.8s ease forwards;display:none}
+@keyframes scoreAnim{0%{opacity:0;transform:translate(-50%,-50%) scale(0.5)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
+.wrong-flash{position:fixed;inset:0;background:rgba(150,0,0,0.15);pointer-events:none;z-index:998;display:none;animation:wrongAnim 0.4s ease forwards}
+@keyframes wrongAnim{0%{opacity:1}100%{opacity:0}}
+.confetti-piece{position:fixed;width:8px;height:8px;pointer-events:none;z-index:9999;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* END */
+#end-screen{width:100%;max-width:700px;display:none;text-align:center;animation:fadeIn 1s ease}
+.end-card{background:#0f0f1a;border:1px solid #2a0000;border-radius:16px;padding:2.5rem 2rem;box-shadow:0 0 60px rgba(139,0,0,0.3)}
+.trophy{font-size:5rem;display:block;margin-bottom:1rem;animation:trophySpin 1s ease}
+@keyframes trophySpin{from{transform:rotateY(0deg) scale(0.5)}to{transform:rotateY(360deg) scale(1)}}
+.end-title{font-family:'Creepster',cursive;font-size:2.8rem;margin-bottom:0.5rem}
+.end-sub{color:#888;margin-bottom:1.5rem;font-size:0.95rem;line-height:1.7}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin:1.5rem 0}
+.stat-box{background:#0a0a15;border:1px solid #2a0000;border-radius:8px;padding:0.75rem}
+.stat-num{font-family:'Creepster',cursive;font-size:2rem;color:#cc0000}
+.stat-label{font-size:11px;color:#666;margin-top:3px}
+.rank-badge{display:inline-block;padding:0.5rem 1.5rem;border-radius:20px;font-weight:600;font-size:0.85rem;margin-bottom:1rem}
+@media(max-width:600px){.models-grid{grid-template-columns:1fr}.drag-container{flex-direction:column}.stat-grid{grid-template-columns:1fr 1fr}.horror-title{font-size:2.5rem}}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="fog"></div>
+<div id="score-flash" class="score-flash">+1</div>
+<div id="wrong-flash" class="wrong-flash"></div>
+<div id="app">
+
+<!-- TITLE -->
+<div id="title-screen">
+  <div class="horror-title">Dead(line)<br>at MediTrack</div>
+  <div class="horror-sub">⚠ An Excel Horror Story ⚠</div>
+  <div class="story-text">
+    It's your first day as a junior analyst at MediTrack Analytics.<br>
+    The data is corrupted. The board presentation is in 2 hours.<br>
+    Your manager Dana is <em>unraveling</em>. Ten crises. Ten decisions.<br><br>
+    Only your Excel skills stand between the company... and total chaos.
+  </div>
+  <button class="btn-horror" onclick="startGame()">⚰ Begin Your First Day ⚰</button>
+</div>
+
+<!-- GAME -->
+<div id="game-screen">
+  <div class="progress-bar-wrap">
+    <div class="progress-label">
+      <span id="act-label">Act 1 of 10</span>
+      <span id="score-label">Score: 0</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="act-dots" id="act-dots"></div>
+  </div>
+  <div class="scene-card">
+    <div class="scene-header">
+      <div class="dana-avatar" id="dana-avatar">😰</div>
+      <div style="flex:1">
+        <div class="dana-name">Dana Reeves</div>
+        <div class="dana-status" id="dana-status">Senior Manager</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="act-badge" id="act-badge">ACT I</div>
+        <div class="type-tag" id="type-tag"></div>
+      </div>
+    </div>
+    <div class="chat-area"><div class="chat-bubble" id="chat-bubble"></div></div>
+    <div class="situation" id="situation"></div>
+    <div class="q-area">
+      <div class="q-label" id="q-label">⚡ What do you do?</div>
+      <div id="interaction-area"></div>
+    </div>
+    <div class="feedback-area" id="feedback-area">
+      <span class="feedback-icon" id="feedback-icon"></span>
+      <span id="feedback-text"></span>
+    </div>
+    <div class="next-wrap" id="next-wrap">
+      <button class="btn-horror" onclick="nextScene()" style="width:100%">Continue the Horror →</button>
+    </div>
+    <div class="score-strip">
+      <span>🩸 MediTrack Analytics</span>
+      <span>First tries: <span id="first-count">0</span>/<span id="total-count">0</span></span>
+    </div>
+  </div>
+</div>
+
+<!-- END -->
+<div id="end-screen">
+  <div class="end-card">
+    <span class="trophy" id="trophy-emoji">🏆</span>
+    <div class="end-title" id="end-title"></div>
+    <div class="end-sub" id="end-sub"></div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num" id="fs1"></div><div class="stat-label">First-try correct</div></div>
+      <div class="stat-box"><div class="stat-num" id="fs2"></div><div class="stat-label">Accuracy</div></div>
+      <div class="stat-box"><div class="stat-num" id="fs3"></div><div class="stat-label">Acts completed</div></div>
+    </div>
+    <div class="rank-badge" id="rank-badge"></div><br><br>
+    <button class="btn-horror" onclick="restartGame()">🔄 Face the Curse Again</button>
+  </div>
+</div>
+</div>
+
+<script>
+var scenes=[
+  // 1. MULTIPLE CHOICE - Math & Stats
+  {act:"ACT I",topic:"Math & Stats",type:"multiple-choice",typeLabel:"Multiple Choice",typeColor:"#442200",
+   avatar:"😰",status:"Stress Level: CRITICAL",
+   dana:"You're finally here. GOOD. I need the typical patient balance RIGHT NOW. We have one patient with a $14,000 bill dragging everything off. The CEO wants a number that actually represents most patients. WHAT FORMULA?",
+   situation:"The CEO needs the 'typical' balance — one that's not skewed by that extreme $14K outlier.",
+   correct:1,
+   choices:[
+     {text:"=AVERAGE() — classic mean, adds all and divides",wrong:"The $14K outlier just inflated your average. The CEO is confused. Dana is mortified."},
+     {text:"=MEDIAN() — middle value, ignores outliers",right:"The median sits right in the middle — that $14K monster can't touch it. Dana exhales for the first time today."},
+     {text:"=MODE() — most frequently occurring value",wrong:"Mode returns the most repeated value. Unless patients owe identical amounts, this errors out. Dana stares blankly."},
+     {text:"=SUBTOTAL() — calculates on visible rows",wrong:"SUBTOTAL is for filtered data aggregation, not for finding the typical value. Wrong tool, wrong crisis."}
+   ]
+  },
+  // 2. FILL IN BLANK - Date & Time
+  {act:"ACT II",topic:"Date & Time",type:"fill-blank",typeLabel:"Fill in the Blank",typeColor:"#002244",
+   avatar:"😤",status:"Stress Level: VOLCANIC",
+   dana:"Someone hardcoded a date three months ago and the overdue report is completely stale! I need a formula in cell A1 that automatically shows TODAY's date every single time this workbook opens. No manual updates. EVER.",
+   situation:"Complete the formula that always returns the current date and updates automatically.",
+   formula:"= _________ ()",
+   blanks:[{placeholder:"function name",answer:"TODAY",hint:"This function takes no arguments and refreshes daily"}],
+   feedback:{right:"TODAY() recalculates every time the workbook opens. No hardcoding. No stale dates. Dana actually smiles. It's terrifying.",
+             wrong:"Not quite — remember the function needs no arguments and updates automatically each day. Think about what 'today' is in Excel's vocabulary."}
+  },
+  // 3. FIX THE BUG - PMT Formula
+  {act:"ACT III",topic:"Math & Stats",type:"fix-bug",typeLabel:"Fix the Bug",typeColor:"#220044",
+   avatar:"😱",status:"Stress Level: SUPERNATURAL",
+   dana:"The loan payment formula is returning the WRONG number! I changed the interest rate in cell B2 but the payment didn't update. Something in this formula is broken. FIND IT.",
+   situation:"The PMT formula below has a bug — one part is hardcoded instead of referencing the input cell. Click the part that's wrong.",
+   formula:[
+     {text:"=PMT(",fixed:true},
+     {text:"0.112",fixed:false,wrong:true,label:"rate"},
+     {text:"/12, ",fixed:true},
+     {text:"B3",fixed:false,wrong:false,label:"nper"},
+     {text:"*12, -",fixed:true},
+     {text:"B4",fixed:false,wrong:false,label:"pv"},
+     {text:")",fixed:true}
+   ],
+   correctPart:1,
+   feedback:{right:"Exactly! 0.112 is hardcoded — it should be =PMT(B2/12, B3*12, -B4) so changing B2 updates the payment. Dana fixes it instantly.",
+             wrong:"That part looks okay. Look for the value that's typed directly into the formula instead of referencing an input cell."}
+  },
+  // 4. DRAG & DROP - Inputs vs Outputs
+  {act:"ACT IV",topic:"Financial Model",type:"drag-drop",typeLabel:"Drag & Drop",typeColor:"#004422",
+   avatar:"🤯",status:"Stress Level: POSSESSED",
+   dana:"Our financial model is a DISASTER. Values and formulas are thrown everywhere. Before we can use Goal Seek or Scenario Manager, we need the model structured correctly. Help me sort these into inputs and outputs RIGHT NOW.",
+   situation:"Drag each item into the correct category — Inputs (values you control) or Outputs (formulas calculated from inputs).",
+   items:[
+     {text:"Loan Amount ($122,000)",category:"input"},
+     {text:"Annual Interest Rate (11.2%)",category:"input"},
+     {text:"Loan Term (10 years)",category:"input"},
+     {text:"Monthly Payment (PMT formula)",category:"output"},
+     {text:"Total Interest Paid",category:"output"},
+     {text:"Total Amount Paid",category:"output"}
+   ],
+   categories:["input","output"],
+   categoryLabels:["📥 Inputs","📤 Outputs"],
+   feedback:{right:"Perfect model structure! Inputs in labeled cells, outputs as formulas referencing those cells. Every What-If tool depends on this separation. Dana prints the model.",
+             wrong:"Not quite — inputs are values YOU control and change. Outputs are calculated FROM those inputs. No formula should have a hardcoded assumption inside it."}
+  },
+  // 5. SLIDER - Goal Seek / PMT
+  {act:"ACT V",topic:"Goal Seek & PMT",type:"slider",typeLabel:"Interactive",typeColor:"#442200",
+   avatar:"😵",status:"Stress Level: BEYOND MORTAL",
+   dana:"The CFO just called. Monthly payment CANNOT exceed $1,200. Not one dollar more. We have a $122,000 loan. Drag the term slider until the payment drops to $1,200 or below, then tell me which formula Excel uses to calculate it.",
+   situation:"Use the slider to find the loan term that keeps payments at or below $1,200/month at 11.2% interest.",
+   sliderConfig:{min:5,max:25,default:10,step:1,label:"Loan Term (years)",rate:0.112,principal:122000},
+   targetMax:1200,
+   question:"Once you find a term that works, which Excel function calculated that payment?",
+   correct:2,
+   choices:[
+     {text:"=FV() — Future Value function",wrong:"FV calculates what an investment grows to. PMT calculates loan payments. Wrong direction entirely."},
+     {text:"=NPER() — Number of periods",wrong:"NPER finds the number of payments needed. PMT finds the payment amount. Close but not right."},
+     {text:"=PMT(rate, nper, pv) — Periodic payment",right:"Exactly! =PMT(11.2%/12, term*12, -122000) calculated every payment you saw on the slider. Dana says you actually know your stuff."},
+     {text:"=PV() — Present Value",wrong:"PV calculates the current value of future payments. PMT calculates the payment itself."}
+   ]
+  },
+  // 6. TRUE/FALSE RAPID - Logic & Lookup
+  {act:"ACT VI",topic:"Logic & Lookup",type:"true-false",typeLabel:"Rapid Fire",typeColor:"#003322",
+   avatar:"👻",status:"Stress Level: HAUNTED",
+   dana:"No time for long questions! Three rapid-fire TRUE or FALSE. If you hesitate, I'm questioning your entire hire. GO.",
+   situation:"Answer all three quickly — these are fundamental logic and lookup rules.",
+   tfQuestions:[
+     {q:"VLOOKUP can only look to the RIGHT of the lookup column.",answer:true,explain:"True! VLOOKUP always returns values from columns to the RIGHT. Use XLOOKUP or INDEX/MATCH to look left."},
+     {q:"=IF(M6>5000, Priority, Standard) is a valid formula that flags patients correctly.",answer:false,explain:"False! Text values need quotes: =IF(M6>5000, \"Priority\", \"Standard\"). Without quotes Excel thinks Priority and Standard are named ranges."},
+     {q:"XLOOKUP handles missing values natively without needing IFERROR.",answer:true,explain:"True! XLOOKUP has a built-in if_not_found argument. That's one of the main reasons it replaced VLOOKUP."}
+   ]
+  },
+  // 7. MULTIPLE CHOICE - Text Functions
+  {act:"ACT VII",topic:"Text Functions",type:"multiple-choice",typeLabel:"Multiple Choice",typeColor:"#442200",
+   avatar:"😤",status:"Stress Level: RE-IGNITED",
+   dana:"The patient data looks like it was entered by someone having a breakdown. Names in ALL CAPS. Phone numbers starting with '1-'. Extra spaces before half the entries. I need THREE formulas. Which combination fixes ALL of it?",
+   situation:"Pick the formula combination that fixes capitalization, removes extra spaces, AND strips the '1-' prefix from phone numbers.",
+   correct:1,
+   choices:[
+     {text:"=UPPER(), =TRIM(), =LEFT()",wrong:"UPPER makes everything MORE capitalized — 'CASEY' stays 'CASEY'. LEFT extracts characters, it doesn't remove a prefix. Two out of three wrong."},
+     {text:"=PROPER(), =TRIM(), =SUBSTITUTE()",right:"PROPER fixes caps to Title Case. TRIM kills rogue spaces. SUBSTITUTE(H6,'1-','') surgically removes the prefix. Dana calls you a data wizard."},
+     {text:"=LOWER(), =CLEAN(), =RIGHT()",wrong:"LOWER makes names all-lowercase. CLEAN removes non-printable characters (different problem). RIGHT extracts from the end. None of these solve the actual issues."},
+     {text:"=PROPER(), =LEN(), =MID()",wrong:"LEN measures length — it doesn't clean spaces. MID extracts middle characters — it doesn't remove prefixes. Only PROPER is right here."}
+   ]
+  },
+  // 8. SEQUENCE - Scenario Manager Steps
+  {act:"ACT VIII",topic:"Scenario Manager",type:"sequence",typeLabel:"Put in Order",typeColor:"#003344",
+   avatar:"💀",status:"Stress Level: FINAL FORM",
+   dana:"I need to set up Scenario Manager for the board — Best Case, Most Likely, Worst Case loan scenarios. But I've never done it before and I need to walk my assistant through it in the right order. Put these steps in order. NOW.",
+   situation:"Drag these Scenario Manager steps into the correct sequence from first to last.",
+   steps:[
+     {text:"Click Data tab → What-If Analysis → Scenario Manager",order:0},
+     {text:"Click Add and enter a descriptive scenario name",order:1},
+     {text:"Select the input cells in the Changing cells field",order:2},
+     {text:"Enter the input values for this scenario",order:3},
+     {text:"Repeat for each additional scenario",order:4},
+     {text:"Click Summary to generate the side-by-side report",order:5}
+   ],
+   feedback:{right:"Perfect sequence! That's exactly how Scenario Manager works — open, add, name, select cells, enter values, repeat, then summarize. Dana walks her assistant through it confidently.",
+             wrong:"The sequence isn't quite right — you need to open the dialog first, then add scenarios one by one, and only generate the summary report at the very end."}
+  },
+  // 9. SPOT THE DIFFERENCE - Clean Model
+  {act:"ACT IX",topic:"Financial Model",type:"spot-diff",typeLabel:"Spot the Difference",typeColor:"#004400",
+   avatar:"😱",status:"Stress Level: APOCALYPTIC",
+   dana:"Two loan models. One is built correctly — inputs in cells, formulas referencing them. The other has hardcoded values buried inside formulas. The board arrives in 20 minutes. WHICH MODEL IS CORRECTLY BUILT?",
+   situation:"Click the model that follows clean model design rules — separate inputs from outputs, no hardcoded values in formulas.",
+   models:[
+     {title:"Model A",correct:false,rows:[
+       {label:"Monthly Payment",value:'=PMT(0.112/12, 120, -122000)',type:"cell-hardcode"},
+       {label:"Total Paid",value:'=PMT(0.112/12,120,-122000)*120',type:"cell-hardcode"},
+       {label:"Total Interest",value:'=PMT(0.112/12,120,-122000)*120-122000',type:"cell-hardcode"}
+     ]},
+     {title:"Model B",correct:true,rows:[
+       {label:"Loan Amount",value:"$122,000",type:"cell-value"},
+       {label:"Annual Rate",value:"11.2%",type:"cell-value"},
+       {label:"Term (years)",value:"10",type:"cell-value"},
+       {label:"Monthly Payment",value:"=PMT(B2/12,B3*12,-B1)",type:"cell-formula"},
+       {label:"Total Paid",value:"=B4*B3*12",type:"cell-formula"}
+     ]}
+   ],
+   feedback:{right:"Model B is clean — inputs in their own labeled cells, formulas referencing B1, B2, B3. Change one input and everything updates. The board is impressed.",
+             wrong:"Model A has every assumption hardcoded inside the formulas. Change the rate? You'd have to rewrite every single formula. That's how models break under pressure."}
+  },
+  // 10. MULTIPLE CHOICE - Data Tables
+  {act:"ACT X",topic:"Data Tables",type:"multiple-choice",typeLabel:"Final Challenge",typeColor:"#440000",
+   avatar:"😤",status:"Stress Level: FINAL BOSS",
+   dana:"The board wants a GRID. Every interest rate from 6% to 16%. Every term: 5, 7, 10, 15, 20 years. Monthly payment for EVERY combination. In ONE table. In the NEXT FIVE MINUTES. What type of Data Table do you build and where does the PMT formula go?",
+   situation:"You need a complete payment grid — rates down the left, terms across the top. What are the correct settings?",
+   correct:2,
+   choices:[
+     {text:"One-variable table, PMT formula above the rate column",wrong:"One-variable only varies ONE input. You need both rate AND term varying simultaneously. You'd need 5 separate tables. The board is not amused."},
+     {text:"Two-variable table, rates across the top, terms down the left",wrong:"Almost — but you have it backwards. Rates go DOWN the left column, terms go ACROSS the top row. Swap them and it works."},
+     {text:"Two-variable table, rates down the left, terms across the top, PMT formula in the top-left corner",right:"Exactly right. Two-variable table, column input = rate cell, row input = term cell, PMT formula in the intersection corner. 55 payment values calculated instantly. The board gasps."},
+     {text:"Scenario Manager with 55 named scenarios",wrong:"55 named scenarios? That's not a workflow, that's a cry for help. Data Tables were built for exactly this — bulk sensitivity analysis."}
+   ]
+  }
+];
+
+var current=0,score=0,firstTries=0,answered=false,totalAnswered=0;
+var tfState={current:0,results:[],done:false};
+var dragState={};
+var seqState={order:[],correct:false};
+
+function startGame(){
+  document.getElementById('title-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  buildDots();renderScene();
+}
+
+function buildDots(){
+  var d=document.getElementById('act-dots');d.innerHTML='';
+  for(var i=0;i<scenes.length;i++) d.innerHTML+='<div class="act-dot" id="dot-'+i+'"></div>';
+}
+
+function updateDots(){
+  for(var i=0;i<scenes.length;i++){
+    var el=document.getElementById('dot-'+i);
+    el.className='act-dot'+(i<current?' done':i===current?' active':'');
+  }
+}
+
+function renderScene(){
+  var s=scenes[current];
+  answered=false;tfState={current:0,results:[],done:false};dragState={};seqState={order:[],correct:false};
+  document.getElementById('feedback-area').style.display='none';
+  document.getElementById('next-wrap').style.display='none';
+  document.getElementById('act-label').textContent='Act '+(current+1)+' of '+scenes.length;
+  document.getElementById('score-label').textContent='Score: '+score;
+  document.getElementById('act-badge').textContent=s.act;
+  document.getElementById('dana-avatar').textContent=s.avatar;
+  document.getElementById('dana-status').textContent=s.topic+' · '+s.status;
+  document.getElementById('situation').textContent=s.situation;
+  document.getElementById('progress-fill').style.width=((current/scenes.length)*100)+'%';
+  var tt=document.getElementById('type-tag');
+  tt.textContent=s.typeLabel;tt.style.background=s.typeColor+'44';tt.style.color=s.typeColor==='#442200'?'#ff8844':s.typeColor==='#002244'?'#4488ff':s.typeColor==='#220044'?'#aa44ff':s.typeColor==='#004422'?'#44ff88':s.typeColor==='#003322'?'#44ddaa':s.typeColor==='#003344'?'#44aaff':s.typeColor==='#004400'?'#44cc44':'#ffaa44';
+  tt.style.border='1px solid '+s.typeColor;
+  updateDots();
+  typeText('chat-bubble',s.dana,function(){buildInteraction(s)});
+}
+
+function typeText(id,text,cb){
+  var el=document.getElementById(id);
+  el.innerHTML='<span class="typing-cursor"></span>';
+  var i=0;
+  var iv=setInterval(function(){
+    if(i<text.length){el.innerHTML=text.substring(0,i+1)+'<span class="typing-cursor"></span>';i++;}
+    else{el.innerHTML=text;clearInterval(iv);if(cb)setTimeout(cb,200);}
+  },16);
+}
+
+function buildInteraction(s){
+  var area=document.getElementById('interaction-area');
+  var ql=document.getElementById('q-label');
+  area.innerHTML='';
+
+  if(s.type==='multiple-choice'){
+    ql.textContent='⚡ What do you do?';
+    buildMC(s,area);
+  } else if(s.type==='fill-blank'){
+    ql.textContent='✏️ Complete the formula:';
+    buildFillBlank(s,area);
+  } else if(s.type==='fix-bug'){
+    ql.textContent='🐛 Click the broken part:';
+    buildFixBug(s,area);
+  } else if(s.type==='drag-drop'){
+    ql.textContent='🖱️ Drag items to the right category:';
+    buildDragDrop(s,area);
+  } else if(s.type==='slider'){
+    ql.textContent='🎚️ Find the right term, then answer:';
+    buildSlider(s,area);
+  } else if(s.type==='true-false'){
+    ql.textContent='⚡ True or False — rapid fire:';
+    buildTF(s,area);
+  } else if(s.type==='sequence'){
+    ql.textContent='🔢 Drag to put in order:';
+    buildSequence(s,area);
+  } else if(s.type==='spot-diff'){
+    ql.textContent='🔍 Click the correctly built model:';
+    buildSpotDiff(s,area);
+  }
+}
+
+function buildMC(s,area){
+  var div=document.createElement('div');div.className='choices';
+  var order=shuffleIdx(s.choices.length);
+  order.forEach(function(idx){
+    var btn=document.createElement('button');
+    btn.className='choice-btn';btn.textContent=s.choices[idx].text;
+    btn.onclick=function(){pickMC(idx,btn,s)};
+    div.appendChild(btn);
+  });
+  area.appendChild(div);
+}
+
+function pickMC(idx,btn,s){
+  if(answered)return;answered=true;totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  document.querySelectorAll('.choice-btn').forEach(function(b){b.classList.add('disabled')});
+  if(idx===s.correct){
+    btn.classList.add('correct');score++;firstTries++;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('dana-avatar').textContent='😅';
+    showFeedback(true,s.choices[idx].right);showScoreFlash();
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.choice-btn').forEach(function(b,i){
+      if(b.textContent===s.choices[s.correct].text)b.classList.add('reveal');
+    });
+    showFeedback(false,s.choices[idx].wrong);showWrongFlash();
+  }
+  document.getElementById('next-wrap').style.display='block';
+}
+
+function buildFillBlank(s,area){
+  var fd=document.createElement('div');fd.className='formula-display';
+  var parts=s.formula.split('_________');
+  var html=parts[0]+'<input type="text" class="blank-input" id="blank-0" placeholder="'+s.blanks[0].placeholder+'" autocomplete="off">';
+  if(parts[1])html+=parts[1];
+  fd.innerHTML=html;
+  area.appendChild(fd);
+  var hint=document.createElement('div');hint.className='hint-text';hint.textContent='💡 Hint: '+s.blanks[0].hint;
+  area.appendChild(hint);
+  var btn=document.createElement('button');btn.className='submit-btn';btn.textContent='Submit Answer';
+  btn.onclick=function(){checkFillBlank(s)};area.appendChild(btn);
+}
+
+function checkFillBlank(s){
+  if(answered)return;
+  var inp=document.getElementById('blank-0');
+  var val=inp.value.trim().toUpperCase().replace(/[=()]/g,'');
+  var correct=s.blanks[0].answer.toUpperCase();
+  answered=true;totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  if(val===correct){
+    inp.classList.add('correct-input');score++;firstTries++;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('dana-avatar').textContent='😅';
+    showFeedback(true,s.feedback.right);showScoreFlash();
+  } else {
+    inp.classList.add('wrong-input');
+    showFeedback(false,s.feedback.wrong+' (Answer: '+s.blanks[0].answer+')');showWrongFlash();
+  }
+  inp.disabled=true;
+  document.querySelector('.submit-btn').disabled=true;
+  document.getElementById('next-wrap').style.display='block';
+}
+
+function buildFixBug(s,area){
+  var cd=document.createElement('div');cd.className='code-display';
+  var hint=document.createElement('div');hint.className='bug-hint';hint.textContent='💡 Click the part of the formula that has the bug';
+  area.appendChild(hint);
+  s.formula.forEach(function(part,i){
+    if(part.fixed){
+      var sp=document.createElement('span');sp.style.color='#888';sp.textContent=part.text;cd.appendChild(sp);
+    } else {
+      var sp=document.createElement('span');sp.className='code-part';sp.textContent=part.text;
+      sp.title='Click if this is the bug';
+      sp.onclick=function(){checkBug(i,sp,s)};
+      cd.appendChild(sp);
+    }
+  });
+  area.appendChild(cd);
+}
+
+function checkBug(idx,el,s){
+  if(answered)return;answered=true;totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  document.querySelectorAll('.code-part').forEach(function(p){p.onclick=null});
+  if(idx===s.correctPart){
+    el.classList.add('correct-part');score++;firstTries++;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('dana-avatar').textContent='😅';
+    showFeedback(true,s.feedback.right);showScoreFlash();
+  } else {
+    el.classList.add('wrong-part');
+    document.querySelectorAll('.code-part').forEach(function(p,i){if(i===s.correctPart)p.classList.add('correct-part')});
+    showFeedback(false,s.feedback.wrong);showWrongFlash();
+  }
+  document.getElementById('next-wrap').style.display='block';
+}
+
+function buildDragDrop(s,area){
+  var allItems=s.items.slice();shuffle(allItems);
+  var dc=document.createElement('div');dc.className='drag-container';
+  var src=document.createElement('div');src.className='drag-source';
+  src.innerHTML='<div class="drag-label">📦 Items to sort</div><div class="drag-items" id="drag-source-list"></div>';
+  var tgt=document.createElement('div');tgt.className='drag-target';
+  tgt.innerHTML='<div class="drag-label">'+s.categoryLabels[0]+'</div><div class="drop-zone" id="drop-input" data-cat="input"><span class="drop-zone-label">Drop here</span></div><br><div class="drag-label">'+s.categoryLabels[1]+'</div><div class="drop-zone" id="drop-output" data-cat="output"><span class="drop-zone-label">Drop here</span></div>';
+  dc.appendChild(src);dc.appendChild(tgt);area.appendChild(dc);
+  var srcList=document.getElementById('drag-source-list');
+  allItems.forEach(function(item){
+    var el=createDragItem(item);
+    srcList.appendChild(el);
+  });
+  setupDropZones();
+  var btn=document.createElement('button');btn.className='check-drops-btn';btn.textContent='Check My Answers';
+  btn.style.marginTop='0.75rem';
+  btn.onclick=function(){checkDragDrop(s)};area.appendChild(btn);
+}
+
+function createDragItem(item){
+  var el=document.createElement('div');
+  el.className='drag-item';el.textContent=item.text;
+  el.setAttribute('data-cat',item.category);el.draggable=true;
+  el.addEventListener('dragstart',function(e){e.dataTransfer.setData('text',item.text);e.dataTransfer.setData('cat',item.category);el.classList.add('dragging')});
+  el.addEventListener('dragend',function(){el.classList.remove('dragging')});
+  return el;
+}
+
+function setupDropZones(){
+  document.querySelectorAll('.drop-zone').forEach(function(zone){
+    zone.addEventListener('dragover',function(e){e.preventDefault();zone.classList.add('drag-over')});
+    zone.addEventListener('dragleave',function(){zone.classList.remove('drag-over')});
+    zone.addEventListener('drop',function(e){
+      e.preventDefault();zone.classList.remove('drag-over');
+      var text=e.dataTransfer.getData('text');var cat=e.dataTransfer.getData('cat');
+      var existing=document.querySelector('.drag-item[data-text="'+text+'"]');
+      var allItems=document.querySelectorAll('.drag-item');
+      allItems.forEach(function(it){if(it.textContent===text){
+        var newEl=createDragItem({text:text,category:cat});
+        newEl.setAttribute('data-text',text);
+        zone.appendChild(newEl);
+        it.remove();
+      }});
+    });
+  });
+}
+
+function checkDragDrop(s){
+  if(answered)return;
+  var inputZone=document.getElementById('drop-input');
+  var outputZone=document.getElementById('drop-output');
+  var allCorrect=true;
+  document.querySelectorAll('.drop-zone .drag-item').forEach(function(el){
+    var zoneCat=el.parentElement.getAttribute('data-cat');
+    var itemCat=el.getAttribute('data-cat');
+    if(zoneCat!==itemCat)allCorrect=false;
+  });
+  var totalPlaced=inputZone.querySelectorAll('.drag-item').length+outputZone.querySelectorAll('.drag-item').length;
+  if(totalPlaced<s.items.length){showFeedback(false,'Sort ALL items before checking!');return;}
+  answered=true;totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  if(allCorrect){
+    score++;firstTries++;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('dana-avatar').textContent='😅';
+    inputZone.classList.add('correct-zone');outputZone.classList.add('correct-zone');
+    showFeedback(true,s.feedback.right);showScoreFlash();
+  } else {
+    inputZone.classList.add('wrong-zone');outputZone.classList.add('wrong-zone');
+    showFeedback(false,s.feedback.wrong);showWrongFlash();
+  }
+  document.querySelector('.check-drops-btn').disabled=true;
+  document.getElementById('next-wrap').style.display='block';
+}
+
+function buildSlider(s,area){
+  var cfg=s.sliderConfig;
+  var sw=document.createElement('div');sw.className='slider-wrap';
+  sw.innerHTML='<div class="slider-row"><label>'+cfg.label+'</label><input type="range" min="'+cfg.min+'" max="'+cfg.max+'" value="'+cfg.default+'" step="'+cfg.step+'" id="term-slider"><span class="val" id="term-val">'+cfg.default+' yrs</span></div>';
+  area.appendChild(sw);
+  var rd=document.createElement('div');rd.className='result-display';
+  rd.innerHTML='<div class="result-num" id="pmt-result">$'+calcPMT(cfg.rate,cfg.default,cfg.principal)+'</div><div class="result-label">Monthly Payment</div>';
+  area.appendChild(rd);
+  var sq=document.createElement('div');sq.className='slider-question';
+  sq.textContent=s.question;area.appendChild(sq);
+  var choices=document.createElement('div');choices.className='choices';
+  s.choices.forEach(function(c,i){
+    var btn=document.createElement('button');btn.className='choice-btn';btn.textContent=c.text;
+    btn.onclick=function(){pickMC(i,btn,s)};choices.appendChild(btn);
+  });
+  area.appendChild(choices);
+  document.getElementById('term-slider').addEventListener('input',function(){
+    var t=parseInt(this.value);
+    document.getElementById('term-val').textContent=t+' yrs';
+    var pmt=calcPMT(cfg.rate,t,cfg.principal);
+    var el=document.getElementById('pmt-result');
+    el.textContent='$'+pmt;
+    el.style.color=pmt<=s.targetMax?'#00cc44':'#cc0000';
+  });
+}
+
+function calcPMT(rate,years,principal){
+  var r=rate/12,n=years*12;
+  var pmt=principal*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
+  return Math.round(pmt).toLocaleString();
+}
+
+function buildTF(s,area){
+  var prog=document.createElement('div');prog.className='tf-progress';prog.id='tf-progress';
+  s.tfQuestions.forEach(function(){prog.innerHTML+='<div class="tf-dot"></div>'});
+  area.appendChild(prog);
+  renderTFQuestion(s,area);
+}
+
+function renderTFQuestion(s,area){
+  var q=s.tfQuestions[tfState.current];
+  var existing=area.querySelector('.tf-question-wrap');if(existing)existing.remove();
+  var wrap=document.createElement('div');wrap.className='tf-question-wrap';
+  wrap.innerHTML='<div class="tf-question">'+q.q+'</div><div class="tf-buttons"><button class="tf-btn tf-true" onclick="pickTF(true,this)">✓ TRUE</button><button class="tf-btn tf-false" onclick="pickTF(false,this)">✗ FALSE</button></div><div style="font-size:12px;color:#555;margin-top:0.5rem" id="tf-explain"></div>';
+  area.appendChild(wrap);
+}
+
+function pickTF(answer,btn){
+  if(tfState.done)return;
+  var s=scenes[current];
+  var q=s.tfQuestions[tfState.current];
+  var correct=(answer===q.answer);
+  var dots=document.querySelectorAll('.tf-dot');
+  btn.parentElement.querySelectorAll('.tf-btn').forEach(function(b){b.disabled=true});
+  if(correct){
+    btn.classList.add('correct-tf');dots[tfState.current].classList.add('tf-correct');
+    tfState.results.push(true);
+    document.getElementById('tf-explain').textContent='✅ '+q.explain;
+  } else {
+    btn.classList.add('wrong-tf');dots[tfState.current].classList.add('tf-wrong');
+    tfState.results.push(false);
+    document.getElementById('tf-explain').textContent='❌ '+q.explain;
+  }
+  tfState.current++;
+  if(tfState.current<s.tfQuestions.length){
+    setTimeout(function(){renderTFQuestion(s,document.getElementById('interaction-area'))},1200);
+  } else {
+    tfState.done=true;answered=true;totalAnswered++;
+    document.getElementById('total-count').textContent=totalAnswered;
+    var allCorrect=tfState.results.every(function(r){return r});
+    var correctCount=tfState.results.filter(function(r){return r}).length;
+    if(allCorrect){
+      score++;firstTries++;
+      document.getElementById('first-count').textContent=firstTries;
+      document.getElementById('score-label').textContent='Score: '+score;
+      document.getElementById('dana-avatar').textContent='😅';
+      setTimeout(function(){showFeedback(true,'All 3 correct! Dana is momentarily speechless. She respects this.');showScoreFlash();document.getElementById('next-wrap').style.display='block';},1400);
+    } else {
+      setTimeout(function(){showFeedback(false,correctCount+'/3 correct. Review the ones you missed before the board presentation.');showWrongFlash();document.getElementById('next-wrap').style.display='block';},1400);
+    }
+  }
+}
+
+function buildSequence(s,area){
+  var items=s.steps.slice();shuffle(items);
+  seqState.order=items;
+  var list=document.createElement('div');list.className='seq-items';list.id='seq-list';
+  items.forEach(function(item,i){
+    var el=document.createElement('div');el.className='seq-item';el.draggable=true;
+    el.setAttribute('data-idx',i);
+    el.innerHTML='<span class="seq-num">'+(i+1)+'</span><span>'+item.text+'</span>';
+    setupSeqDrag(el,list);
+    list.appendChild(el);
+  });
+  area.appendChild(list);
+  var btn=document.createElement('button');btn.className='check-drops-btn';btn.textContent='Check Order';
+  btn.onclick=function(){checkSequence(s)};area.appendChild(btn);
+}
+
+function setupSeqDrag(el,list){
+  el.addEventListener('dragstart',function(e){e.dataTransfer.setData('idx',el.getAttribute('data-idx'));el.classList.add('dragging')});
+  el.addEventListener('dragend',function(){el.classList.remove('dragging')});
+  list.addEventListener('dragover',function(e){
+    e.preventDefault();
+    var dragging=list.querySelector('.dragging');
+    var siblings=[].slice.call(list.querySelectorAll('.seq-item:not(.dragging)'));
+    var next=siblings.find(function(s){return e.clientY<=s.getBoundingClientRect().top+s.offsetHeight/2});
+    if(next)list.insertBefore(dragging,next);else list.appendChild(dragging);
+  });
+}
+
+function checkSequence(s){
+  if(answered)return;
+  var items=[].slice.call(document.querySelectorAll('.seq-item'));
+  var correct=true;
+  items.forEach(function(el,i){
+    var text=el.querySelector('span:last-child').textContent;
+    var step=s.steps.find(function(st){return st.text===text});
+    if(step.order!==i)correct=false;
+  });
+  answered=true;totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  if(correct){
+    items.forEach(function(el){el.classList.add('seq-correct')});
+    score++;firstTries++;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('dana-avatar').textContent='😅';
+    showFeedback(true,s.feedback.right);showScoreFlash();
+  } else {
+    items.forEach(function(el){el.classList.add('seq-wrong')});
+    showFeedback(false,s.feedback.wrong);showWrongFlash();
+  }
+  document.querySelector('.check-drops-btn').disabled=true;
+  document.getElementById('next-wrap').style.display='block';
+}
+
+function buildSpotDiff(s,area){
+  var grid=document.createElement('div');grid.className='models-grid';
+  s.models.forEach(function(model,i){
+    var card=document.createElement('div');card.className='model-card';
+    card.innerHTML='<div class="model-title">'+model.title+'</div>';
+    var tbl=document.createElement('table');tbl.className='model-table';
+    model.rows.forEach(function(row){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td class="cell-label">'+row.label+'</td><td class="'+row.type+'">'+row.value+'</td>';
+      tbl.appendChild(tr);
+    });
+    card.appendChild(tbl);
+    card.onclick=function(){checkSpotDiff(model.correct,card,s)};
+    grid.appendChild(card);
+  });
+  area.appendChild(grid);
+}
+
+function checkSpotDiff(isCorrect,card,s){
+  if(answered)return;answered=true;totalAnswered++;
+  document.getElementById('total-count').textContent=totalAnswered;
+  document.querySelectorAll('.model-card').forEach(function(c){c.onclick=null});
+  if(isCorrect){
+    card.classList.add('correct-model');score++;firstTries++;
+    document.getElementById('first-count').textContent=firstTries;
+    document.getElementById('score-label').textContent='Score: '+score;
+    document.getElementById('dana-avatar').textContent='😅';
+    showFeedback(true,s.feedback.right);showScoreFlash();
+  } else {
+    card.classList.add('wrong-model');
+    document.querySelectorAll('.model-card').forEach(function(c){
+      if(!c.classList.contains('wrong-model'))c.classList.add('correct-model');
+    });
+    showFeedback(false,s.feedback.wrong);showWrongFlash();
+  }
+  document.getElementById('next-wrap').style.display='block';
+}
+
+function showFeedback(ok,msg){
+  var fa=document.getElementById('feedback-area');
+  fa.className='feedback-area '+(ok?'correct':'wrong');
+  document.getElementById('feedback-icon').textContent=ok?'✅':'💀';
+  document.getElementById('feedback-text').textContent=msg;
+  fa.style.display='block';
+}
+
+function showScoreFlash(){
+  var el=document.getElementById('score-flash');
+  el.style.display='block';el.style.animation='none';el.offsetHeight;
+  el.style.animation='scoreAnim 0.8s ease forwards';
+  setTimeout(function(){el.style.display='none'},800);
+  launchConfetti();
+}
+
+function showWrongFlash(){
+  var el=document.getElementById('wrong-flash');
+  el.style.display='block';el.style.animation='none';el.offsetHeight;
+  el.style.animation='wrongAnim 0.4s ease forwards';
+  setTimeout(function(){el.style.display='none'},400);
+}
+
+function launchConfetti(){
+  var colors=['#cc0000','#ff4444','#ff8800','#ffcc00','#00cc44'];
+  for(var i=0;i<25;i++){(function(){
+    var el=document.createElement('div');el.className='confetti-piece';
+    el.style.left=Math.random()*100+'vw';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.borderRadius=Math.random()>0.5?'50%':'0';
+    el.style.animationDuration=(Math.random()*1.5+0.8)+'s';
+    el.style.animationDelay=(Math.random()*0.3)+'s';
+    document.body.appendChild(el);
+    setTimeout(function(){el.remove()},2500);
+  })();}
+}
+
+function nextScene(){
+  current++;
+  if(current>=scenes.length){showEnd();}
+  else{
+    var gs=document.getElementById('game-screen');
+    gs.style.animation='none';gs.offsetHeight;gs.style.animation='slideIn 0.5s ease';
+    renderScene();
+  }
+  if(current===scenes.length-1){
+    document.querySelector('#next-wrap .btn-horror').textContent='See Your Fate →';
+  }
+}
+
+function showEnd(){
+  document.getElementById('game-screen').style.display='none';
+  document.getElementById('end-screen').style.display='block';
+  var pct=Math.round((firstTries/scenes.length)*100);
+  document.getElementById('fs1').textContent=firstTries+'/'+scenes.length;
+  document.getElementById('fs2').textContent=pct+'%';
+  document.getElementById('fs3').textContent=scenes.length;
+  var trophy,title,sub,rank,rc;
+  if(firstTries>=9){trophy='🏆';title='LEGENDARY ANALYST';rc='#ffcc00';sub='Perfect performance. Every formula, every drag, every sequence — flawless. Dana promoted you immediately. The board gave you a standing ovation. The curse is broken forever.';rank='⭐ Excel Master — Promoted to Senior Analyst';}
+  else if(firstTries>=7){trophy='🎖️';title='CRISIS AVERTED';rc='#00cc44';sub='Strong work across all question types. A few stumbles, but MediTrack survived. Dana is relieved. The board presentation went ahead.';rank='✅ Solid Analyst — Ready for Real Projects';}
+  else if(firstTries>=5){trophy='😅';title='SURVIVED... BARELY';rc='#ff8800';sub='You made it through, but the curse took its toll. Review the topics where you got stuck. Dana has some notes for your 1:1.';rank='📚 Junior Analyst — Review Recommended';}
+  else{trophy='💀';title='THE CURSE WINS';rc='#cc0000';sub='MediTrack has fallen. But every great analyst failed before they succeeded — face the curse again and you\'ll be stronger.';rank='🔄 Apprentice — Try Again, You\'ve Got This';}
+  document.getElementById('trophy-emoji').textContent=trophy;
+  document.getElementById('end-title').textContent=title;
+  document.getElementById('end-title').style.color=rc;
+  document.getElementById('end-sub').textContent=sub;
+  var rb=document.getElementById('rank-badge');
+  rb.textContent=rank;rb.style.background=rc+'22';rb.style.color=rc;rb.style.border='1px solid '+rc+'44';
+  if(firstTries>=7)launchConfetti();
+}
+
+function restartGame(){
+  current=0;score=0;firstTries=0;answered=false;totalAnswered=0;
+  document.getElementById('first-count').textContent='0';
+  document.getElementById('total-count').textContent='0';
+  document.getElementById('end-screen').style.display='none';
+  document.getElementById('game-screen').style.display='block';
+  buildDots();renderScene();
+}
+
+function shuffle(arr){for(var i=arr.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}}
+function shuffleIdx(n){var a=[];for(var i=0;i<n;i++)a.push(i);shuffle(a);return a;}
+
+// PARTICLES
+var canvas=document.getElementById('particles');
+var ctx=canvas.getContext('2d');
+var pts=[];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+for(var i=0;i<50;i++){pts.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,vx:(Math.random()-0.5)*0.4,vy:-Math.random()*0.5-0.15,size:Math.random()*2+0.5,opacity:Math.random()*0.35+0.1,color:Math.random()>0.7?'180,0,0':'100,0,150'});}
+function animParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  pts.forEach(function(p){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.y<-10)p.y=canvas.height+10;
+    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fillStyle='rgba('+p.color+','+p.opacity+')';ctx.fill();
+  });
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+</script>
+</body>
+</html>
