@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Excel Formula Activity</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; display: flex; justify-content: center; padding: 2rem 1rem; min-height: 100vh; }
+  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.75rem; max-width: 560px; width: 100%; }
+  .progress { display: flex; gap: 5px; margin-bottom: 1.5rem; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; transition: background 0.3s; }
+  .dot.done { background: #22c55e; }
+  .dot.active { background: #3b82f6; }
+  .badge { display: inline-block; font-size: 12px; padding: 3px 10px; border-radius: 6px; margin-bottom: 1rem; background: #eff6ff; color: #1d4ed8; font-weight: 500; }
+  .question { font-size: 16px; font-weight: 500; color: #111; margin-bottom: 1.25rem; line-height: 1.5; }
+  .choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { display: inline-block; font-size: 14px; padding: 8px 14px; border-radius: 8px; border: 1px solid #d1d5db; cursor: pointer; background: #f9fafb; color: #374151; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .chip:hover { background: #eff6ff; color: #1d4ed8; border-color: #93c5fd; }
+  .chip.correct { background: #f0fdf4; color: #15803d; border-color: #86efac; pointer-events: none; }
+  .chip.wrong { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; pointer-events: none; }
+  .chip.disabled { pointer-events: none; opacity: 0.55; }
+  .feedback { font-size: 14px; margin-top: 1rem; min-height: 20px; color: #6b7280; line-height: 1.6; }
+  .feedback .correct-label { color: #15803d; font-weight: 500; }
+  .feedback .wrong-label { color: #b91c1c; font-weight: 500; }
+  .next-btn { margin-top: 1.25rem; padding: 8px 18px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; color: #374151; font-size: 14px; cursor: pointer; display: none; }
+  .next-btn:hover { background: #f3f4f6; }
+  .score-msg { margin-top: 1rem; font-size: 14px; color: #374151; line-height: 1.6; }
+  .score-num { font-size: 22px; font-weight: 600; color: #111; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="progress" id="progress"></div>
+  <div class="badge" id="topic-badge"></div>
+  <p class="question" id="question"></p>
+  <div class="choices" id="choices"></div>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="next-btn" onclick="nextQ()">Next &rarr;</button>
+  <div class="score-msg" id="score-msg"></div>
+</div>
+
+<script>
+var qs = [
+  {
+    topic: "Math & Stats",
+    q: "You want to find the middle value in patient balances — not thrown off by a $14,000 outlier.",
+    correct: "=MEDIAN()",
+    wrong: ["=AVERAGE()", "=MODE()", "=COUNT()"],
+    explain: "MEDIAN ignores outliers. AVERAGE would be skewed by that $14K bill."
+  },
+  {
+    topic: "Date & Time",
+    q: "You need today's date to automatically update every time the workbook opens.",
+    correct: "=TODAY()",
+    wrong: ["=NOW()", "=DATE()", "=YEAR()"],
+    explain: "TODAY() refreshes automatically each time. NOW() also adds a timestamp you don't need here."
+  },
+  {
+    topic: "Logic & Lookup",
+    q: "Flag patients with a balance over $5,000 as 'Priority', everyone else as 'Standard'.",
+    correct: "=IF()",
+    wrong: ["=IFS()", "=VLOOKUP()", "=AND()"],
+    explain: "A simple IF with two outcomes is the cleanest fit — one condition, two possible results."
+  },
+  {
+    topic: "Text Functions",
+    q: "A patient name was entered as 'CASEY WRIGHT' — you need it in proper name format.",
+    correct: "=PROPER()",
+    wrong: ["=UPPER()", "=LOWER()", "=TRIM()"],
+    explain: "PROPER() capitalises the first letter of each word — perfect for names."
+  },
+  {
+    topic: "Goal Seek",
+    q: "You know the monthly payment must stay under $1,200. You need to find the maximum loan amount.",
+    correct: "Goal Seek",
+    wrong: ["Scenario Manager", "Data Table", "PMT function alone"],
+    explain: "Goal Seek works backward — you set the target output and Excel finds the required input."
+  },
+  {
+    topic: "Data Tables",
+    q: "You want to see monthly payments for every combination of interest rate AND loan term at once.",
+    correct: "Two-variable table",
+    wrong: ["One-variable table", "Scenario Manager", "Goal Seek"],
+    explain: "Two-variable tables show how two inputs interact — rates down the left, terms across the top."
+  },
+  {
+    topic: "Financial Model",
+    q: "Your loan model isn't updating when you change the interest rate. What's most likely wrong?",
+    correct: "Hard-coded value in formula",
+    wrong: ["Wrong cell format", "Missing label", "Too many sheets"],
+    explain: "Hard-coded assumptions inside formulas don't update when inputs change — always use cell references."
+  }
+];
+
+var current = 0;
+var score = 0;
+var answered = false;
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function render() {
+  var q = qs[current];
+  answered = false;
+  document.getElementById("topic-badge").textContent = q.topic;
+  document.getElementById("question").textContent = q.q;
+  document.getElementById("feedback").innerHTML = "";
+  document.getElementById("score-msg").innerHTML = "";
+  document.getElementById("next-btn").style.display = "none";
+
+  var opts = shuffle([q.correct].concat(q.wrong));
+  var html = "";
+  for (var i = 0; i < opts.length; i++) {
+    html += '<span class="chip" data-val="' + opts[i].replace(/"/g, "&quot;") + '" onclick="pick(this)">' + opts[i] + '</span>';
+  }
+  document.getElementById("choices").innerHTML = html;
+
+  var prog = document.getElementById("progress");
+  var pdots = "";
+  for (var j = 0; j < qs.length; j++) {
+    pdots += '<div class="dot ' + (j < current ? "done" : j === current ? "active" : "") + '"></div>';
+  }
+  prog.innerHTML = pdots;
+}
+
+function pick(el) {
+  if (answered) return;
+  answered = true;
+  var chosen = el.getAttribute("data-val");
+  var correct = qs[current].correct;
+  var chips = document.querySelectorAll(".chip");
+  for (var i = 0; i < chips.length; i++) chips[i].classList.add("disabled");
+
+  var fb = document.getElementById("feedback");
+  if (chosen === correct) {
+    el.classList.add("correct");
+    score++;
+    fb.innerHTML = '<span class="correct-label">&#10003; Correct!</span> ' + qs[current].explain;
+  } else {
+    el.classList.add("wrong");
+    for (var j = 0; j < chips.length; j++) {
+      if (chips[j].getAttribute("data-val") === correct) chips[j].classList.add("correct");
+    }
+    fb.innerHTML = '<span class="wrong-label">&#10007; Not quite.</span> ' + qs[current].explain;
+  }
+
+  if (current < qs.length - 1) {
+    document.getElementById("next-btn").style.display = "inline-block";
+  } else {
+    var msg = score >= 6 ? "Great work! You're ready for the full activity." :
+              score >= 4 ? "Good foundation — review the topics you missed." :
+              "Worth a re-read before the main exercise.";
+    document.getElementById("score-msg").innerHTML =
+      '<br><span class="score-num">' + score + "/" + qs.length + "</span> &mdash; " + msg;
+  }
+}
+
+function nextQ() { current++; render(); }
+
+render();
+</script>
+</body>
+</html>
