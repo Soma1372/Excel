@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Conservatory Music History Placement Exam</title>
+
+<style>
+:root {
+    --bg: #0f172a;
+    --panel: #172033;
+    --panel2: #1e293b;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --accent: #60a5fa;
+    --accent2: #a78bfa;
+    --green: #34d399;
+    --red: #fb7185;
+    --yellow: #facc15;
+    --border: #334155;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background: linear-gradient(180deg, #0b1120, var(--bg));
+    color: var(--text);
+    line-height: 1.55;
+}
+
+header {
+    padding: 46px 20px 30px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+}
+
+header p {
+    max-width: 850px;
+    margin: 15px auto 0;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+
+.container {
+    max-width: 1050px;
+    margin: auto;
+    padding: 28px 20px 80px;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+button,
+select {
+    border: 1px solid var(--border);
+    background: var(--panel2);
+    color: var(--text);
+    padding: 11px 16px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+button:hover,
+select:hover {
+    border-color: var(--accent);
+}
+
+button.primary {
+    background: var(--accent);
+    color: #07111f;
+    font-weight: 700;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.stat strong {
+    display: block;
+    font-size: 1.6rem;
+    color: white;
+}
+
+.stat span {
+    color: var(--muted);
+    font-size: 0.86rem;
+}
+
+.tier-heading {
+    margin-top: 35px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.tier-heading h2 {
+    margin-bottom: 3px;
+}
+
+.tier-heading p {
+    margin-top: 0;
+    color: var(--muted);
+}
+
+.question {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 13px;
+    margin-bottom: 17px;
+}
+
+.question.correct {
+    border-color: var(--green);
+}
+
+.question.incorrect {
+    border-color: var(--red);
+}
+
+.meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: #253148;
+    color: #cbd5e1;
+    font-size: 0.75rem;
+}
+
+.badge.t1 {
+    color: #bfdbfe;
+}
+
+.badge.t2 {
+    color: #ddd6fe;
+}
+
+.badge.t3 {
+    color: #fde68a;
+}
+
+.qtext {
+    font-size: 1.08rem;
+    font-weight: 650;
+    margin: 8px 0 13px;
+}
+
+.choice {
+    padding: 9px 11px;
+    margin: 7px 0;
+    background: #111827;
+    border: 1px solid #263449;
+    border-radius: 8px;
+}
+
+.choice label {
+    display: block;
+    cursor: pointer;
+}
+
+.choice.correct-answer {
+    border-color: var(--green);
+    background: rgba(52, 211, 153, 0.09);
+}
+
+.choice.wrong-answer {
+    border-color: var(--red);
+    background: rgba(251, 113, 133, 0.08);
+}
+
+.explanation {
+    display: none;
+    margin-top: 13px;
+    padding: 12px;
+    border-left: 4px solid var(--accent2);
+    background: #111827;
+    color: #cbd5e1;
+}
+
+.explanation.show {
+    display: block;
+}
+
+.scorebox {
+    display: none;
+    margin: 25px 0;
+    padding: 20px;
+    background: var(--panel);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+}
+
+.scorebox.show {
+    display: block;
+}
+
+.scorebox h2 {
+    margin-top: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+footer {
+    color: var(--muted);
+    text-align: center;
+    border-top: 1px solid var(--border);
+    padding: 25px;
+}
+
+@media (max-width: 700px) {
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Music History Placement Exam</h1>
+    <p>
+        A conservatory-style review covering genres, forms, repertoire,
+        stylistic periods, harmony, nationalism, Modernism, serialism,
+        experimental music, and major composer-work associations.
+    </p>
+</header>
+
+<main class="container">
+
+<div class="controls">
+
+<select id="tierFilter">
+    <option value="all">All Tiers</option>
+    <option value="1">Tier 1 — Essential</option>
+    <option value="2">Tier 2 — Very Likely</option>
+    <option value="3">Tier 3 — Advanced</option>
+</select>
+
+<select id="categoryFilter">
+    <option value="all">All Categories</option>
+    <option value="Genre">Genres</option>
+    <option value="Form">Forms</option>
+    <option value="Composer">Composers & Works</option>
+    <option value="Harmony">Harmony & Technique</option>
+    <option value="Opera">Opera</option>
+    <option value="Nationalism">Nationalism</option>
+    <option value="Modernism">Modernism</option>
+    <option value="Politics">Politics & Society</option>
+    <option value="20th Century">20th Century</option>
+</select>
+
+<button onclick="shuffleQuestions()">Shuffle</button>
+<button onclick="resetExam()">Reset</button>
+<button class="primary" onclick="gradeExam()">Grade Exam</button>
+
+</div>
+
+<div class="stats">
+    <div class="stat">
+        <strong id="visibleCount">0</strong>
+        <span>Questions</span>
+    </div>
+
+    <div class="stat">
+        <strong id="answeredCount">0</strong>
+        <span>Answered</span>
+    </div>
+
+    <div class="stat">
+        <strong id="correctCount">—</strong>
+        <span>Correct</span>
+    </div>
+
+    <div class="stat">
+        <strong id="percentScore">—</strong>
+        <span>Score</span>
+    </div>
+</div>
+
+<div id="scorebox" class="scorebox"></div>
+
+<div id="quiz"></div>
+
+</main>
+
+<footer>
+Music History Placement Study Exam
+</footer>
+
+<script>
+
+const questions = [
+
+/* =========================================================
+   TIER 1
+   ========================================================= */
+
+{
+tier:1,
+category:"Genre",
+q:"Which genre is best defined as a miniature opera?",
+choices:[
+"Serenata",
+"Oratorio",
+"Symphonic poem",
+"Operetta"
+],
+answer:0,
+explanation:"The test bank defines the serenata as a miniature opera."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"Which term refers to Italian serious opera?",
+choices:[
+"Opera buffa",
+"Opera seria",
+"Operetta",
+"Singspiel"
+],
+answer:1,
+explanation:"Seria means serious. Opera seria dominated much 18th-century Italian operatic culture."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"A short comic opera performed between acts of an opera seria is called:",
+choices:[
+"Intermezzo",
+"Serenata",
+"Oratorio",
+"Grand opéra"
+],
+answer:0,
+explanation:"The classic example is Pergolesi's La serva padrona."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"Which genre uses popular tunes and spoken dialogue?",
+choices:[
+"Opera seria",
+"Ballad opera",
+"Grand opéra",
+"Verismo"
+],
+answer:1,
+explanation:"Ballad opera combines familiar/popular tunes with spoken dialogue. The Beggar's Opera is the key example."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"Which genre is most closely associated with Schubert's Erlkönig?",
+choices:[
+"Lied",
+"Symphonic poem",
+"Oratorio",
+"Operetta"
+],
+answer:0,
+explanation:"A Lied is a German art song, generally for solo voice and piano."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"A group of songs connected by a narrative and intended to be performed together is called:",
+choices:[
+"Part song",
+"Song cycle",
+"Concerto grosso",
+"Scena ed aria"
+],
+answer:1,
+explanation:"Schubert's Die schöne Müllerin and Schumann's Dichterliebe are major examples."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"A one-movement programmatic orchestral work cultivated by Liszt is a:",
+choices:[
+"Symphonic poem",
+"String quartet",
+"Serenata",
+"Concert étude"
+],
+answer:0,
+explanation:"Liszt is closely associated with the symphonic poem. Les préludes is the central example in the test bank."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"Which genre is especially associated with Meyerbeer and large-scale French spectacle?",
+choices:[
+"Grand opéra",
+"Singspiel",
+"Opera buffa",
+"Verismo"
+],
+answer:0,
+explanation:"Grand opéra uses large forces, chorus, ballet, elaborate sets, and typically five acts."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"Which genre is associated with Offenbach, Johann Strauss Jr., and Gilbert & Sullivan?",
+choices:[
+"Operetta",
+"Oratorio",
+"Verismo",
+"Program symphony"
+],
+answer:0,
+explanation:"Operetta is a shorter comic theatrical genre, often with spoken dialogue."
+},
+
+{
+tier:1,
+category:"Genre",
+q:"Cavalleria rusticana and Pagliacci belong to which operatic movement?",
+choices:[
+"Bel canto",
+"Verismo",
+"Opera seria",
+"Grand opéra"
+],
+answer:1,
+explanation:"Verismo emphasizes naturalism, ordinary people, and intense personal drama."
+},
+
+{
+tier:1,
+category:"Form",
+q:"Which form is typically represented as A–B–A, with a return to the opening section?",
+choices:[
+"Da capo aria",
+"Through-composed",
+"Rondo",
+"Fugue"
+],
+answer:0,
+explanation:"Da capo means 'from the head' or return to the beginning."
+},
+
+{
+tier:1,
+category:"Form",
+q:"Which song form repeats the same music for each stanza?",
+choices:[
+"Through-composed",
+"Strophic",
+"Sonata",
+"Ritornello"
+],
+answer:1,
+explanation:"Schubert's Heidenröslein is the key strophic example."
+},
+
+{
+tier:1,
+category:"Form",
+q:"Which song form uses new music as the text proceeds through different stanzas or sections?",
+choices:[
+"Strophic",
+"Through-composed",
+"Binary",
+"Rondo"
+],
+answer:1,
+explanation:"Schubert's Erlkönig is the main example in the test bank."
+},
+
+{
+tier:1,
+category:"Form",
+q:"What is the correct order of the major sections of sonata form?",
+choices:[
+"Development – exposition – recapitulation",
+"Exposition – development – recapitulation",
+"Exposition – recapitulation – development",
+"Theme – episode – stretto"
+],
+answer:1,
+explanation:"Sonata form normally moves exposition → development → recapitulation."
+},
+
+{
+tier:1,
+category:"Form",
+q:"Which section of sonata form normally contains the most radical harmonic movement?",
+choices:[
+"Exposition",
+"Development",
+"Recapitulation",
+"Coda"
+],
+answer:1,
+explanation:"The development is typically the most harmonically unstable and modulatory section."
+},
+
+{
+tier:1,
+category:"Form",
+q:"Which form is based on a recurring refrain alternating with episodes?",
+choices:[
+"Rondo",
+"Fugue",
+"Binary",
+"Scena ed aria"
+],
+answer:0,
+explanation:"Think A–B–A–C–A: the refrain keeps returning."
+},
+
+{
+tier:1,
+category:"Composer",
+q:"Which composer is commonly called the 'Father of the Symphony' in the test bank?",
+choices:[
+"Mozart",
+"Haydn",
+"Beethoven",
+"Schubert"
+],
+answer:1,
+explanation:"Franz Joseph Haydn is the answer used by the test bank."
+},
+
+{
+tier:1,
+category:"Composer",
+q:"Which composer wrote Symphonie fantastique?",
+choices:[
+"Liszt",
+"Berlioz",
+"Wagner",
+"Brahms"
+],
+answer:1,
+explanation:"Berlioz's Symphonie fantastique is one of the central examples of Romantic program music."
+},
+
+/* =========================================================
+   TIER 2
+   ========================================================= */
+
+{
+tier:2,
+category:"Opera",
+q:"In a cantabile–cabaletta structure, which section is slower and more lyrical?",
+choices:[
+"Cabaletta",
+"Cantabile",
+"Tempo di mezzo",
+"Stretta"
+],
+answer:1,
+explanation:"Cantabile = slow and lyrical. Cabaletta = faster, often repeated and embellished."
+},
+
+{
+tier:2,
+category:"Opera",
+q:"What is the primary function of the tempo di mezzo in a scena ed aria?",
+choices:[
+"Slow lyrical reflection",
+"Plot interruption or change",
+"Return of the opening theme",
+"Opening orchestral fanfare"
+],
+answer:1,
+explanation:"Tempo di mezzo is the middle section where an event often changes the dramatic situation."
+},
+
+{
+tier:2,
+category:"Opera",
+q:"In 19th-century Italian opera, the fast concluding section of an ensemble is called:",
+choices:[
+"Stretta",
+"Cavatina",
+"Parlante",
+"Ritornello"
+],
+answer:0,
+explanation:"Stretta refers to the fast concluding section of an ensemble."
+},
+
+{
+tier:2,
+category:"Opera",
+q:"An imbroglio in Rossinian opera usually refers to:",
+choices:[
+"A solemn funeral aria",
+"A climactic ensemble of confusion",
+"A solo cadenza",
+"A recurring orchestral theme"
+],
+answer:1,
+explanation:"The imbroglio is the moment of greatest comic confusion, often near an act ending."
+},
+
+{
+tier:2,
+category:"Opera",
+q:"Which term best describes Wagner's concept of the total or unified work of art?",
+choices:[
+"Leitmotif",
+"Gesamtkunstwerk",
+"Grundgestalt",
+"Rubato"
+],
+answer:1,
+explanation:"Gesamtkunstwerk means a total artwork integrating music, poetry, drama, staging, and other arts."
+},
+
+{
+tier:2,
+category:"Opera",
+q:"A recurring musical idea associated with a dramatic person, object, or concept is a:",
+choices:[
+"Idée fixe",
+"Leitmotif",
+"Tone row",
+"Ground bass"
+],
+answer:1,
+explanation:"Leitmotif is especially associated with Wagnerian music drama."
+},
+
+{
+tier:2,
+category:"Form",
+q:"Which Baroque form alternates recurring orchestral material with contrasting solo episodes?",
+choices:[
+"Ritornello",
+"Sonata form",
+"Rondo",
+"Theme and variations"
+],
+answer:0,
+explanation:"Ritornello form is especially important in the Baroque concerto tradition, including Vivaldi."
+},
+
+{
+tier:2,
+category:"Form",
+q:"In a fugue, which section usually does not present the complete fugue subject?",
+choices:[
+"Exposition",
+"Answer",
+"Episode",
+"Stretto"
+],
+answer:2,
+explanation:"Episodes provide contrast between subject statements."
+},
+
+{
+tier:2,
+category:"Form",
+q:"In fugue terminology, stretto means:",
+choices:[
+"The fugue subject is inverted",
+"Entries of the subject overlap more closely",
+"The subject is played backwards",
+"The fugue moves into a new meter"
+],
+answer:1,
+explanation:"In stretto, subject entries are compressed and overlap more closely in time."
+},
+
+{
+tier:2,
+category:"Form",
+q:"Which technique is most closely associated with Liszt and involves presenting a central theme in altered guises?",
+choices:[
+"Developing variation",
+"Thematic transformation",
+"Phasing",
+"Serialism"
+],
+answer:1,
+explanation:"Liszt's Les préludes is a key example of thematic transformation."
+},
+
+{
+tier:2,
+category:"Form",
+q:"The term 'developing variation' was used by Schoenberg to describe the compositional technique of:",
+choices:[
+"Debussy",
+"Brahms",
+"Stravinsky",
+"Mahler"
+],
+answer:1,
+explanation:"Schoenberg used the concept to describe Brahms's continual transformation of small motives."
+},
+
+{
+tier:2,
+category:"Composer",
+q:"Which pairing is correct?",
+choices:[
+"Berlioz — idée fixe",
+"Wagner — whole-tone scale",
+"Debussy — Socialist Realism",
+"Cage — bel canto"
+],
+answer:0,
+explanation:"Berlioz's idée fixe represents the artist's beloved in Symphonie fantastique."
+},
+
+{
+tier:2,
+category:"Composer",
+q:"Which composer-work pairing is correct?",
+choices:[
+"Liszt — Les préludes",
+"Verdi — The Rite of Spring",
+"Schoenberg — La traviata",
+"Debussy — Wozzeck"
+],
+answer:0,
+explanation:"Liszt's Les préludes is a central symphonic poem."
+},
+
+{
+tier:2,
+category:"Harmony",
+q:"Which scale consists entirely of whole steps?",
+choices:[
+"Pentatonic",
+"Octatonic",
+"Whole-tone",
+"Chromatic"
+],
+answer:2,
+explanation:"Debussy frequently used the whole-tone scale for harmonic color."
+},
+
+{
+tier:2,
+category:"Harmony",
+q:"Which scale alternates whole steps and half steps?",
+choices:[
+"Octatonic",
+"Pentatonic",
+"Whole-tone",
+"Diatonic"
+],
+answer:0,
+explanation:"The octatonic scale alternates whole and half steps."
+},
+
+{
+tier:2,
+category:"Harmony",
+q:"Which work in the test bank is characterized by both whole-tone and pentatonic collections?",
+choices:[
+"Voiles",
+"The Rite of Spring",
+"Wozzeck",
+"Les préludes"
+],
+answer:0,
+explanation:"Debussy's Voiles is associated with whole-tone and pentatonic pitch collections."
+},
+
+{
+tier:2,
+category:"Modernism",
+q:"Which composer is most strongly associated with musical Expressionism?",
+choices:[
+"Debussy",
+"Schoenberg",
+"Haydn",
+"Offenbach"
+],
+answer:1,
+explanation:"Schoenberg and the Second Viennese School are central to Expressionism."
+},
+
+{
+tier:2,
+category:"Modernism",
+q:"Which composer is most strongly associated with musical Impressionism in the test bank?",
+choices:[
+"Debussy",
+"Verdi",
+"Brahms",
+"Shostakovich"
+],
+answer:0,
+explanation:"The label Impressionism is most prominently applied to Claude Debussy."
+},
+
+{
+tier:2,
+category:"Modernism",
+q:"Which ballet is most strongly associated with Primitivism?",
+choices:[
+"Pulcinella",
+"The Rite of Spring",
+"Appalachian Spring",
+"Jeux"
+],
+answer:1,
+explanation:"Stravinsky's The Rite of Spring is the central Primitivist example."
+},
+
+{
+tier:2,
+category:"Nationalism",
+q:"Which composer is associated with the Czech cycle of symphonic poems Má Vlast?",
+choices:[
+"Smetana",
+"Dvořák",
+"Bartók",
+"Sibelius"
+],
+answer:0,
+explanation:"Smetana's Má Vlast is a major Czech nationalist work."
+},
+
+{
+tier:2,
+category:"Nationalism",
+q:"Which composer collected and studied Hungarian peasant music and incorporated it into his own style?",
+choices:[
+"Liszt",
+"Bartók",
+"Mahler",
+"Sibelius"
+],
+answer:1,
+explanation:"Béla Bartók combined composition with intensive ethnomusicological fieldwork."
+},
+
+{
+tier:2,
+category:"Nationalism",
+q:"Which work is associated with Finnish nationalism?",
+choices:[
+"Má Vlast",
+"The Swan of Tuonela",
+"Alexander Nevsky",
+"Appalachian Spring"
+],
+answer:1,
+explanation:"Sibelius's The Swan of Tuonela draws from the Finnish national epic Kalevala."
+},
+
+{
+tier:2,
+category:"Politics",
+q:"What was the official arts doctrine of the Soviet Union?",
+choices:[
+"Futurism",
+"Socialist Realism",
+"Expressionism",
+"Neoclassicism"
+],
+answer:1,
+explanation:"Socialist Realism demanded art aligned with Soviet political and social ideals."
+},
+
+{
+tier:2,
+category:"Politics",
+q:"Which Shostakovich work restored him to official Soviet favor after earlier criticism?",
+choices:[
+"The Nose",
+"Fifth Symphony",
+"Lady Macbeth of the Mtsensk District",
+"First Symphony"
+],
+answer:1,
+explanation:"Shostakovich's Fifth Symphony was crucial in restoring his official standing."
+},
+
+/* =========================================================
+   TIER 3
+   ========================================================= */
+
+{
+tier:3,
+category:"Harmony",
+q:"Atonality is best defined as music in which:",
+choices:[
+"Only dissonances are used",
+"No functional hierarchy exists among scale degrees",
+"Only chromatic scales are used",
+"Every note must occur exactly once"
+],
+answer:1,
+explanation:"Atonality removes functional tonal hierarchy. It is not identical to twelve-tone composition."
+},
+
+{
+tier:3,
+category:"Harmony",
+q:"Schoenberg's 'emancipation of dissonance' means:",
+choices:[
+"All pieces must end on dissonance",
+"Dissonances no longer need to resolve conventionally",
+"Tonality is replaced by rhythm",
+"Only seventh chords may be used"
+],
+answer:1,
+explanation:"Schoenberg argued that complex dissonances could function independently rather than requiring traditional resolution."
+},
+
+{
+tier:3,
+category:"Harmony",
+q:"What is the original ordering of a twelve-tone row called?",
+choices:[
+"Retrograde",
+"Prime",
+"Inversion",
+"Aggregate"
+],
+answer:1,
+explanation:"Prime is the original row form."
+},
+
+{
+tier:3,
+category:"Harmony",
+q:"A tone row presented backwards is called:",
+choices:[
+"Inversion",
+"Prime",
+"Retrograde",
+"Retrograde inversion"
+],
+answer:2,
+explanation:"Retrograde reverses the order of the row."
+},
+
+{
+tier:3,
+category:"Harmony",
+q:"A tone row presented backwards and upside down is:",
+choices:[
+"Retrograde inversion",
+"Prime",
+"Aggregate",
+"Octatonic"
+],
+answer:0,
+explanation:"Retrograde inversion combines both operations."
+},
+
+{
+tier:3,
+category:"Modernism",
+q:"Which three composers make up the Second Viennese School?",
+choices:[
+"Mahler, Strauss, Schoenberg",
+"Schoenberg, Berg, Webern",
+"Stravinsky, Bartók, Schoenberg",
+"Debussy, Ravel, Satie"
+],
+answer:1,
+explanation:"The Second Viennese School consists of Arnold Schoenberg, Alban Berg, and Anton Webern."
+},
+
+{
+tier:3,
+category:"Modernism",
+q:"Sprechstimme is best described as:",
+choices:[
+"A strict form of sung recitative",
+"A technique between speaking and singing",
+"A type of fugue",
+"A twelve-tone row operation"
+],
+answer:1,
+explanation:"Sprechstimme combines characteristics of speech and song. Pierrot lunaire is the central example."
+},
+
+{
+tier:3,
+category:"Modernism",
+q:"Klangfarbenmelodie refers to:",
+choices:[
+"A melody created through shifting tone colors",
+"A melody built from folk tunes",
+"A retrograde melody",
+"A melody based on a ground bass"
+],
+answer:0,
+explanation:"Klangfarbenmelodie treats changes of timbre or tone color as part of melodic organization."
+},
+
+{
+tier:3,
+category:"Modernism",
+q:"Which work most prominently employs Sprechstimme?",
+choices:[
+"Pierrot lunaire",
+"Voiles",
+"The Rite of Spring",
+"Appalachian Spring"
+],
+answer:0,
+explanation:"Schoenberg's Pierrot lunaire is the classic Sprechstimme example in the test bank."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which composer invented the prepared piano?",
+choices:[
+"Milton Babbitt",
+"John Cage",
+"Steve Reich",
+"Pierre Boulez"
+],
+answer:1,
+explanation:"John Cage developed the prepared piano by altering the instrument's strings with inserted objects."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"John Cage's 4'33'' is notable because:",
+choices:[
+"It uses a twelve-tone row",
+"The performer makes no intentional sound",
+"It is written for prepared piano and orchestra",
+"It consists of electronic tape only"
+],
+answer:1,
+explanation:"The work focuses attention on environmental and unintended sounds."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Music created or performed partly according to chance operations is called:",
+choices:[
+"Aleatoric music",
+"Verismo",
+"Total serialism",
+"Neue Sachlichkeit"
+],
+answer:0,
+explanation:"Aleatoric or chance music is closely associated with Cage and other experimentalists."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"The serialization of musical parameters beyond pitch, such as rhythm and dynamics, is called:",
+choices:[
+"Minimalism",
+"Total serialism",
+"Phasing",
+"Musique concrète"
+],
+answer:1,
+explanation:"Total serialism extends serial organization beyond pitch."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which composer is most closely associated with total serialism in 1950s America?",
+choices:[
+"Milton Babbitt",
+"John Cage",
+"Philip Glass",
+"George Gershwin"
+],
+answer:0,
+explanation:"Milton Babbitt combined serial procedures with mathematical thinking."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Musique concrète is primarily associated with:",
+choices:[
+"Recorded real-world sounds",
+"Only electronically synthesized sounds",
+"Live orchestral improvisation",
+"Twelve-tone opera"
+],
+answer:0,
+explanation:"Musique concrète manipulates recorded sounds originating in the real world."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Elektronische Musik was initially associated with:",
+choices:[
+"Recorded environmental sounds only",
+"New electronically synthesized sounds",
+"Prepared piano",
+"Minimalist repetition"
+],
+answer:1,
+explanation:"The distinction in the test bank contrasts synthesized sounds with musique concrète's recorded sound sources."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which term describes two musical patterns gradually moving rhythmically out of sync?",
+choices:[
+"Metric modulation",
+"Phasing",
+"Serialism",
+"Stretto"
+],
+answer:1,
+explanation:"Phasing is especially associated with Steve Reich."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which work by Steve Reich is a tape phase composition?",
+choices:[
+"Come Out",
+"In C",
+"Einstein on the Beach",
+"4'33''"
+],
+answer:0,
+explanation:"Come Out is one of Reich's central tape-phase works."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which composer is associated with the minimalist technique called additive structure?",
+choices:[
+"Philip Glass",
+"Steve Reich",
+"John Cage",
+"Milton Babbitt"
+],
+answer:0,
+explanation:"The test bank associates additive structure particularly with Philip Glass."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which work is an opera associated with Philip Glass and minimalism?",
+choices:[
+"Einstein on the Beach",
+"Wozzeck",
+"Nixon in China",
+"Peter Grimes"
+],
+answer:0,
+explanation:"Einstein on the Beach is one of the major minimalist operas."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which composer is associated with the tintinnabular style?",
+choices:[
+"Arvo Pärt",
+"Steve Reich",
+"Pierre Boulez",
+"Elliott Carter"
+],
+answer:0,
+explanation:"Arvo Pärt developed the tintinnabular style after studying Medieval and Renaissance music."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Nixon in China was composed by:",
+choices:[
+"Philip Glass",
+"John Adams",
+"Steve Reich",
+"George Crumb"
+],
+answer:1,
+explanation:"John Adams's Nixon in China is associated with postminimalism."
+},
+
+{
+tier:3,
+category:"20th Century",
+q:"Which technique is most closely associated with Elliott Carter?",
+choices:[
+"Metric modulation",
+"Phasing",
+"Prepared piano",
+"Sprechstimme"
+],
+answer:0,
+explanation:"Metric modulation allows different temporal levels or rates to relate systematically."
+},
+
+{
+tier:3,
+category:"Politics",
+q:"Which work was originally a film score by Prokofiev and was later adapted into a cantata?",
+choices:[
+"Alexander Nevsky",
+"Carmina burana",
+"Lady Macbeth",
+"Peter Grimes"
+],
+answer:0,
+explanation:"Prokofiev's Alexander Nevsky began as film music and was later adapted into a cantata."
+},
+
+{
+tier:3,
+category:"Politics",
+q:"In Nazi Germany, music considered damaging or unacceptable to the state was labeled:",
+choices:[
+"Neue Musik",
+"Degenerate music",
+"Mass music",
+"Socialist music"
+],
+answer:1,
+explanation:"The Nazi regime used the concept of 'degenerate music' to condemn disfavored styles and composers."
+},
+
+{
+tier:3,
+category:"Politics",
+q:"Which composer wrote Carmina burana?",
+choices:[
+"Carl Orff",
+"Shostakovich",
+"Prokofiev",
+"Hindemith"
+],
+answer:0,
+explanation:"Carl Orff's Carmina burana sets medieval Latin and vernacular texts."
+},
+
+{
+tier:3,
+category:"Composer",
+q:"Which pairing best summarizes a high-yield composer-work-technique relationship?",
+choices:[
+"Berlioz — Symphonie fantastique — idée fixe",
+"Debussy — Wozzeck — Sprechstimme",
+"Wagner — Voiles — whole-tone scale",
+"Cage — Les préludes — thematic transformation"
+],
+answer:0,
+explanation:"Berlioz → Symphonie fantastique → idée fixe is one of the most important associations to memorize."
+},
+
+{
+tier:3,
+category:"Composer",
+q:"Which pairing is correct?",
+choices:[
+"Liszt — Les préludes — thematic transformation",
+"Brahms — The Rite of Spring — Primitivism",
+"Stravinsky — Tristan und Isolde — leitmotif",
+"Schoenberg — Carmen — verismo"
+],
+answer:0,
+explanation:"Liszt's Les préludes exemplifies the symphonic poem and thematic transformation."
+},
+
+{
+tier:3,
+category:"Composer",
+q:"Which pairing is correct?",
+choices:[
+"Debussy — Voiles — whole-tone and pentatonic collections",
+"Bartók — Messiah — fugue",
+"Haydn — Pierrot lunaire — Sprechstimme",
+"Offenbach — Wozzeck — Expressionism"
+],
+answer:0,
+explanation:"Debussy's Voiles is a key example of nontraditional scale collections."
+},
+
+{
+tier:3,
+category:"Composer",
+q:"Which pairing is correct?",
+choices:[
+"Stravinsky — The Rite of Spring — Primitivism",
+"Sibelius — Rhapsody in Blue — jazz",
+"Gershwin — Má Vlast — Czech nationalism",
+"Smetana — Pierrot lunaire — Expressionism"
+],
+answer:0,
+explanation:"The Rite of Spring is the central example of Stravinsky's early Primitivist style."
+},
+
+{
+tier:3,
+category:"Composer",
+q:"Which pairing is correct?",
+choices:[
+"Cage — 4'33'' — indeterminacy/experimentalism",
+"Reich — Tristan und Isolde — chromaticism",
+"Glass — Boris Godunov — realism",
+"Adams — Messiah — oratorio"
+],
+answer:0,
+explanation:"Cage's 4'33'' is central to postwar experimentalism and his philosophy of sound."
+}
+
+];
+
+
+/* =========================================================
+   APP
+   ========================================================= */
+
+const quiz = document.getElementById("quiz");
+const tierFilter = document.getElementById("tierFilter");
+const categoryFilter = document.getElementById("categoryFilter");
+
+let questionOrder = questions.map((_, i) => i);
+
+function visibleQuestions() {
+
+    const tier = tierFilter.value;
+    const cat = categoryFilter.value;
+
+    return questionOrder.filter(index => {
+
+        const q = questions[index];
+
+        const tierOK =
+            tier === "all" ||
+            String(q.tier) === tier;
+
+        const catOK =
+            cat === "all" ||
+            q.category === cat;
+
+        return tierOK && catOK;
+    });
+}
+
+function renderQuiz() {
+
+    quiz.innerHTML = "";
+
+    const visible = visibleQuestions();
+
+    let currentTier = null;
+
+    visible.forEach((index, displayIndex) => {
+
+        const q = questions[index];
+
+        if (tierFilter.value === "all" && q.tier !== currentTier) {
+
+            currentTier = q.tier;
+
+            const heading = document.createElement("div");
+            heading.className = "tier-heading";
+
+            const tierDescriptions = {
+                1: "Essential recognition: genres, forms, composers, and core repertoire.",
+                2: "Very likely placement material: opera structure, nationalism, harmony, and stylistic identification.",
+                3: "Advanced placement material: Modernism, serialism, experimental music, politics, and analytical distinctions."
+            };
+
+            heading.innerHTML =
+                `<h2>Tier ${q.tier}</h2>
+                 <p>${tierDescriptions[q.tier]}</p>`;
+
+            quiz.appendChild(heading);
+        }
+
+        const div = document.createElement("div");
+
+        div.className = "question";
+        div.dataset.index = index;
+
+        const choices = q.choices.map((choice, choiceIndex) => `
+
+            <div class="choice" data-choice="${choiceIndex}">
+                <label>
+                    <input
+                        type="radio"
+                        name="question-${index}"
+                        value="${choiceIndex}"
+                        onchange="updateAnswered()"
+                    >
+                    ${String.fromCharCode(97 + choiceIndex)}. ${choice}
+                </label>
+            </div>
+
+        `).join("");
+
+        div.innerHTML = `
+
+            <div class="meta">
+                <span class="badge t${q.tier}">Tier ${q.tier}</span>
+                <span class="badge">${q.category}</span>
+            </div>
+
+            <div class="qtext">
+                ${displayIndex + 1}. ${q.q}
+            </div>
+
+            ${choices}
+
+            <div class="explanation">
+                <strong>Correct answer:</strong>
+                ${String.fromCharCode(97 + q.answer)}.
+                ${q.choices[q.answer]}
+                <br><br>
+                <strong>Why:</strong>
+                ${q.explanation}
+            </div>
+        `;
+
+        quiz.appendChild(div);
+    });
+
+    document.getElementById("visibleCount").textContent = visible.length;
+
+    updateAnswered();
+}
+
+function updateAnswered() {
+
+    const visible = visibleQuestions();
+
+    let answered = 0;
+
+    visible.forEach(index => {
+
+        const selected =
+            document.querySelector(
+                `input[name="question-${index}"]:checked`
+            );
+
+        if (selected) answered++;
+    });
+
+    document.getElementById("answeredCount").textContent = answered;
+}
+
+function gradeExam() {
+
+    const visible = visibleQuestions();
+
+    let correct = 0;
+    let answered = 0;
+
+    visible.forEach(index => {
+
+        const q = questions[index];
+
+        const questionDiv =
+            document.querySelector(
+                `.question[data-index="${index}"]`
+            );
+
+        if (!questionDiv) return;
+
+        questionDiv.classList.remove("correct", "incorrect");
+
+        const choices =
+            questionDiv.querySelectorAll(".choice");
+
+        choices.forEach(choice => {
+            choice.classList.remove(
+                "correct-answer",
+                "wrong-answer"
+            );
+        });
+
+        const selected =
+            questionDiv.querySelector(
+                `input[name="question-${index}"]:checked`
+            );
+
+        const explanation =
+            questionDiv.querySelector(".explanation");
+
+        explanation.classList.add("show");
+
+        choices[q.answer].classList.add("correct-answer");
+
+        if (selected) {
+
+            answered++;
+
+            const selectedIndex =
+                Number(selected.value);
+
+            if (selectedIndex === q.answer) {
+
+                correct++;
+                questionDiv.classList.add("correct");
+
+            } else {
+
+                questionDiv.classList.add("incorrect");
+
+                choices[selectedIndex]
+                    .classList.add("wrong-answer");
+            }
+
+        } else {
+
+            questionDiv.classList.add("incorrect");
+        }
+
+    });
+
+    const percent =
+        visible.length
+        ? Math.round(correct / visible.length * 100)
+        : 0;
+
+    document.getElementById("correctCount").textContent =
+        `${correct}/${visible.length}`;
+
+    document.getElementById("percentScore").textContent =
+        `${percent}%`;
+
+    const scorebox =
+        document.getElementById("scorebox");
+
+    let level;
+
+    if (percent >= 90) {
+
+        level =
+        "Excellent. Your recognition of the material is at a strong placement-exam level.";
+
+    } else if (percent >= 80) {
+
+        level =
+        "Strong. Review the questions you missed, especially terminology and composer-work associations.";
+
+    } else if (percent >= 70) {
+
+        level =
+        "Developing well. Concentrate on genre/form distinctions and high-yield composer-work-technique associations.";
+
+    } else {
+
+        level =
+        "Review recommended. Start with Tier 1 before moving back into Tier 2 and Tier 3.";
+    }
+
+    scorebox.innerHTML = `
+
+        <h2>${percent}%</h2>
+
+        <p>
+            <strong>${correct}</strong> correct out of
+            <strong>${visible.length}</strong>.
+            You answered ${answered}.
+        </p>
+
+        <p>${level}</p>
+
+    `;
+
+    scorebox.classList.add("show");
+
+    scorebox.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+}
+
+function resetExam() {
+
+    document
+        .querySelectorAll('input[type="radio"]')
+        .forEach(input => input.checked = false);
+
+    document
+        .querySelectorAll(".question")
+        .forEach(q => {
+            q.classList.remove("correct", "incorrect");
+        });
+
+    document
+        .querySelectorAll(".choice")
+        .forEach(c => {
+            c.classList.remove(
+                "correct-answer",
+                "wrong-answer"
+            );
+        });
+
+    document
+        .querySelectorAll(".explanation")
+        .forEach(e => e.classList.remove("show"));
+
+    document.getElementById("correctCount").textContent = "—";
+    document.getElementById("percentScore").textContent = "—";
+    document.getElementById("scorebox").classList.remove("show");
+
+    updateAnswered();
+}
+
+function shuffleQuestions() {
+
+    for (
+        let i = questionOrder.length - 1;
+        i > 0;
+        i--
+    ) {
+
+        const j =
+            Math.floor(Math.random() * (i + 1));
+
+        [
+            questionOrder[i],
+            questionOrder[j]
+        ] = [
+            questionOrder[j],
+            questionOrder[i]
+        ];
+    }
+
+    resetExam();
+    renderQuiz();
+}
+
+tierFilter.addEventListener("change", () => {
+    resetExam();
+    renderQuiz();
+});
+
+categoryFilter.addEventListener("change", () => {
+    resetExam();
+    renderQuiz();
+});
+
+renderQuiz();
+
+</script>
+
+</body>
+</html>
