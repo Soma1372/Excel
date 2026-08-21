@@ -54,6 +54,10 @@ button{
     cursor:pointer;
 }
 
+a{
+    color:inherit;
+}
+
 header{
     text-align:center;
     padding:45px 20px 30px;
@@ -364,6 +368,8 @@ textarea{
     border:1px solid var(--border);
     border-radius:8px;
     padding:9px 13px;
+    text-decoration:none;
+    display:inline-block;
 }
 
 .btn:hover{
@@ -395,6 +401,13 @@ textarea{
 .btn.red{
     background:rgba(251,113,133,.12);
     border-color:var(--red);
+}
+
+.listen-btn{
+    background:linear-gradient(135deg,#2563eb,#38bdf8);
+    border-color:transparent;
+    color:white;
+    font-weight:bold;
 }
 
 .study-note{
@@ -574,48 +587,21 @@ footer{
 <body>
 
 <div class="topbar">
-
 <div class="topbar-inner">
 
-<button onclick="showSection('home')">
-Home
-</button>
+<button onclick="showSection('home')">Home</button>
+<button onclick="showSection('general')">I. General</button>
+<button onclick="showSection('scores')">II. Score Lab</button>
+<button onclick="showSection('reading')">III-A. Reading</button>
+<button onclick="showSection('essays')">III-B. Essays</button>
+<button onclick="showSection('results')">Results</button>
 
-<button onclick="showSection('general')">
-I. General
-</button>
+<button onclick="newExam()">New Exam</button>
+<button onclick="saveWork()">Save</button>
 
-<button onclick="showSection('scores')">
-II. Score Lab
-</button>
+<button class="primary" onclick="gradeAll()">Grade All</button>
 
-<button onclick="showSection('reading')">
-III-A. Reading
-</button>
-
-<button onclick="showSection('essays')">
-III-B. Essays
-</button>
-
-<button onclick="showSection('results')">
-Results
-</button>
-
-<button onclick="newExam()">
-New Exam
-</button>
-
-<button onclick="saveWork()">
-Save
-</button>
-
-<button class="primary" onclick="gradeAll()">
-Grade All
-</button>
-
-<div class="timer" id="timer">
-90:00
-</div>
+<div class="timer" id="timer">90:00</div>
 
 </div>
 </div>
@@ -623,9 +609,7 @@ Grade All
 
 <header>
 
-<h1>
-Music History Placement Simulator
-</h1>
+<h1>Music History Placement Simulator</h1>
 
 <p>
 Graduate placement practice covering Western classical music
@@ -637,9 +621,7 @@ from 1700 to the present.
 
 <main>
 
-<!-- =====================================================
-HOME
-===================================================== -->
+<!-- HOME -->
 
 <section id="home" class="section active">
 
@@ -647,13 +629,11 @@ HOME
 
 <div class="mode-card selected" id="studyCard">
 
-<h3>
-Study Mode
-</h3>
+<h3>Study Mode</h3>
 
 <p>
-Practice at your own pace. Every question has its own
-feedback and Show Answer buttons.
+Practice at your own pace. Every question has individual feedback,
+answer reveal, and score-listening links.
 </p>
 
 <button class="btn primary" onclick="setMode('study')">
@@ -665,9 +645,7 @@ Study Mode
 
 <div class="mode-card" id="examCard">
 
-<h3>
-90-Minute Mock Exam
-</h3>
+<h3>90-Minute Mock Exam</h3>
 
 <p>
 Random 40 general questions + random 15 score excerpts +
@@ -683,13 +661,11 @@ Start Mock Exam
 
 <div class="mode-card" id="scoreCard">
 
-<h3>
-40-Excerpt Score Lab
-</h3>
+<h3>40-Excerpt Score Lab</h3>
 
 <p>
-Practice all forty high-yield repertoire examples.
-You can check each one individually and rate yourself.
+Practice all forty high-yield repertoire examples with
+Listen, Feedback, Show Answer, and Self-Rate.
 </p>
 
 <button class="btn" onclick="practiceAllScores()">
@@ -703,66 +679,30 @@ Practice All 40
 
 <div class="study-note">
 
-<strong>How to use the score section</strong>
+<strong>Score-ID method</strong>
 
 <br><br>
 
-For every excerpt, train this chain:
-
-<br><br>
-
-<strong>
 Composer → Genre → Date → Texture → Form/process →
-one or two identifying stylistic features
-</strong>
+one or two identifying stylistic features.
 
 <br><br>
 
-In Study Mode, use <strong>Feedback</strong> before
-<strong>Show Answer</strong> whenever possible.
-
-</div>
-
-
-<div class="card">
-
-<h3>
-Recommended score-ID answer format
-</h3>
-
-<p>
-<strong>Composer:</strong> Hector Berlioz
-</p>
-
-<p>
-<strong>Genre:</strong> Program symphony
-</p>
-
-<p>
-<strong>Date:</strong> c. 1830
-</p>
-
-<p>
-<strong>Evidence:</strong> recurring idée fixe, expanded orchestration,
-programmatic transformation of the theme.
-</p>
+The <strong>▶ Listen</strong> button opens a YouTube search
+for the exact work in a new tab.
 
 </div>
 
 </section>
 
 
-<!-- =====================================================
-SECTION I
-===================================================== -->
+<!-- SECTION I -->
 
 <section id="general" class="section">
 
 <div class="section-title">
 
-<h2>
-Section I — General Knowledge
-</h2>
+<h2>Section I — General Knowledge</h2>
 
 <p>
 40 questions: exactly 20 from 1700–1900 and
@@ -801,7 +741,6 @@ Section I — General Knowledge
 
 </div>
 
-
 <div class="progress">
 <div id="gProgress"></div>
 </div>
@@ -815,17 +754,13 @@ Grade Section I
 </section>
 
 
-<!-- =====================================================
-SECTION II
-===================================================== -->
+<!-- SECTION II -->
 
 <section id="scores" class="section">
 
 <div class="section-title">
 
-<h2>
-Section II — Score Identification & Discussion
-</h2>
+<h2>Section II — Score Identification & Discussion</h2>
 
 <p id="scoreModeDescription">
 40-excerpt practice pool.
@@ -836,11 +771,10 @@ Section II — Score Identification & Discussion
 
 <div class="study-note">
 
-These exercises are based on high-yield repertoire from the anthology
-list and concepts emphasized in the test bank.
+Each score card now includes a <strong>▶ Listen</strong> button.
 
-For modern copyrighted repertoire, the exercise uses descriptive
-score/notational clues rather than copying Oxford anthology pages.
+For older and newer repertoire alike, the button opens a YouTube
+search for the exact composer/work in a new tab.
 
 </div>
 
@@ -904,17 +838,13 @@ Grade Displayed Score Questions
 </section>
 
 
-<!-- =====================================================
-READING
-===================================================== -->
+<!-- READING -->
 
 <section id="reading" class="section">
 
 <div class="section-title">
 
-<h2>
-Section III-A — Reading Comprehension
-</h2>
+<h2>Section III-A — Reading Comprehension</h2>
 
 <p>
 Answer according to the passage.
@@ -925,9 +855,7 @@ Answer according to the passage.
 
 <div class="reading">
 
-<h3>
-Historical Repertory and Musical Progress
-</h3>
+<h3>Historical Repertory and Musical Progress</h3>
 
 <p>
 During much of the eighteenth century, courts, churches,
@@ -941,25 +869,21 @@ During the nineteenth century, however, older music assumed an
 increasingly important role in concert life. Conservatories trained
 professional performers, concert institutions expanded, and critics
 increasingly described certain compositions as lasting artistic
-monuments. Musicians therefore encountered music by deceased composers
-with greater regularity.
+monuments.
 </p>
 
 <p>
 This change created a challenge for living composers. A symphonist
 writing after Beethoven confronted not only the technical problem of
 creating a new symphony but also the cultural authority of Beethoven's
-symphonies. The past could function simultaneously as a model and as
-a burden.
+symphonies.
 </p>
 
 <p>
 Different composers responded in different ways. Some treated
 historical styles and genres as sources of continuity. Others emphasized
 innovation, arguing that the history of music demonstrated the necessity
-of continued development. Nineteenth- and twentieth-century musical
-culture repeatedly returned to this tension between preservation
-and change.
+of continued development.
 </p>
 
 </div>
@@ -973,17 +897,13 @@ Grade Reading
 </section>
 
 
-<!-- =====================================================
-ESSAYS
-===================================================== -->
+<!-- ESSAYS -->
 
 <section id="essays" class="section">
 
 <div class="section-title">
 
-<h2>
-Section III-B — Reflective Essays
-</h2>
+<h2>Section III-B — Reflective Essays</h2>
 
 <p>
 Practice expressing your own musical and historical experience.
@@ -994,9 +914,7 @@ Practice expressing your own musical and historical experience.
 
 <div class="card essay">
 
-<h3>
-Essay 1 — Through 1900
-</h3>
+<h3>Essay 1 — Through 1900</h3>
 
 <p>
 Reflect on your experience studying, performing, listening to,
@@ -1023,9 +941,7 @@ oninput="wordCount('essay1','wc1')"></textarea>
 
 <div class="card essay">
 
-<h3>
-Essay 2 — 1900 to the Present
-</h3>
+<h3>Essay 2 — 1900 to the Present</h3>
 
 <p>
 Discuss at least two composers or works and explain how they challenged
@@ -1047,23 +963,17 @@ oninput="wordCount('essay2','wc2')"></textarea>
 </section>
 
 
-<!-- =====================================================
-RESULTS
-===================================================== -->
+<!-- RESULTS -->
 
 <section id="results" class="section">
 
 <div class="section-title">
-<h2>
-Results
-</h2>
+<h2>Results</h2>
 </div>
 
 <div id="resultBox" class="result-box">
 
-<h3>
-No graded attempt yet.
-</h3>
+<h3>No graded attempt yet.</h3>
 
 <p>
 Complete the sections and click Grade All.
@@ -1087,25 +997,18 @@ Music History Graduate Placement Practice
 
 <script>
 
-/* =========================================================
-GLOBAL STATE
-========================================================= */
+/* GLOBAL STATE */
 
 let mode = "study";
-
 let secondsRemaining = 90 * 60;
 let timerInterval = null;
 
 let selectedGeneral = [];
 let activeScores = [];
-
 let scoreRatings = {};
 
 
-
-/* =========================================================
-UTILITIES
-========================================================= */
+/* UTILITIES */
 
 function shuffle(array){
 
@@ -1113,18 +1016,10 @@ function shuffle(array){
 
     for(let i=result.length-1;i>0;i--){
 
-        const j =
-        Math.floor(
-            Math.random()*(i+1)
-        );
+        const j = Math.floor(Math.random()*(i+1));
 
-        [
-            result[i],
-            result[j]
-        ] = [
-            result[j],
-            result[i]
-        ];
+        [result[i],result[j]] =
+        [result[j],result[i]];
 
     }
 
@@ -1146,22 +1041,15 @@ function normalize(text){
 
 function accepts(value,answers){
 
-    const v =
-    normalize(value);
+    const v = normalize(value);
 
-    if(!v){
-        return false;
-    }
+    if(!v) return false;
 
     return answers.some(function(answer){
 
-        const a =
-        normalize(answer);
+        const a = normalize(answer);
 
-        return (
-            v.includes(a) ||
-            a.includes(v)
-        );
+        return v.includes(a) || a.includes(v);
 
     });
 
@@ -1170,8 +1058,7 @@ function accepts(value,answers){
 
 function keywordHits(text,keywords){
 
-    const value =
-    normalize(text);
+    const value = normalize(text);
 
     return keywords.filter(function(keyword){
 
@@ -1204,10 +1091,15 @@ function showSection(id){
 }
 
 
+function getListenLink(title){
 
-/* =========================================================
-MODE / TIMER
-========================================================= */
+    return "https://www.youtube.com/results?search_query=" +
+    encodeURIComponent(title);
+
+}
+
+
+/* MODE / TIMER */
 
 function setMode(newMode){
 
@@ -1250,13 +1142,10 @@ function setMode(newMode){
 function startTimer(){
 
     if(timerInterval){
-
         clearInterval(timerInterval);
-
     }
 
-    secondsRemaining =
-    90 * 60;
+    secondsRemaining = 90 * 60;
 
     renderTimer();
 
@@ -1289,13 +1178,11 @@ function stopTimer(){
     if(timerInterval){
 
         clearInterval(timerInterval);
-
         timerInterval = null;
 
     }
 
-    secondsRemaining =
-    90 * 60;
+    secondsRemaining = 90 * 60;
 
     renderTimer();
 
@@ -1305,9 +1192,7 @@ function stopTimer(){
 function renderTimer(){
 
     const minutes =
-    Math.floor(
-        secondsRemaining/60
-    );
+    Math.floor(secondsRemaining/60);
 
     const seconds =
     secondsRemaining%60;
@@ -1321,14 +1206,9 @@ function renderTimer(){
 }
 
 
-
-/* =========================================================
-GENERAL QUESTION BANK
-========================================================= */
+/* GENERAL QUESTION BANK */
 
 const generalBank = [
-
-/* ---------------- 1700–1900 ---------------- */
 
 {
 era:"pre",
@@ -1336,12 +1216,7 @@ tier:1,
 category:"Genre",
 type:"mc",
 q:"Which genre is best described as a miniature opera?",
-choices:[
-"Serenata",
-"Oratorio",
-"Symphonic poem",
-"Operetta"
-],
+choices:["Serenata","Oratorio","Symphonic poem","Operetta"],
 answer:0,
 explanation:"Serenata is the term used in the test-bank material for a miniature opera."
 },
@@ -1352,12 +1227,7 @@ tier:1,
 category:"Opera",
 type:"mc",
 q:"Which term refers to serious Italian opera?",
-choices:[
-"Opera buffa",
-"Opera seria",
-"Operetta",
-"Singspiel"
-],
+choices:["Opera buffa","Opera seria","Operetta","Singspiel"],
 answer:1,
 explanation:"Opera seria means serious Italian opera."
 },
@@ -1368,9 +1238,7 @@ tier:1,
 category:"Opera",
 type:"fill",
 q:"A short comic opera performed between acts of an opera seria is called an __________.",
-accepted:[
-"intermezzo"
-],
+accepted:["intermezzo"],
 answerText:"intermezzo",
 explanation:"Pergolesi's La serva padrona is the central example."
 },
@@ -1381,12 +1249,7 @@ tier:1,
 category:"Genre",
 type:"mc",
 q:"Which genre combines popular tunes with spoken dialogue?",
-choices:[
-"Ballad opera",
-"Grand opéra",
-"Opera seria",
-"Oratorio"
-],
+choices:["Ballad opera","Grand opéra","Opera seria","Oratorio"],
 answer:0,
 explanation:"Ballad opera combines familiar tunes with spoken dialogue."
 },
@@ -1397,9 +1260,7 @@ tier:1,
 category:"Genre",
 type:"fill",
 q:"The German-language operatic genre normally containing spoken dialogue is called __________.",
-accepted:[
-"singspiel"
-],
+accepted:["singspiel"],
 answerText:"Singspiel",
 explanation:"Singspiel combines spoken dialogue with sung numbers."
 },
@@ -1410,10 +1271,7 @@ tier:1,
 category:"Form",
 type:"fill",
 q:"An aria in A–B–A form in which the opening section returns is a __________ aria.",
-accepted:[
-"da capo",
-"da capo aria"
-],
+accepted:["da capo","da capo aria"],
 answerText:"da capo aria",
 explanation:"Da capo means to return to the beginning."
 },
@@ -1424,12 +1282,7 @@ tier:1,
 category:"Form",
 type:"mc",
 q:"Which form repeats the same music for each stanza?",
-choices:[
-"Through-composed",
-"Strophic",
-"Sonata",
-"Rondo"
-],
+choices:["Through-composed","Strophic","Sonata","Rondo"],
 answer:1,
 explanation:"Schubert's Heidenröslein is a central strophic example."
 },
@@ -1440,12 +1293,7 @@ tier:1,
 category:"Form",
 type:"mc",
 q:"Schubert's Erlkönig is an important example of:",
-choices:[
-"Strophic form",
-"Through-composed form",
-"Ritornello form",
-"Da capo form"
-],
+choices:["Strophic form","Through-composed form","Ritornello form","Da capo form"],
 answer:1,
 explanation:"The music changes continuously with the unfolding text."
 },
@@ -1456,10 +1304,7 @@ tier:1,
 category:"Form",
 type:"fill",
 q:"The three main sections of sonata form are exposition, development, and __________.",
-accepted:[
-"recapitulation",
-"recap"
-],
+accepted:["recapitulation","recap"],
 answerText:"recapitulation",
 explanation:"The recapitulation returns the principal material and restores the tonic."
 },
@@ -1470,12 +1315,7 @@ tier:1,
 category:"Form",
 type:"mc",
 q:"Which section of sonata form usually contains the greatest harmonic instability?",
-choices:[
-"Exposition",
-"Development",
-"Recapitulation",
-"Introduction"
-],
+choices:["Exposition","Development","Recapitulation","Introduction"],
 answer:1,
 explanation:"The development is normally the most modulatory and unstable section."
 },
@@ -1486,12 +1326,7 @@ tier:1,
 category:"Form",
 type:"mc",
 q:"Which form alternates a recurring refrain with contrasting episodes?",
-choices:[
-"Rondo",
-"Fugue",
-"Binary",
-"Passacaglia"
-],
+choices:["Rondo","Fugue","Binary","Passacaglia"],
 answer:0,
 explanation:"A common rondo outline is A–B–A–C–A."
 },
@@ -1502,9 +1337,7 @@ tier:2,
 category:"Baroque",
 type:"fill",
 q:"The Baroque concerto form alternating recurring orchestral material with solo episodes is called __________ form.",
-accepted:[
-"ritornello"
-],
+accepted:["ritornello"],
 answerText:"ritornello",
 explanation:"Ritornello form is strongly associated with the Baroque concerto."
 },
@@ -1515,12 +1348,7 @@ tier:2,
 category:"Counterpoint",
 type:"mc",
 q:"In a fugue, which section normally does not contain a complete statement of the subject?",
-choices:[
-"Exposition",
-"Answer",
-"Episode",
-"Stretto"
-],
+choices:["Exposition","Answer","Episode","Stretto"],
 answer:2,
 explanation:"Episodes provide contrast between complete subject statements."
 },
@@ -1531,9 +1359,7 @@ tier:2,
 category:"Counterpoint",
 type:"fill",
 q:"Overlapping fugue-subject entries occurring increasingly close together are called __________.",
-accepted:[
-"stretto"
-],
+accepted:["stretto"],
 answerText:"stretto",
 explanation:"Stretto compresses the distance between subject entries."
 },
@@ -1544,12 +1370,7 @@ tier:1,
 category:"Composer",
 type:"mc",
 q:"Which composer is identified in the test bank as the 'Father of the Symphony'?",
-choices:[
-"Mozart",
-"Haydn",
-"Beethoven",
-"Schubert"
-],
+choices:["Mozart","Haydn","Beethoven","Schubert"],
 answer:1,
 explanation:"Franz Joseph Haydn."
 },
@@ -1560,10 +1381,7 @@ tier:1,
 category:"Composer",
 type:"fill",
 q:"The composer of Symphonie fantastique is Hector __________.",
-accepted:[
-"berlioz",
-"hector berlioz"
-],
+accepted:["berlioz","hector berlioz"],
 answerText:"Berlioz",
 explanation:"Berlioz's Symphonie fantastique is a central example of Romantic program music."
 },
@@ -1574,10 +1392,7 @@ tier:2,
 category:"Program Music",
 type:"fill",
 q:"The recurring theme representing the beloved in Symphonie fantastique is the __________.",
-accepted:[
-"idee fixe",
-"idée fixe"
-],
+accepted:["idee fixe","idée fixe"],
 answerText:"idée fixe",
 explanation:"Berlioz called the recurring obsession-theme the idée fixe."
 },
@@ -1588,12 +1403,7 @@ tier:2,
 category:"Program Music",
 type:"mc",
 q:"Which composer is most closely associated with the symphonic poem?",
-choices:[
-"Liszt",
-"Schubert",
-"Rossini",
-"Haydn"
-],
+choices:["Liszt","Schubert","Rossini","Haydn"],
 answer:0,
 explanation:"Liszt cultivated the one-movement programmatic orchestral genre."
 },
@@ -1604,10 +1414,7 @@ tier:2,
 category:"Form",
 type:"fill",
 q:"Liszt's technique of altering a central theme across a composition is called thematic __________.",
-accepted:[
-"transformation",
-"thematic transformation"
-],
+accepted:["transformation","thematic transformation"],
 answerText:"thematic transformation",
 explanation:"Les préludes is the central example."
 },
@@ -1618,12 +1425,7 @@ tier:2,
 category:"Opera",
 type:"mc",
 q:"In a cantabile–cabaletta structure, which section is slower and more lyrical?",
-choices:[
-"Cabaletta",
-"Cantabile",
-"Tempo di mezzo",
-"Stretta"
-],
+choices:["Cabaletta","Cantabile","Tempo di mezzo","Stretta"],
 answer:1,
 explanation:"Cantabile is the slower lyrical section."
 },
@@ -1634,9 +1436,7 @@ tier:2,
 category:"Opera",
 type:"fill",
 q:"The faster, often more virtuosic section following the cantabile is the __________.",
-accepted:[
-"cabaletta"
-],
+accepted:["cabaletta"],
 answerText:"cabaletta",
 explanation:"The cabaletta provides the faster conclusion."
 },
@@ -1647,12 +1447,7 @@ tier:2,
 category:"Opera",
 type:"mc",
 q:"What normally occurs during the tempo di mezzo of a scena ed aria?",
-choices:[
-"A dramatic interruption or plot change",
-"The overture begins",
-"A fugue begins",
-"The entire aria repeats"
-],
+choices:["A dramatic interruption or plot change","The overture begins","A fugue begins","The entire aria repeats"],
 answer:0,
 explanation:"The tempo di mezzo changes the dramatic situation before the cabaletta."
 },
@@ -1663,9 +1458,7 @@ tier:2,
 category:"Opera",
 type:"fill",
 q:"A Rossinian ensemble of escalating comic confusion is called an __________.",
-accepted:[
-"imbroglio"
-],
+accepted:["imbroglio"],
 answerText:"imbroglio",
 explanation:"The imbroglio is a climactic ensemble of confusion."
 },
@@ -1676,12 +1469,7 @@ tier:1,
 category:"Genre",
 type:"mc",
 q:"Which genre is a German Romantic art song, usually for solo voice and piano?",
-choices:[
-"Lied",
-"Oratorio",
-"Operetta",
-"Symphonic poem"
-],
+choices:["Lied","Oratorio","Operetta","Symphonic poem"],
 answer:0,
 explanation:"Schubert and Schumann are central Lied composers."
 },
@@ -1692,10 +1480,7 @@ tier:1,
 category:"Genre",
 type:"fill",
 q:"A connected group of songs intended to be performed together is called a song __________.",
-accepted:[
-"cycle",
-"song cycle"
-],
+accepted:["cycle","song cycle"],
 answerText:"song cycle",
 explanation:"Examples include Die schöne Müllerin and Dichterliebe."
 },
@@ -1706,12 +1491,7 @@ tier:2,
 category:"Opera",
 type:"mc",
 q:"Which genre is associated with Meyerbeer, five acts, ballet, chorus, large orchestra, and spectacular staging?",
-choices:[
-"Grand opéra",
-"Operetta",
-"Verismo",
-"Singspiel"
-],
+choices:["Grand opéra","Operetta","Verismo","Singspiel"],
 answer:0,
 explanation:"Grand opéra was a major nineteenth-century Parisian genre."
 },
@@ -1722,12 +1502,7 @@ tier:2,
 category:"Opera",
 type:"mc",
 q:"Which genre is associated with Offenbach, Johann Strauss Jr., and Gilbert and Sullivan?",
-choices:[
-"Operetta",
-"Opera seria",
-"Grand opéra",
-"Oratorio"
-],
+choices:["Operetta","Opera seria","Grand opéra","Oratorio"],
 answer:0,
 explanation:"Operetta is a shorter comic theatrical genre."
 },
@@ -1738,12 +1513,7 @@ tier:2,
 category:"Opera",
 type:"mc",
 q:"Cavalleria rusticana and Pagliacci are associated with:",
-choices:[
-"Bel canto",
-"Verismo",
-"Opera seria",
-"Singspiel"
-],
+choices:["Bel canto","Verismo","Opera seria","Singspiel"],
 answer:1,
 explanation:"Verismo emphasizes realism, ordinary people, and intense personal conflict."
 },
@@ -1754,10 +1524,7 @@ tier:2,
 category:"Wagner",
 type:"fill",
 q:"Wagner's term for a recurring musical idea associated with a person, object, or concept is __________.",
-accepted:[
-"leitmotif",
-"leitmotiv"
-],
+accepted:["leitmotif","leitmotiv"],
 answerText:"Leitmotif",
 explanation:"Leitmotifs are central to Wagnerian dramatic technique."
 },
@@ -1768,9 +1535,7 @@ tier:2,
 category:"Wagner",
 type:"fill",
 q:"Wagner's term for the total work of art is __________.",
-accepted:[
-"gesamtkunstwerk"
-],
+accepted:["gesamtkunstwerk"],
 answerText:"Gesamtkunstwerk",
 explanation:"The concept integrates music, poetry, drama, staging, and related arts."
 },
@@ -1781,12 +1546,7 @@ tier:2,
 category:"Nationalism",
 type:"mc",
 q:"Má Vlast is a cycle of symphonic poems by:",
-choices:[
-"Dvořák",
-"Smetana",
-"Musorgsky",
-"Liszt"
-],
+choices:["Dvořák","Smetana","Musorgsky","Liszt"],
 answer:1,
 explanation:"Smetana's Má Vlast is a central Czech nationalist work."
 },
@@ -1797,12 +1557,7 @@ tier:2,
 category:"Genre",
 type:"mc",
 q:"A concerto grosso is principally based on contrast between:",
-choices:[
-"A small solo group and a larger ensemble",
-"Two solo singers",
-"A solo piano and solo violin only",
-"Two choruses"
-],
+choices:["A small solo group and a larger ensemble","Two solo singers","A solo piano and solo violin only","Two choruses"],
 answer:0,
 explanation:"The concertino contrasts with the larger ripieno."
 },
@@ -1813,9 +1568,7 @@ tier:2,
 category:"Performance",
 type:"fill",
 q:"The Romantic performance practice involving flexible rhythmic freedom is called __________.",
-accepted:[
-"rubato"
-],
+accepted:["rubato"],
 answerText:"rubato",
 explanation:"Rubato is particularly associated with Romantic performance practice."
 },
@@ -1826,14 +1579,7 @@ tier:3,
 category:"Aesthetics",
 type:"short",
 q:"In 2–3 sentences, distinguish program music from absolute music.",
-keywords:[
-"program",
-"extramusical",
-"narrative",
-"story",
-"absolute",
-"without"
-],
+keywords:["program","extramusical","narrative","story","absolute","without"],
 answerText:"Program music has an explicit extramusical narrative or idea. Absolute music is understood without an explicit external program.",
 explanation:"Mention an extramusical program or narrative for program music and the absence of such an explicit program for absolute music."
 },
@@ -1844,22 +1590,10 @@ tier:3,
 category:"Nationalism",
 type:"short",
 q:"Give two ways nineteenth-century composers could suggest a national musical identity.",
-keywords:[
-"folk",
-"dance",
-"language",
-"legend",
-"history",
-"song",
-"myth",
-"national"
-],
+keywords:["folk","dance","language","legend","history","song","myth","national"],
 answerText:"Examples: folk-song quotation, national dances, language, historical legends, myths, or other stylized national markers.",
 explanation:"Any two appropriate mechanisms are sufficient."
 },
-
-
-/* ---------------- 1900–PRESENT ---------------- */
 
 {
 era:"post",
@@ -1867,12 +1601,7 @@ tier:1,
 category:"Modernism",
 type:"mc",
 q:"Which composer is most closely associated with musical Expressionism?",
-choices:[
-"Debussy",
-"Schoenberg",
-"Haydn",
-"Offenbach"
-],
+choices:["Debussy","Schoenberg","Haydn","Offenbach"],
 answer:1,
 explanation:"Schoenberg and the Second Viennese School are central to Expressionism."
 },
@@ -1883,12 +1612,7 @@ tier:1,
 category:"Modernism",
 type:"mc",
 q:"Which composer is most closely associated with musical Impressionism in the test bank?",
-choices:[
-"Debussy",
-"Verdi",
-"Brahms",
-"Shostakovich"
-],
+choices:["Debussy","Verdi","Brahms","Shostakovich"],
 answer:0,
 explanation:"Claude Debussy."
 },
@@ -1899,10 +1623,7 @@ tier:2,
 category:"Harmony",
 type:"fill",
 q:"A scale consisting entirely of whole steps is the __________ scale.",
-accepted:[
-"whole tone",
-"whole-tone"
-],
+accepted:["whole tone","whole-tone"],
 answerText:"whole-tone scale",
 explanation:"Debussy's Voiles prominently uses whole-tone material."
 },
@@ -1913,9 +1634,7 @@ tier:2,
 category:"Harmony",
 type:"fill",
 q:"A scale alternating whole and half steps is the __________ scale.",
-accepted:[
-"octatonic"
-],
+accepted:["octatonic"],
 answerText:"octatonic scale",
 explanation:"The octatonic collection is important in early twentieth-century modernism."
 },
@@ -1926,12 +1645,7 @@ tier:2,
 category:"Modernism",
 type:"mc",
 q:"Which work is most strongly associated with Primitivism?",
-choices:[
-"The Rite of Spring",
-"Pierrot lunaire",
-"Einstein on the Beach",
-"Nixon in China"
-],
+choices:["The Rite of Spring","Pierrot lunaire","Einstein on the Beach","Nixon in China"],
 answer:0,
 explanation:"Stravinsky's The Rite of Spring."
 },
@@ -1942,10 +1656,7 @@ tier:2,
 category:"Schoenberg",
 type:"fill",
 q:"Schoenberg's speech-song technique in Pierrot lunaire is called __________.",
-accepted:[
-"sprechstimme",
-"sprechgesang"
-],
+accepted:["sprechstimme","sprechgesang"],
 answerText:"Sprechstimme",
 explanation:"Sprechstimme lies between speaking and singing."
 },
@@ -1956,9 +1667,7 @@ tier:2,
 category:"Schoenberg",
 type:"fill",
 q:"The technique in which changing tone colors function as part of melodic organization is called __________.",
-accepted:[
-"klangfarbenmelodie"
-],
+accepted:["klangfarbenmelodie"],
 answerText:"Klangfarbenmelodie",
 explanation:"The concept treats changing timbre as an organizing musical parameter."
 },
@@ -1969,15 +1678,7 @@ tier:3,
 category:"Harmony",
 type:"short",
 q:"In 2–3 sentences, distinguish atonality from twelve-tone composition.",
-keywords:[
-"atonal",
-"hierarchy",
-"tonic",
-"twelve",
-"row",
-"ordered",
-"pitch"
-],
+keywords:["atonal","hierarchy","tonic","twelve","row","ordered","pitch"],
 answerText:"Atonality removes functional tonal hierarchy. Twelve-tone composition is a specific method using an ordered row of the twelve pitch classes.",
 explanation:"The terms are related but not interchangeable."
 },
@@ -1988,9 +1689,7 @@ tier:2,
 category:"Twelve-Tone",
 type:"fill",
 q:"The original ordering of a twelve-tone row is called the __________ form.",
-accepted:[
-"prime"
-],
+accepted:["prime"],
 answerText:"prime",
 explanation:"Prime is the original row form."
 },
@@ -2001,12 +1700,7 @@ tier:2,
 category:"Twelve-Tone",
 type:"mc",
 q:"A twelve-tone row presented backwards is:",
-choices:[
-"Inversion",
-"Retrograde",
-"Prime",
-"Aggregate"
-],
+choices:["Inversion","Retrograde","Prime","Aggregate"],
 answer:1,
 explanation:"Retrograde reverses the ordering."
 },
@@ -2017,12 +1711,7 @@ tier:2,
 category:"Twelve-Tone",
 type:"mc",
 q:"A row that is both inverted and backwards is:",
-choices:[
-"Prime",
-"Retrograde",
-"Retrograde inversion",
-"Aggregate"
-],
+choices:["Prime","Retrograde","Retrograde inversion","Aggregate"],
 answer:2,
 explanation:"Retrograde inversion combines both operations."
 },
@@ -2033,12 +1722,7 @@ tier:2,
 category:"Modernism",
 type:"mc",
 q:"Which three composers form the Second Viennese School?",
-choices:[
-"Schoenberg, Berg, Webern",
-"Mahler, Strauss, Schoenberg",
-"Debussy, Ravel, Satie",
-"Stravinsky, Bartók, Ives"
-],
+choices:["Schoenberg, Berg, Webern","Mahler, Strauss, Schoenberg","Debussy, Ravel, Satie","Stravinsky, Bartók, Ives"],
 answer:0,
 explanation:"Arnold Schoenberg, Alban Berg, and Anton Webern."
 },
@@ -2049,12 +1733,7 @@ tier:2,
 category:"Neoclassicism",
 type:"mc",
 q:"Which Stravinsky anthology work strongly represents his Neoclassical period?",
-choices:[
-"Octet for Wind Instruments",
-"The Rite of Spring",
-"Firebird",
-"Petrushka"
-],
+choices:["Octet for Wind Instruments","The Rite of Spring","Firebird","Petrushka"],
 answer:0,
 explanation:"The Octet is a central Neoclassical Stravinsky example."
 },
@@ -2065,10 +1744,7 @@ tier:2,
 category:"Politics",
 type:"fill",
 q:"The official arts doctrine of the Soviet Union was Socialist __________.",
-accepted:[
-"realism",
-"socialist realism"
-],
+accepted:["realism","socialist realism"],
 answerText:"Socialist Realism",
 explanation:"Socialist Realism linked art to Soviet political and social ideals."
 },
@@ -2079,12 +1755,7 @@ tier:2,
 category:"Politics",
 type:"mc",
 q:"Which Shostakovich work restored him to official Soviet favor?",
-choices:[
-"The Nose",
-"Fifth Symphony",
-"Lady Macbeth of the Mtsensk District",
-"First Symphony"
-],
+choices:["The Nose","Fifth Symphony","Lady Macbeth of the Mtsensk District","First Symphony"],
 answer:1,
 explanation:"The Fifth Symphony was central to Shostakovich's political rehabilitation."
 },
@@ -2095,12 +1766,7 @@ tier:2,
 category:"Politics",
 type:"mc",
 q:"Alexander Nevsky was originally:",
-choices:[
-"A film with music by Prokofiev",
-"An opera by Shostakovich",
-"A symphony by Prokofiev",
-"A ballet by Stravinsky"
-],
+choices:["A film with music by Prokofiev","An opera by Shostakovich","A symphony by Prokofiev","A ballet by Stravinsky"],
 answer:0,
 explanation:"Prokofiev later adapted the film music into a cantata."
 },
@@ -2111,10 +1777,7 @@ tier:2,
 category:"Experimentalism",
 type:"fill",
 q:"The composer who invented the prepared piano was John __________.",
-accepted:[
-"cage",
-"john cage"
-],
+accepted:["cage","john cage"],
 answerText:"John Cage",
 explanation:"Cage developed the prepared piano."
 },
@@ -2125,12 +1788,7 @@ tier:2,
 category:"Experimentalism",
 type:"mc",
 q:"Music whose realization depends partly on chance operations is called:",
-choices:[
-"Aleatoric music",
-"Verismo",
-"Bel canto",
-"Grand opéra"
-],
+choices:["Aleatoric music","Verismo","Bel canto","Grand opéra"],
 answer:0,
 explanation:"Aleatoric or chance procedures are associated with postwar experimentalism."
 },
@@ -2141,12 +1799,7 @@ tier:2,
 category:"Experimentalism",
 type:"mc",
 q:"John Cage's 4'33'' is famous because:",
-choices:[
-"The performer produces no intentional sound",
-"It uses only percussion",
-"It is a twelve-tone opera",
-"It is written for prepared orchestra"
-],
+choices:["The performer produces no intentional sound","It uses only percussion","It is a twelve-tone opera","It is written for prepared orchestra"],
 answer:0,
 explanation:"The work directs attention toward environmental and unintended sound."
 },
@@ -2157,10 +1810,7 @@ tier:3,
 category:"Serialism",
 type:"fill",
 q:"The serialization of musical parameters beyond pitch is called total __________.",
-accepted:[
-"serialism",
-"total serialism"
-],
+accepted:["serialism","total serialism"],
 answerText:"total serialism",
 explanation:"Total serialism extends serial procedures to rhythm, dynamics, and other parameters."
 },
@@ -2171,12 +1821,7 @@ tier:3,
 category:"Serialism",
 type:"mc",
 q:"Which American composer is strongly associated with total serialism and mathematical approaches?",
-choices:[
-"Milton Babbitt",
-"John Cage",
-"Philip Glass",
-"Aaron Copland"
-],
+choices:["Milton Babbitt","John Cage","Philip Glass","Aaron Copland"],
 answer:0,
 explanation:"Milton Babbitt."
 },
@@ -2187,12 +1832,7 @@ tier:2,
 category:"Electronic Music",
 type:"mc",
 q:"Musique concrète is principally associated with:",
-choices:[
-"Recorded real-world sounds",
-"Only synthesized electronic sounds",
-"Prepared piano",
-"Romantic orchestration"
-],
+choices:["Recorded real-world sounds","Only synthesized electronic sounds","Prepared piano","Romantic orchestration"],
 answer:0,
 explanation:"Musique concrète manipulates recorded real-world sound."
 },
@@ -2203,12 +1843,7 @@ tier:2,
 category:"Electronic Music",
 type:"mc",
 q:"Elektronische Musik was initially associated principally with:",
-choices:[
-"New electronically synthesized sounds",
-"Recorded environmental sounds only",
-"Prepared piano",
-"Folk-song transcription"
-],
+choices:["New electronically synthesized sounds","Recorded environmental sounds only","Prepared piano","Folk-song transcription"],
 answer:0,
 explanation:"The test bank contrasts synthesized sound with musique concrète."
 },
@@ -2219,10 +1854,7 @@ tier:2,
 category:"Minimalism",
 type:"fill",
 q:"The process in which repeating patterns gradually move rhythmically out of sync is called __________.",
-accepted:[
-"phasing",
-"phase"
-],
+accepted:["phasing","phase"],
 answerText:"phasing",
 explanation:"Steve Reich is closely associated with phasing."
 },
@@ -2233,12 +1865,7 @@ tier:2,
 category:"Minimalism",
 type:"mc",
 q:"Which composer is associated with additive structure?",
-choices:[
-"Philip Glass",
-"Pierre Boulez",
-"Elliott Carter",
-"Alban Berg"
-],
+choices:["Philip Glass","Pierre Boulez","Elliott Carter","Alban Berg"],
 answer:0,
 explanation:"The test bank associates additive structure with Philip Glass."
 },
@@ -2249,12 +1876,7 @@ tier:2,
 category:"Minimalism",
 type:"mc",
 q:"Einstein on the Beach is:",
-choices:[
-"A minimalist opera",
-"A Romantic symphony",
-"A verismo opera",
-"A Lied"
-],
+choices:["A minimalist opera","A Romantic symphony","A verismo opera","A Lied"],
 answer:0,
 explanation:"It is a major minimalist opera by Philip Glass."
 },
@@ -2265,12 +1887,7 @@ tier:2,
 category:"Minimalism",
 type:"fill",
 q:"The composer associated with tintinnabuli is Arvo __________.",
-accepted:[
-"part",
-"pärt",
-"arvo part",
-"arvo pärt"
-],
+accepted:["part","pärt","arvo part","arvo pärt"],
 answerText:"Arvo Pärt",
 explanation:"Pärt developed the tintinnabuli approach."
 },
@@ -2281,12 +1898,7 @@ tier:2,
 category:"Postminimalism",
 type:"mc",
 q:"Who composed Nixon in China?",
-choices:[
-"John Adams",
-"Philip Glass",
-"Steve Reich",
-"George Crumb"
-],
+choices:["John Adams","Philip Glass","Steve Reich","George Crumb"],
 answer:0,
 explanation:"John Adams."
 },
@@ -2297,10 +1909,7 @@ tier:2,
 category:"Rhythm",
 type:"fill",
 q:"The rhythmic technique particularly associated with Elliott Carter is metric __________.",
-accepted:[
-"modulation",
-"metric modulation"
-],
+accepted:["modulation","metric modulation"],
 answerText:"metric modulation",
 explanation:"Metric modulation systematically relates different temporal rates."
 },
@@ -2311,12 +1920,7 @@ tier:2,
 category:"Americanism",
 type:"mc",
 q:"Which work is a ballet by Aaron Copland associated with Americanist style?",
-choices:[
-"Billy the Kid",
-"Wozzeck",
-"Salome",
-"Pierrot lunaire"
-],
+choices:["Billy the Kid","Wozzeck","Salome","Pierrot lunaire"],
 answer:0,
 explanation:"Billy the Kid is a central Copland Americanist work."
 },
@@ -2327,10 +1931,7 @@ tier:2,
 category:"Rhythm",
 type:"fill",
 q:"Messiaen's term for a rhythmic palindrome is a nonretrogradable __________.",
-accepted:[
-"rhythm",
-"nonretrogradable rhythm"
-],
+accepted:["rhythm","nonretrogradable rhythm"],
 answerText:"nonretrogradable rhythm",
 explanation:"The pattern reads the same forward and backward."
 },
@@ -2341,12 +1942,7 @@ tier:2,
 category:"Timbre",
 type:"mc",
 q:"Which composer is especially associated with tone clusters and extended piano techniques?",
-choices:[
-"Henry Cowell",
-"Benjamin Britten",
-"Samuel Barber",
-"John Adams"
-],
+choices:["Henry Cowell","Benjamin Britten","Samuel Barber","John Adams"],
 answer:0,
 explanation:"Henry Cowell used tone clusters and unconventional piano techniques."
 },
@@ -2357,12 +1953,7 @@ tier:2,
 category:"Postmodernism",
 type:"mc",
 q:"Which term refers to artistic cutting-and-pasting of different musical sources?",
-choices:[
-"Collage",
-"Pastiche",
-"Phasing",
-"Rubato"
-],
+choices:["Collage","Pastiche","Phasing","Rubato"],
 answer:0,
 explanation:"Collage juxtaposes different source materials."
 },
@@ -2373,9 +1964,7 @@ tier:2,
 category:"Postmodernism",
 type:"fill",
 q:"An imitation of a historical artistic style is called __________.",
-accepted:[
-"pastiche"
-],
+accepted:["pastiche"],
 answerText:"pastiche",
 explanation:"Pastiche imitates a style."
 },
@@ -2386,12 +1975,7 @@ tier:2,
 category:"Postmodernism",
 type:"mc",
 q:"Which composer is particularly associated with polystylism?",
-choices:[
-"Alfred Schnittke",
-"Haydn",
-"Rossini",
-"Pergolesi"
-],
+choices:["Alfred Schnittke","Haydn","Rossini","Pergolesi"],
 answer:0,
 explanation:"Schnittke frequently juxtaposed multiple historical styles."
 },
@@ -2402,15 +1986,7 @@ tier:2,
 category:"Modernism",
 type:"short",
 q:"Name two features that could help you recognize The Rite of Spring.",
-keywords:[
-"rhythm",
-"accent",
-"ostinato",
-"meter",
-"orchestration",
-"dissonance",
-"block"
-],
+keywords:["rhythm","accent","ostinato","meter","orchestration","dissonance","block"],
 answerText:"Examples: ostinati, irregular accents, changing meters, block construction, dissonance, or distinctive orchestration.",
 explanation:"Any two strong identifying features are sufficient."
 },
@@ -2421,14 +1997,7 @@ tier:2,
 category:"Modernism",
 type:"short",
 q:"Name two features that could distinguish Pierrot lunaire from a nineteenth-century Lied.",
-keywords:[
-"sprech",
-"atonal",
-"ensemble",
-"speech",
-"chamber",
-"expression"
-],
+keywords:["sprech","atonal","ensemble","speech","chamber","expression"],
 answerText:"Examples: Sprechstimme, atonality, expressionist text setting, or its distinctive chamber ensemble.",
 explanation:"Any two appropriate identifying features are sufficient."
 }
@@ -2436,43 +2005,30 @@ explanation:"Any two appropriate identifying features are sufficient."
 ];
 
 
-
-/* =========================================================
-GENERAL EXAM
-========================================================= */
+/* GENERAL EXAM */
 
 function chooseGeneral(){
 
     const pre =
     shuffle(
-        generalBank.filter(
-            q => q.era === "pre"
-        )
+        generalBank.filter(q=>q.era==="pre")
     ).slice(0,20);
 
     const post =
     shuffle(
-        generalBank.filter(
-            q => q.era === "post"
-        )
+        generalBank.filter(q=>q.era==="post")
     ).slice(0,20);
 
     selectedGeneral =
-    shuffle([
-        ...pre,
-        ...post
-    ]);
+    shuffle([...pre,...post]);
 
 }
-
 
 
 function renderGeneral(){
 
     const container =
-    document.getElementById(
-        "generalQuestions"
-    );
+    document.getElementById("generalQuestions");
 
     container.innerHTML = "";
 
@@ -2482,7 +2038,7 @@ function renderGeneral(){
         document.createElement("div");
 
         card.className = "card";
-        card.id = "gcard" + index;
+        card.id = "gcard"+index;
 
         let inputHTML = "";
 
@@ -2492,7 +2048,7 @@ function renderGeneral(){
             q.choices.map(function(choice,i){
 
                 return `
-                <div class="choice" data-choice="${i}">
+                <div class="choice">
                 <label>
 
                 <input
@@ -2501,8 +2057,7 @@ function renderGeneral(){
                 value="${i}"
                 onchange="updateGeneralProgress()">
 
-                ${String.fromCharCode(97+i)}.
-                ${choice}
+                ${String.fromCharCode(97+i)}. ${choice}
 
                 </label>
                 </div>
@@ -2540,7 +2095,7 @@ function renderGeneral(){
         <div class="meta">
 
         <span class="badge ${q.era}">
-        ${q.era === "pre" ? "1700–1900" : "1900–Present"}
+        ${q.era==="pre" ? "1700–1900" : "1900–Present"}
         </span>
 
         <span class="badge t${q.tier}">
@@ -2553,39 +2108,31 @@ function renderGeneral(){
 
         </div>
 
-
         <div class="question">
         ${index+1}. ${q.q}
         </div>
 
         ${inputHTML}
 
-
         <div class="actions">
 
-        <button
-        class="btn"
+        <button class="btn"
         onclick="feedbackGeneral(${index})">
         Feedback
         </button>
 
-        <button
-        class="btn"
+        <button class="btn"
         onclick="showGeneralAnswer(${index})">
         Show Answer
         </button>
 
         </div>
 
-
-        <div
-        class="feedback"
+        <div class="feedback"
         id="gfeedback${index}">
         </div>
 
-
-        <div
-        class="answer"
+        <div class="answer"
         id="ganswer${index}">
         </div>
 
@@ -2600,14 +2147,12 @@ function renderGeneral(){
 }
 
 
-
 function evaluateGeneral(index){
 
     const q =
     selectedGeneral[index];
 
     let ok = false;
-
     let userAnswer = "";
 
     if(q.type === "mc"){
@@ -2620,9 +2165,7 @@ function evaluateGeneral(index){
         if(chosen){
 
             userAnswer =
-            q.choices[
-                Number(chosen.value)
-            ];
+            q.choices[Number(chosen.value)];
 
             ok =
             Number(chosen.value) === q.answer;
@@ -2661,13 +2204,12 @@ function evaluateGeneral(index){
 
     }
 
-    return {
+    return{
         ok,
         userAnswer
     };
 
 }
-
 
 
 function feedbackGeneral(index){
@@ -2689,27 +2231,20 @@ function feedbackGeneral(index){
     );
 
     feedback.classList.remove(
-        "good",
-        "bad",
-        "partial"
+        "good","bad","partial"
     );
 
     card.classList.remove(
-        "correct",
-        "incorrect"
+        "correct","incorrect"
     );
 
-    if(
-        !result.userAnswer ||
-        !result.userAnswer.trim()
-    ){
+    if(!result.userAnswer.trim()){
 
         feedback.innerHTML =
         "Answer the question first, then press Feedback.";
 
         feedback.classList.add(
-            "show",
-            "partial"
+            "show","partial"
         );
 
         return;
@@ -2723,8 +2258,7 @@ function feedbackGeneral(index){
         q.explanation;
 
         feedback.classList.add(
-            "show",
-            "good"
+            "show","good"
         );
 
         card.classList.add(
@@ -2734,12 +2268,11 @@ function feedbackGeneral(index){
     }else{
 
         feedback.innerHTML =
-        "<strong>Not quite.</strong> Review your answer and try again. " +
+        "<strong>Not quite.</strong> " +
         q.explanation;
 
         feedback.classList.add(
-            "show",
-            "bad"
+            "show","bad"
         );
 
         card.classList.add(
@@ -2749,7 +2282,6 @@ function feedbackGeneral(index){
     }
 
 }
-
 
 
 function showGeneralAnswer(index){
@@ -2767,9 +2299,7 @@ function showGeneralAnswer(index){
     if(q.type === "mc"){
 
         answer =
-        String.fromCharCode(
-            97 + q.answer
-        )
+        String.fromCharCode(97+q.answer)
         + ". "
         + q.choices[q.answer];
 
@@ -2786,12 +2316,9 @@ function showGeneralAnswer(index){
     + "<br><br>"
     + q.explanation;
 
-    box.classList.toggle(
-        "show"
-    );
+    box.classList.toggle("show");
 
 }
-
 
 
 function gradeGeneral(){
@@ -2805,13 +2332,9 @@ function gradeGeneral(){
         evaluateGeneral(index);
 
         if(result.ok){
-
             correct++;
-
         }else{
-
             missed.push(q.q);
-
         }
 
         feedbackGeneral(index);
@@ -2828,9 +2351,9 @@ function gradeGeneral(){
     document.getElementById(
         "gScore"
     ).textContent =
-    percent + "%";
+    percent+"%";
 
-    return {
+    return{
         correct,
         total:selectedGeneral.length,
         percent,
@@ -2838,7 +2361,6 @@ function gradeGeneral(){
     };
 
 }
-
 
 
 function updateGeneralProgress(){
@@ -2854,9 +2376,7 @@ function updateGeneralProgress(){
                     `input[name="g${index}"]:checked`
                 )
             ){
-
                 answered++;
-
             }
 
         }else{
@@ -2866,13 +2386,8 @@ function updateGeneralProgress(){
                 "ginput"+index
             );
 
-            if(
-                input &&
-                input.value.trim()
-            ){
-
+            if(input && input.value.trim()){
                 answered++;
-
             }
 
         }
@@ -2891,1320 +2406,641 @@ function updateGeneralProgress(){
         answered /
         selectedGeneral.length *
         100
-    ) + "%";
+    )+"%";
 
 }
 
 
-
-/* =========================================================
-SIMPLE NOTATION HELPERS
-========================================================= */
-
-function staffLines(y,width=900){
-
-    let result = "";
-
-    for(let i=0;i<5;i++){
-
-        result +=
-        `<line
-        x1="35"
-        y1="${y+i*12}"
-        x2="${width}"
-        y2="${y+i*12}"
-        stroke="#111"
-        stroke-width="1"/>`;
-
-    }
-
-    return result;
-
-}
-
-
-function note(x,y){
-
-    return `
-    <ellipse
-    cx="${x}"
-    cy="${y}"
-    rx="7"
-    ry="5"
-    fill="#111"
-    transform="rotate(-18 ${x} ${y})"/>
-
-    <line
-    x1="${x+6}"
-    y1="${y}"
-    x2="${x+6}"
-    y2="${y-34}"
-    stroke="#111"
-    stroke-width="2"/>
-    `;
-
-}
-
-
-
-/* =========================================================
-40 SCORE EXCERPTS
-========================================================= */
+/* 40 SCORE EXCERPTS */
 
 const scoreBank = [
-
-/* ============== PRE-1900 ============== */
 
 {
 id:"cpebach",
 era:"pre",
-composer:[
-"carl philipp emanuel bach",
-"c p e bach",
-"cpe bach"
-],
-genre:[
-"fantasia",
-"keyboard fantasia",
-"solo keyboard"
-],
+composer:["carl philipp emanuel bach","c p e bach","cpe bach"],
+genre:["fantasia","keyboard fantasia","solo keyboard"],
 year:1787,
 title:"C. P. E. Bach — Fantasia in C Minor, Wq. 63/6/iii",
-clue:
-"Solo keyboard writing that sounds improvisatory and highly changeable, with sudden contrasts of affect, register, pacing, and gesture. The work reflects the empfindsamer style.",
-discussion:
-"Improvisatory keyboard fantasia, empfindsamer Stil, sudden expressive contrasts, irregular phrase behavior."
+clue:"Solo keyboard writing that sounds improvisatory and highly changeable, with sudden contrasts of affect, register, pacing, and gesture.",
+discussion:"Improvisatory keyboard fantasia, empfindsamer style, sudden expressive contrasts."
 },
 
 {
 id:"pergolesi",
 era:"pre",
-composer:[
-"pergolesi",
-"giovanni battista pergolesi"
-],
-genre:[
-"intermezzo",
-"comic opera",
-"opera buffa"
-],
+composer:["pergolesi","giovanni battista pergolesi"],
+genre:["intermezzo","comic opera","opera buffa"],
 year:1733,
 title:"Pergolesi — La serva padrona",
-clue:
-"Small-scale Italian comic stage work with direct characterization and tuneful vocal writing. It was originally performed between acts of a serious opera.",
-discussion:
-"Intermezzo, Italian comic opera, concise characterization, lighter texture than opera seria."
+clue:"Small-scale Italian comic stage work with direct characterization and tuneful vocal writing. It was originally performed between acts of a serious opera.",
+discussion:"Intermezzo, Italian comic opera, concise characterization."
 },
 
 {
 id:"sammartini",
 era:"pre",
-composer:[
-"sammartini",
-"giovanni battista sammartini"
-],
-genre:[
-"symphony",
-"sinfonia"
-],
+composer:["sammartini","giovanni battista sammartini"],
+genre:["symphony","sinfonia"],
 year:1740,
 title:"Sammartini — Sinfonia in G",
-clue:
-"Early orchestral sinfonia with compact movements, clear homophonic texture, and a style transitional between late Baroque and Classical procedures.",
-discussion:
-"Early symphony/sinfonia, homophonic texture, compact thematic ideas, pre-Classical style."
+clue:"Early orchestral sinfonia with compact movements, clear homophonic texture, and a style transitional between late Baroque and Classical procedures.",
+discussion:"Early symphony/sinfonia, homophonic texture, compact thematic ideas."
 },
 
 {
 id:"haydn45",
 era:"pre",
-composer:[
-"haydn",
-"joseph haydn",
-"franz joseph haydn"
-],
-genre:[
-"symphony"
-],
+composer:["haydn","joseph haydn","franz joseph haydn"],
+genre:["symphony"],
 year:1772,
 title:"Haydn — Symphony No. 45, Farewell",
-clue:
-"Classical orchestral first movement in a striking minor-mode language associated with Haydn's Sturm und Drang period.",
-discussion:
-"Classical symphony, sonata-form procedures, minor mode, strong rhythmic energy, Sturm und Drang."
+clue:"Classical orchestral first movement in a striking minor-mode language associated with Haydn's Sturm und Drang period.",
+discussion:"Classical symphony, sonata form, minor mode, Sturm und Drang."
 },
 
 {
 id:"haydnjoke",
 era:"pre",
-composer:[
-"haydn",
-"joseph haydn"
-],
-genre:[
-"string quartet",
-"quartet"
-],
+composer:["haydn","joseph haydn"],
+genre:["string quartet","quartet"],
 year:1781,
 title:"Haydn — String Quartet Op. 33 No. 2, The Joke",
-clue:
-"Four equal string instruments engage in conversational motivic exchange. The work belongs to Haydn's Op. 33 quartets and is famous for comic manipulation of expectations.",
-discussion:
-"String quartet texture, motivic conversation, Classical phrase structure, wit and formal expectation."
+clue:"Four equal string instruments engage in conversational motivic exchange. The work is famous for comic manipulation of expectations.",
+discussion:"String quartet texture, motivic conversation, Classical wit."
 },
 
 {
 id:"mozart40",
 era:"pre",
-composer:[
-"mozart",
-"wolfgang amadeus mozart"
-],
-genre:[
-"symphony"
-],
+composer:["mozart","wolfgang amadeus mozart"],
+genre:["symphony"],
 year:1788,
 title:"Mozart — Symphony No. 40 in G Minor",
-clue:
-"Classical orchestral first movement in minor. The opening theme begins quietly with urgent, sighing melodic motion over repeated accompaniment.",
-discussion:
-"Classical symphony, sonata form, G minor, motivic economy, balanced phrase construction."
+clue:"Classical orchestral first movement in minor. The opening theme begins quietly with urgent, sighing melodic motion over repeated accompaniment.",
+discussion:"Classical symphony, sonata form, G minor, motivic economy."
 },
 
 {
 id:"mozart41",
 era:"pre",
-composer:[
-"mozart",
-"wolfgang amadeus mozart"
-],
-genre:[
-"symphony"
-],
+composer:["mozart","wolfgang amadeus mozart"],
+genre:["symphony"],
 year:1788,
 title:"Mozart — Symphony No. 41, Jupiter",
-clue:
-"Finale combines Classical sonata procedures with dense contrapuntal treatment of several short motives.",
-discussion:
-"Classical symphony, contrapuntal finale, motivic combination, sonata-form and fugal procedures."
+clue:"Finale combines Classical sonata procedures with dense contrapuntal treatment of several short motives.",
+discussion:"Classical symphony, contrapuntal finale, motivic combination."
 },
 
 {
 id:"mozartdon",
 era:"pre",
-composer:[
-"mozart",
-"wolfgang amadeus mozart"
-],
-genre:[
-"opera",
-"dramma giocoso"
-],
+composer:["mozart","wolfgang amadeus mozart"],
+genre:["opera","dramma giocoso"],
 year:1787,
 title:"Mozart — Don Giovanni",
-clue:
-"Italian-language opera combining comic and serious dramatic elements, with rapid ensemble interaction and strong orchestral characterization.",
-discussion:
-"Dramma giocoso, mixture of serious and comic styles, operatic ensemble writing."
+clue:"Italian-language opera combining comic and serious dramatic elements, with rapid ensemble interaction and strong orchestral characterization.",
+discussion:"Dramma giocoso, mixture of comic and serious styles."
 },
 
 {
 id:"beethovenpathetique",
 era:"pre",
-composer:[
-"beethoven",
-"ludwig van beethoven"
-],
-genre:[
-"piano sonata",
-"sonata"
-],
+composer:["beethoven","ludwig van beethoven"],
+genre:["piano sonata","sonata"],
 year:1798,
 title:"Beethoven — Pathétique Sonata",
-clue:
-"Solo piano score opens with a slow Grave introduction containing dotted rhythms and massive chords before a fast sonata-form movement.",
-discussion:
-"Piano sonata, dramatic slow introduction, dynamic contrasts, sonata process."
+clue:"Solo piano score opens with a slow Grave introduction containing dotted rhythms and massive chords before a fast sonata-form movement.",
+discussion:"Piano sonata, dramatic slow introduction, dynamic contrast."
 },
 
 {
 id:"beethoven3",
 era:"pre",
-composer:[
-"beethoven",
-"ludwig van beethoven"
-],
-genre:[
-"symphony"
-],
+composer:["beethoven","ludwig van beethoven"],
+genre:["symphony"],
 year:1804,
 title:"Beethoven — Symphony No. 3, Eroica",
-clue:
-"Large orchestral sonata-form movement whose scale, harmonic range, and developmental intensity greatly expand Classical expectations.",
-discussion:
-"Heroic-period Beethoven, expanded sonata form, motivic development, enlarged symphonic scale."
+clue:"Large orchestral sonata-form movement whose scale, harmonic range, and developmental intensity greatly expand Classical expectations.",
+discussion:"Heroic-period Beethoven, expanded sonata form, motivic development."
 },
 
 {
 id:"beethoven5",
 era:"pre",
-composer:[
-"beethoven",
-"ludwig van beethoven"
-],
-genre:[
-"symphony"
-],
+composer:["beethoven","ludwig van beethoven"],
+genre:["symphony"],
 year:1808,
 title:"Beethoven — Symphony No. 5 in C Minor",
-visual:`
-<div class="score-sheet">
-<svg viewBox="0 0 950 190">
-
-${staffLines(60)}
-
-<text x="35" y="28" font-size="18">
-Allegro con brio
-</text>
-
-${note(150,95)}
-${note(185,95)}
-${note(220,95)}
-
-<line
-x1="156"
-y1="61"
-x2="226"
-y2="61"
-stroke="#111"
-stroke-width="3"/>
-
-<ellipse
-cx="295"
-cy="118"
-rx="10"
-ry="7"
-fill="#111"/>
-
-${note(410,105)}
-${note(445,105)}
-${note(480,105)}
-
-<line
-x1="416"
-y1="71"
-x2="486"
-y2="71"
-stroke="#111"
-stroke-width="3"/>
-
-<ellipse
-cx="555"
-cy="130"
-rx="10"
-ry="7"
-fill="#111"/>
-
-</svg>
-</div>
-`,
-discussion:
-"Short-short-short-long rhythmic motive, concentrated motivic development, orchestral symphony."
+clue:"Famous four-note short-short-short-long motive dominates an orchestral symphony.",
+discussion:"Concentrated motivic development, rhythmic identity, orchestral symphony."
 },
 
 {
 id:"beethoven130",
 era:"pre",
-composer:[
-"beethoven",
-"ludwig van beethoven"
-],
-genre:[
-"string quartet",
-"quartet"
-],
+composer:["beethoven","ludwig van beethoven"],
+genre:["string quartet","quartet"],
 year:1826,
 title:"Beethoven — String Quartet Op. 130, Cavatina",
-clue:
-"Late Beethoven chamber writing for string quartet. The movement is slow, intensely lyrical, and highly expressive.",
-discussion:
-"Late Beethoven, string quartet, inward lyricism, expanded harmonic and expressive language."
+clue:"Late Beethoven chamber writing for string quartet. The movement is slow, intensely lyrical, and highly expressive.",
+discussion:"Late Beethoven, string quartet, inward lyricism."
 },
 
 {
 id:"rossiniitaliana",
 era:"pre",
-composer:[
-"rossini",
-"gioachino rossini"
-],
-genre:[
-"opera",
-"opera finale",
-"comic opera"
-],
+composer:["rossini","gioachino rossini"],
+genre:["opera","opera finale","comic opera"],
 year:1813,
 title:"Rossini — L'italiana in Algeri, Act I Finale",
-clue:
-"Multiple singers accumulate in a comic ensemble while repetition, rhythmic acceleration, and crescendo produce escalating confusion.",
-discussion:
-"Comic opera, imbroglio, ensemble finale, Rossinian crescendo."
+clue:"Multiple singers accumulate in a comic ensemble while repetition, rhythmic acceleration, and crescendo produce escalating confusion.",
+discussion:"Comic opera, imbroglio, ensemble finale, Rossinian crescendo."
 },
 
 {
 id:"bellininorma",
 era:"pre",
-composer:[
-"bellini",
-"vincenzo bellini"
-],
-genre:[
-"opera",
-"aria",
-"bel canto opera"
-],
+composer:["bellini","vincenzo bellini"],
+genre:["opera","aria","bel canto opera"],
 year:1831,
 title:"Bellini — Norma, Casta diva",
-clue:
-"Long, arching vocal melody unfolds over relatively restrained accompaniment, emphasizing legato line and sustained bel canto expression.",
-discussion:
-"Bel canto opera, lyrical cantabile, long melodic line, vocal control and ornament."
+clue:"Long, arching vocal melody unfolds over restrained accompaniment, emphasizing legato line and sustained bel canto expression.",
+discussion:"Bel canto opera, lyrical cantabile, long melodic line."
 },
 
 {
 id:"donizettilucia",
 era:"pre",
-composer:[
-"donizetti",
-"gaetano donizetti"
-],
-genre:[
-"opera",
-"mad scene",
-"aria"
-],
+composer:["donizetti","gaetano donizetti"],
+genre:["opera","mad scene","aria"],
 year:1835,
 title:"Donizetti — Lucia di Lammermoor, Mad Scene",
-clue:
-"Virtuosic coloratura vocal writing represents psychological breakdown, with a prominent high obbligato instrument interacting with the singer.",
-discussion:
-"Bel canto mad scene, coloratura, dramatic virtuosity, instrumental-vocal dialogue."
+clue:"Virtuosic coloratura vocal writing represents psychological breakdown, with a prominent obbligato instrument interacting with the singer.",
+discussion:"Bel canto mad scene, coloratura, dramatic virtuosity."
 },
 
 {
 id:"schubertheiden",
 era:"pre",
-composer:[
-"schubert",
-"franz schubert"
-],
-genre:[
-"lied",
-"art song",
-"song"
-],
+composer:["schubert","franz schubert"],
+genre:["lied","art song","song"],
 year:1815,
 title:"Schubert — Heidenröslein",
-clue:
-"Solo voice and piano. Each stanza returns to essentially the same music.",
-discussion:
-"Lied, strophic form, direct melodic setting, voice and piano."
+clue:"Solo voice and piano. Each stanza returns to essentially the same music.",
+discussion:"Lied, strophic form, voice and piano."
 },
 
 {
 id:"schubertErl",
 era:"pre",
-composer:[
-"schubert",
-"franz schubert"
-],
-genre:[
-"lied",
-"art song",
-"song"
-],
+composer:["schubert","franz schubert"],
+genre:["lied","art song","song"],
 year:1815,
 title:"Schubert — Erlkönig",
-visual:`
-<div class="score-sheet">
-<svg viewBox="0 0 950 275">
-
-<text x="35" y="28" font-size="18">
-Schnell
-</text>
-
-${staffLines(55)}
-${staffLines(150)}
-
-<text x="10" y="88" font-size="14">
-Voice
-</text>
-
-<text x="10" y="183" font-size="14">
-Piano
-</text>
-
-${note(210,86)}
-${note(310,77)}
-${note(410,93)}
-
-${note(140,182)}
-${note(175,182)}
-${note(210,182)}
-
-${note(260,174)}
-${note(295,174)}
-${note(330,174)}
-
-${note(380,185)}
-${note(415,185)}
-${note(450,185)}
-
-${note(500,176)}
-${note(535,176)}
-${note(570,176)}
-
-<text
-x="120"
-y="245"
-font-size="16">
-rapid repeated-note accompaniment
-</text>
-
-</svg>
-</div>
-`,
-discussion:
-"Through-composed Lied, voice and piano, relentless repeated-note accompaniment, dramatic character differentiation."
+clue:"Solo voice and piano with relentless repeated-note accompaniment and dramatic character changes.",
+discussion:"Through-composed Lied, repeated-note accompaniment, dramatic text setting."
 },
 
 {
 id:"paganini24",
 era:"pre",
-composer:[
-"paganini",
-"niccolo paganini",
-"niccolò paganini"
-],
-genre:[
-"caprice",
-"violin caprice",
-"solo violin"
-],
+composer:["paganini","niccolo paganini","niccolò paganini"],
+genre:["caprice","violin caprice","solo violin"],
 year:1817,
 title:"Paganini — Caprice No. 24",
-clue:
-"Unaccompanied violin writing full of technical display, rapid passagework, multiple stops, and variation-like transformation.",
-discussion:
-"Virtuoso solo violin caprice, technical display, variation procedures."
+clue:"Unaccompanied violin writing full of technical display, rapid passagework, multiple stops, and variation-like transformation.",
+discussion:"Virtuoso solo violin caprice, technical display."
 },
 
 {
 id:"chopinmazurka",
 era:"pre",
-composer:[
-"chopin",
-"frederic chopin",
-"frédéric chopin"
-],
-genre:[
-"mazurka",
-"piano piece",
-"dance"
-],
+composer:["chopin","frederic chopin","frédéric chopin"],
+genre:["mazurka","piano piece","dance"],
 year:1833,
 title:"Chopin — Mazurka Op. 17 No. 4",
-clue:
-"Solo piano in triple meter with stylized Polish dance character, flexible accentuation, and subtle rhythmic displacement.",
-discussion:
-"Mazurka, triple meter, Polish-national dance associations, rubato and accent displacement."
+clue:"Solo piano in triple meter with stylized Polish dance character, flexible accentuation, and subtle rhythmic displacement.",
+discussion:"Mazurka, triple meter, Polish-national dance associations."
 },
 
 {
 id:"berlioz",
 era:"pre",
-composer:[
-"berlioz",
-"hector berlioz"
-],
-genre:[
-"symphony",
-"program symphony"
-],
+composer:["berlioz","hector berlioz"],
+genre:["symphony","program symphony"],
 year:1830,
 title:"Berlioz — Symphonie fantastique",
-visual:`
-<div class="score-sheet">
-<svg viewBox="0 0 950 190">
-
-${staffLines(60)}
-
-<text
-x="35"
-y="28"
-font-size="18">
-Recurring idée fixe
-</text>
-
-${note(140,105)}
-${note(190,93)}
-${note(240,83)}
-${note(300,94)}
-${note(360,110)}
-${note(420,101)}
-${note(480,88)}
-${note(555,102)}
-
-<path
-d="M140 124 Q330 150 555 120"
-fill="none"
-stroke="#111"
-stroke-width="1.7"/>
-
-</svg>
-</div>
-`,
-discussion:
-"Program symphony, recurring idée fixe, vivid orchestration, thematic transformation across movements."
+clue:"Large programmatic symphony whose recurring theme represents the beloved and is transformed across movements.",
+discussion:"Program symphony, idée fixe, vivid orchestration."
 },
 
 {
 id:"lisztpreludes",
 era:"pre",
-composer:[
-"liszt",
-"franz liszt"
-],
-genre:[
-"symphonic poem",
-"tone poem"
-],
+composer:["liszt","franz liszt"],
+genre:["symphonic poem","tone poem"],
 year:1854,
 title:"Liszt — Les préludes",
-clue:
-"Single-movement orchestral program music in which a small number of themes return in substantially transformed forms.",
-discussion:
-"Symphonic poem, thematic transformation, Romantic program music."
+clue:"Single-movement orchestral program music in which a small number of themes return in substantially transformed forms.",
+discussion:"Symphonic poem, thematic transformation."
 },
 
 {
 id:"wagnertristan",
 era:"pre",
-composer:[
-"wagner",
-"richard wagner"
-],
-genre:[
-"opera",
-"music drama"
-],
+composer:["wagner","richard wagner"],
+genre:["opera","music drama"],
 year:1859,
 title:"Wagner — Tristan und Isolde",
-visual:`
-<div class="score-sheet">
-<svg viewBox="0 0 950 220">
-
-${staffLines(65)}
-
-<text
-x="35"
-y="28"
-font-size="18">
-Langsam und schmachtend
-</text>
-
-${note(175,117)}
-${note(175,96)}
-${note(175,84)}
-${note(175,71)}
-
-<text
-x="245"
-y="103"
-font-size="18">
-chromatic tension →
-</text>
-
-${note(560,111)}
-${note(560,98)}
-${note(560,83)}
-${note(560,72)}
-
-</svg>
-</div>
-`,
-discussion:
-"Extreme chromaticism, delayed resolution, Tristan sonority, continuous dramatic writing and leitmotivic technique."
+clue:"Highly chromatic opera with delayed harmonic resolution and the famous Tristan sonority.",
+discussion:"Extreme chromaticism, delayed resolution, leitmotivic technique."
 },
 
 {
 id:"verdirigoletto",
 era:"pre",
-composer:[
-"verdi",
-"giuseppe verdi"
-],
-genre:[
-"opera"
-],
+composer:["verdi","giuseppe verdi"],
+genre:["opera"],
 year:1851,
 title:"Verdi — Rigoletto",
-clue:
-"Mid-nineteenth-century Italian opera with sharply characterized vocal lines and an ensemble texture in which several characters express different emotions simultaneously.",
-discussion:
-"Italian Romantic opera, dramatic vocal characterization, ensemble writing, mature Verdi style."
+clue:"Mid-nineteenth-century Italian opera with sharply characterized vocal lines and ensemble writing.",
+discussion:"Italian Romantic opera, dramatic vocal characterization."
 },
 
 {
 id:"smetanavaltava",
 era:"pre",
-composer:[
-"smetana",
-"bedrich smetana",
-"bedřich smetana"
-],
-genre:[
-"symphonic poem",
-"tone poem"
-],
+composer:["smetana","bedrich smetana","bedřich smetana"],
+genre:["symphonic poem","tone poem"],
 year:1874,
 title:"Smetana — Vltava",
-clue:
-"Programmatic orchestral work depicting a river as it moves through different landscapes and scenes within a Czech nationalist cycle.",
-discussion:
-"Symphonic poem, program music, Czech nationalism, recurring river theme."
+clue:"Programmatic orchestral work depicting a river as it travels through different Czech landscapes.",
+discussion:"Symphonic poem, program music, Czech nationalism."
 },
 
 {
 id:"tchaik4",
 era:"pre",
-composer:[
-"tchaikovsky",
-"pyotr ilyich tchaikovsky"
-],
-genre:[
-"symphony"
-],
+composer:["tchaikovsky","pyotr ilyich tchaikovsky"],
+genre:["symphony"],
 year:1878,
 title:"Tchaikovsky — Symphony No. 4",
-clue:
-"Large late-Romantic orchestra. A powerful brass fanfare functions as a recurring 'fate' idea in an emotionally charged symphonic design.",
-discussion:
-"Late-Romantic symphony, fate motive, rich orchestration, cyclical thematic recall."
+clue:"Large late-Romantic orchestra. A powerful brass fanfare functions as a recurring fate idea.",
+discussion:"Late-Romantic symphony, fate motive, rich orchestration."
 },
 
 {
 id:"brahms1",
 era:"pre",
-composer:[
-"brahms",
-"johannes brahms"
-],
-genre:[
-"symphony"
-],
+composer:["brahms","johannes brahms"],
+genre:["symphony"],
 year:1876,
 title:"Brahms — Symphony No. 1",
-clue:
-"Dense late-Romantic symphonic texture combines Classical formal discipline with motivic development and an explicit historical dialogue with Beethoven.",
-discussion:
-"Symphony, developing variation, motivic density, historical engagement with Beethoven."
+clue:"Dense late-Romantic symphonic texture combines Classical discipline with intense motivic development.",
+discussion:"Symphony, developing variation, motivic density."
 },
 
 {
 id:"dvorak9",
 era:"pre",
-composer:[
-"dvorak",
-"antonin dvorak",
-"antonín dvořák"
-],
-genre:[
-"symphony"
-],
+composer:["dvorak","antonin dvorak","antonín dvořák"],
+genre:["symphony"],
 year:1893,
 title:"Dvořák — Symphony No. 9, From the New World",
-clue:
-"Late-Romantic symphony written in the United States. The slow movement features a famous English horn melody and was connected to debates about American national style.",
-discussion:
-"Late-Romantic symphony, English horn, American-national context, memorable pentatonic/modal melodic language."
+clue:"Late-Romantic symphony written in the United States, famous for an English horn melody in the slow movement.",
+discussion:"Late-Romantic symphony, English horn, American-national context."
 },
 
 {
 id:"bizetcarmen",
 era:"pre",
-composer:[
-"bizet",
-"georges bizet"
-],
-genre:[
-"opera",
-"aria"
-],
+composer:["bizet","georges bizet"],
+genre:["opera","aria"],
 year:1875,
 title:"Bizet — Carmen, Habanera",
-clue:
-"Operatic vocal writing unfolds over a characteristic habanera dance rhythm and an exoticized Spanish/Cuban sound world.",
-discussion:
-"Opera aria, habanera rhythm, exoticism, Carmen's characterization."
+clue:"Operatic vocal writing unfolds over a characteristic habanera rhythm.",
+discussion:"Opera aria, habanera rhythm, exoticism."
 },
 
 {
 id:"leoncavallo",
 era:"pre",
-composer:[
-"leoncavallo",
-"ruggero leoncavallo"
-],
-genre:[
-"opera",
-"verismo opera",
-"aria"
-],
+composer:["leoncavallo","ruggero leoncavallo"],
+genre:["opera","verismo opera","aria"],
 year:1892,
 title:"Leoncavallo — Pagliacci, Vesti la giubba",
-clue:
-"Intense late-nineteenth-century Italian dramatic aria in which an ordinary performer must hide personal anguish behind his public role.",
-discussion:
-"Verismo opera, direct emotional realism, declamatory vocal writing."
+clue:"Intense Italian dramatic aria centered on personal anguish and ordinary life.",
+discussion:"Verismo opera, direct emotional realism."
 },
-
-
-/* ============== 1900–PRESENT ============== */
 
 {
 id:"mahler1",
 era:"post",
-composer:[
-"mahler",
-"gustav mahler"
-],
-genre:[
-"symphony"
-],
+composer:["mahler","gustav mahler"],
+genre:["symphony"],
 year:1888,
 title:"Mahler — Symphony No. 1, Third Movement",
-clue:
-"Orchestral movement uses a familiar children's tune transformed into a minor-mode funeral march, combined with unusual instrumental color and contrasting vernacular material.",
-discussion:
-"Symphony, funeral march, distorted quotation, ironic juxtaposition, orchestral color."
+clue:"Orchestral movement transforms a familiar children's tune into a minor-mode funeral march.",
+discussion:"Symphony, funeral march, distorted quotation, irony."
 },
 
 {
 id:"mahler5",
 era:"post",
-composer:[
-"mahler",
-"gustav mahler"
-],
-genre:[
-"symphony",
-"adagietto"
-],
+composer:["mahler","gustav mahler"],
+genre:["symphony","adagietto"],
 year:1902,
 title:"Mahler — Symphony No. 5, Adagietto",
-clue:
-"Very slow orchestral movement scored primarily for strings and harp, producing an unusually intimate texture within a massive symphony.",
-discussion:
-"Symphony, Adagietto, strings and harp, lyrical late-Romantic intensity."
+clue:"Very slow movement scored primarily for strings and harp.",
+discussion:"Symphony, Adagietto, strings and harp."
 },
 
 {
 id:"schoenberg19",
 era:"post",
-composer:[
-"schoenberg",
-"arnold schoenberg"
-],
-genre:[
-"piano piece",
-"miniature",
-"solo piano"
-],
+composer:["schoenberg","arnold schoenberg"],
+genre:["piano piece","miniature","solo piano"],
 year:1911,
 title:"Schoenberg — Six Little Piano Pieces Op. 19 No. 6",
-clue:
-"Extremely brief solo piano miniature. Traditional functional tonality is absent and every gesture carries unusual weight.",
-discussion:
-"Atonal piano miniature, brevity, expressionism, concentrated gesture."
+clue:"Extremely brief atonal piano miniature in which every gesture carries unusual expressive weight.",
+discussion:"Atonal piano miniature, brevity, expressionism."
 },
 
 {
 id:"webern9",
 era:"post",
-composer:[
-"webern",
-"anton webern"
-],
-genre:[
-"string quartet",
-"bagatelle",
-"chamber music"
-],
+composer:["webern","anton webern"],
+genre:["string quartet","bagatelle","chamber music"],
 year:1913,
 title:"Webern — Six Bagatelles Op. 9",
-clue:
-"Extremely brief string-quartet writing, sparse gestures, unusual timbral effects, silence, and compressed motivic material.",
-discussion:
-"Second Viennese School, brevity, sparse texture, Klangfarben-like timbral emphasis."
+clue:"Extremely brief, sparse string-quartet writing with silence and unusual timbral effects.",
+discussion:"Second Viennese School, brevity, sparse texture."
 },
 
 {
 id:"pierrot",
 era:"post",
-composer:[
-"schoenberg",
-"arnold schoenberg"
-],
-genre:[
-"song cycle",
-"vocal chamber work",
-"melodrama"
-],
+composer:["schoenberg","arnold schoenberg"],
+genre:["song cycle","vocal chamber work","melodrama"],
 year:1912,
 title:"Schoenberg — Pierrot lunaire",
-clue:
-"The singer uses speech-like vocal notation. A small chamber ensemble changes color constantly. The language is atonal and expressionistic.",
-discussion:
-"Sprechstimme, atonality, Expressionism, chamber ensemble, intense text setting."
+clue:"The singer uses speech-like vocal delivery over a small chamber ensemble in an atonal expressionist language.",
+discussion:"Sprechstimme, atonality, Expressionism."
 },
 
 {
 id:"debussyvoiles",
 era:"post",
-composer:[
-"debussy",
-"claude debussy"
-],
-genre:[
-"prelude",
-"piano prelude",
-"solo piano"
-],
+composer:["debussy","claude debussy"],
+genre:["prelude","piano prelude","solo piano"],
 year:1909,
 title:"Debussy — Voiles",
-clue:
-"Solo piano music avoids traditional functional progression and prominently uses whole-tone and pentatonic pitch collections.",
-discussion:
-"Whole-tone and pentatonic collections, coloristic harmony, ambiguous tonal center."
+clue:"Solo piano music prominently uses whole-tone and pentatonic collections.",
+discussion:"Whole-tone and pentatonic collections, coloristic harmony."
 },
 
 {
 id:"rite",
 era:"post",
-composer:[
-"stravinsky",
-"igor stravinsky"
-],
-genre:[
-"ballet"
-],
+composer:["stravinsky","igor stravinsky"],
+genre:["ballet"],
 year:1913,
 title:"Stravinsky — The Rite of Spring",
-clue:
-"Large orchestra, repeated ostinati, harsh vertical sonorities, rapidly changing meters, displaced accents, and block-like construction.",
-discussion:
-"Primitivism, ostinati, irregular accents, changing meter, block construction, vivid orchestration."
+clue:"Large orchestra with repeated ostinati, harsh chords, rapidly changing meters, and displaced accents.",
+discussion:"Primitivism, ostinati, irregular accents, changing meter."
 },
 
 {
 id:"ivesputnam",
 era:"post",
-composer:[
-"ives",
-"charles ives"
-],
-genre:[
-"orchestral piece",
-"program piece",
-"orchestral work"
-],
+composer:["ives","charles ives"],
+genre:["orchestral piece","program piece","orchestral work"],
 year:1914,
 title:"Charles Ives — Putnam's Camp",
-clue:
-"Different musical layers seem to collide: marches, popular tunes, conflicting rhythms, and simultaneous tonal areas.",
-discussion:
-"Quotation, collage-like simultaneity, polyrhythm, polytonality, American vernacular material."
+clue:"Marches, popular tunes, conflicting rhythms, and simultaneous tonal areas collide.",
+discussion:"Quotation, simultaneity, polyrhythm, polytonality."
 },
 
 {
 id:"stravinskyOctet",
 era:"post",
-composer:[
-"stravinsky",
-"igor stravinsky"
-],
-genre:[
-"octet",
-"chamber music",
-"wind ensemble"
-],
+composer:["stravinsky","igor stravinsky"],
+genre:["octet","chamber music","wind ensemble"],
 year:1923,
 title:"Stravinsky — Octet for Wind Instruments",
-clue:
-"Dry, clear wind writing uses older formal models, variation procedures, and detached instrumental sonority rather than lush Romantic expression.",
-discussion:
-"Neoclassicism, wind ensemble, formal clarity, older forms reinterpreted in modern language."
+clue:"Dry, clear wind writing uses older formal models and detached sonority.",
+discussion:"Neoclassicism, wind ensemble, formal clarity."
 },
 
 {
 id:"schoenberg25",
 era:"post",
-composer:[
-"schoenberg",
-"arnold schoenberg"
-],
-genre:[
-"piano suite",
-"suite",
-"solo piano"
-],
+composer:["schoenberg","arnold schoenberg"],
+genre:["piano suite","suite","solo piano"],
 year:1923,
 title:"Schoenberg — Suite for Piano Op. 25",
-clue:
-"Twelve-tone piano work whose movements use historical dance titles such as Gavotte, Menuett, Trio, and Gigue.",
-discussion:
-"Twelve-tone method combined with Baroque/Classical dance forms."
+clue:"Twelve-tone piano work whose movements use historical dance titles such as Gavotte and Gigue.",
+discussion:"Twelve-tone method combined with historical dance forms."
 },
 
 {
 id:"bergwozzeck",
 era:"post",
-composer:[
-"berg",
-"alban berg"
-],
-genre:[
-"opera"
-],
+composer:["berg","alban berg"],
+genre:["opera"],
 year:1922,
 title:"Alban Berg — Wozzeck",
-clue:
-"Expressionist opera with highly dissonant language, intense psychological drama, and tightly organized formal structures underlying individual scenes.",
-discussion:
-"Expressionist opera, atonal/dissonant language, psychological intensity, traditional forms embedded in drama."
+clue:"Expressionist opera with highly dissonant language and intense psychological drama.",
+discussion:"Expressionist opera, atonal/dissonant language."
 },
 
 {
 id:"gershwin",
 era:"post",
-composer:[
-"gershwin",
-"george gershwin"
-],
-genre:[
-"rhapsody",
-"concert work",
-"piano and orchestra"
-],
+composer:["gershwin","george gershwin"],
+genre:["rhapsody","concert work","piano and orchestra"],
 year:1924,
 title:"Gershwin — Rhapsody in Blue",
-clue:
-"Concert work combines piano virtuosity with orchestral writing heavily influenced by jazz, blues, syncopation, and popular style.",
-discussion:
-"Jazz-concert fusion, blues inflection, syncopation, piano and orchestra."
+clue:"Concert work combines piano virtuosity with jazz, blues, and syncopation.",
+discussion:"Jazz-concert fusion, blues inflection, syncopation."
 },
 
 {
 id:"shostakovich5",
 era:"post",
-composer:[
-"shostakovich",
-"dmitry shostakovich"
-],
-genre:[
-"symphony"
-],
+composer:["shostakovich","dmitry shostakovich"],
+genre:["symphony"],
 year:1937,
 title:"Shostakovich — Symphony No. 5",
-clue:
-"Large Soviet symphony combining tonal reference points with severe dissonance, intense lyricism, and a politically charged public context.",
-discussion:
-"Soviet symphony, Socialist Realism context, tonal/dissonant language, public political significance."
+clue:"Large Soviet symphony combining tonal reference points with severe dissonance and political context.",
+discussion:"Soviet symphony, Socialist Realism context."
 },
 
 {
 id:"prokofievNevsky",
 era:"post",
-composer:[
-"prokofiev",
-"sergey prokofiev"
-],
-genre:[
-"cantata",
-"film music",
-"film score"
-],
+composer:["prokofiev","sergey prokofiev"],
+genre:["cantata","film music","film score"],
 year:1938,
 title:"Prokofiev — Alexander Nevsky",
-clue:
-"Massive choral-orchestral writing derives from music for a historical Soviet film and was later reshaped into a concert cantata.",
-discussion:
-"Film score/cantata, large chorus and orchestra, Soviet historical subject, dramatic mass style."
+clue:"Massive choral-orchestral writing derived from a historical Soviet film score.",
+discussion:"Film score/cantata, chorus and orchestra."
 },
 
 {
 id:"cowell",
 era:"post",
-composer:[
-"cowell",
-"henry cowell"
-],
-genre:[
-"piano piece",
-"solo piano"
-],
+composer:["cowell","henry cowell"],
+genre:["piano piece","solo piano"],
 year:1917,
 title:"Henry Cowell — The Tides of Manaunaun",
-clue:
-"Solo piano writing uses large tone clusters struck by the hand or forearm alongside more conventional melodic material.",
-discussion:
-"Tone clusters, experimental piano technique, American experimentalism."
+clue:"Solo piano writing uses large tone clusters struck by the hand or forearm.",
+discussion:"Tone clusters, experimental piano technique."
 },
 
 {
 id:"coplandBilly",
 era:"post",
-composer:[
-"copland",
-"aaron copland"
-],
-genre:[
-"ballet"
-],
+composer:["copland","aaron copland"],
+genre:["ballet"],
 year:1938,
 title:"Copland — Billy the Kid",
-clue:
-"American ballet using open sonorities, folk material, and musical images of wide landscapes and frontier life.",
-discussion:
-"Americanism, ballet, open intervals, folk references, populist style."
+clue:"American ballet using open sonorities, folk material, and frontier imagery.",
+discussion:"Americanism, ballet, open intervals, folk references."
 },
 
 {
 id:"cageBacchanale",
 era:"post",
-composer:[
-"cage",
-"john cage"
-],
-genre:[
-"prepared piano piece",
-"piano piece",
-"solo piano"
-],
+composer:["cage","john cage"],
+genre:["prepared piano piece","piano piece","solo piano"],
 year:1940,
 title:"John Cage — Bacchanale",
-clue:
-"The piano is altered by objects placed between or on the strings, transforming ordinary keystrokes into percussion-like timbres.",
-discussion:
-"Prepared piano, experimental timbre, Cage's early experimentalism."
+clue:"The piano is altered by objects placed between or on the strings.",
+discussion:"Prepared piano, experimental timbre."
 },
 
 {
 id:"messiaenQuartet",
 era:"post",
-composer:[
-"messiaen",
-"olivier messiaen"
-],
-genre:[
-"quartet",
-"chamber music"
-],
+composer:["messiaen","olivier messiaen"],
+genre:["quartet","chamber music"],
 year:1941,
 title:"Messiaen — Quartet for the End of Time",
-clue:
-"Chamber music for clarinet, violin, cello, and piano uses unusual modes, additive rhythmic ideas, nonretrogradable rhythms, birdsong references, and religious symbolism.",
-discussion:
-"Modes of limited transposition, nonretrogradable rhythm, birdsong, Roman Catholic spirituality."
+clue:"Chamber music for clarinet, violin, cello, and piano uses unusual modes, nonretrogradable rhythms, birdsong, and religious symbolism.",
+discussion:"Modes of limited transposition, nonretrogradable rhythm, birdsong."
 },
 
 {
 id:"babbitt",
 era:"post",
-composer:[
-"babbitt",
-"milton babbitt"
-],
-genre:[
-"chamber music",
-"serial chamber work"
-],
+composer:["babbitt","milton babbitt"],
+genre:["chamber music","serial chamber work"],
 year:1948,
 title:"Milton Babbitt — Composition for Four Instruments",
-clue:
-"Highly organized postwar chamber music systematically controls pitch and other musical relationships using serial procedures.",
-discussion:
-"American serialism, mathematical organization, rigorous pitch structure."
+clue:"Highly organized postwar chamber music using rigorous serial procedures.",
+discussion:"American serialism, mathematical organization."
 },
 
 {
 id:"carter",
 era:"post",
-composer:[
-"carter",
-"elliott carter"
-],
-genre:[
-"string quartet",
-"quartet"
-],
+composer:["carter","elliott carter"],
+genre:["string quartet","quartet"],
 year:1951,
 title:"Elliott Carter — String Quartet No. 1",
-clue:
-"Four string players often seem to inhabit different rhythmic characters or temporal layers, connected through changing pulse relationships.",
-discussion:
-"Metric modulation, independent instrumental characters, layered temporal organization."
+clue:"Four string players often seem to inhabit different rhythmic characters or temporal layers.",
+discussion:"Metric modulation, independent instrumental characters."
 },
 
 {
 id:"reich18",
 era:"post",
-composer:[
-"reich",
-"steve reich"
-],
-genre:[
-"minimalist ensemble work",
-"ensemble piece",
-"minimalism"
-],
+composer:["reich","steve reich"],
+genre:["minimalist ensemble work","ensemble piece","minimalism"],
 year:1976,
 title:"Steve Reich — Music for 18 Musicians",
-clue:
-"A regular pulse supports repeating interlocking patterns. Harmonic changes unfold gradually over long spans rather than through traditional thematic development.",
-discussion:
-"Minimalism, pulse, repetition, interlocking patterns, gradual harmonic process."
+clue:"A regular pulse supports repeating interlocking patterns and gradual harmonic change.",
+discussion:"Minimalism, pulse, repetition, gradual process."
 },
 
 {
 id:"glassEinstein",
 era:"post",
-composer:[
-"glass",
-"philip glass"
-],
-genre:[
-"opera"
-],
+composer:["glass","philip glass"],
+genre:["opera"],
 year:1976,
 title:"Philip Glass — Einstein on the Beach",
-clue:
-"Unconventional stage work uses repeated cells, additive structures, numbers, and solfège syllables rather than traditional operatic narrative.",
-discussion:
-"Minimalist opera, additive structure, repeated cells, nontraditional theater."
+clue:"Stage work uses repeated cells, additive structures, numbers, and solfège syllables.",
+discussion:"Minimalist opera, additive structure, repetition."
 },
 
 {
 id:"partTabula",
 era:"post",
-composer:[
-"part",
-"pärt",
-"arvo part",
-"arvo pärt"
-],
-genre:[
-"concerto",
-"instrumental work",
-"minimalist work"
-],
+composer:["part","pärt","arvo part","arvo pärt"],
+genre:["concerto","instrumental work","minimalist work"],
 year:1977,
 title:"Arvo Pärt — Tabula Rasa",
-clue:
-"Slow, sparse tonal writing uses bell-like triadic sonorities and an austere spiritual atmosphere.",
-discussion:
-"Tintinnabuli, spiritual minimalism, tonal triads, sparse texture."
+clue:"Slow, sparse tonal writing uses bell-like triadic sonorities and spiritual austerity.",
+discussion:"Tintinnabuli, spiritual minimalism."
 },
 
 {
 id:"berioSinfonia",
 era:"post",
-composer:[
-"berio",
-"luciano berio"
-],
-genre:[
-"sinfonia",
-"orchestral vocal work"
-],
+composer:["berio","luciano berio"],
+genre:["sinfonia","orchestral vocal work"],
 year:1968,
 title:"Luciano Berio — Sinfonia",
-clue:
-"Large ensemble work combines voices and orchestra with quotations and references to earlier music, creating a dense collage.",
-discussion:
-"Collage, quotation, Postmodern/transhistorical reference, voices and orchestra."
+clue:"Large ensemble work combines voices and orchestra with quotations from earlier music.",
+discussion:"Collage, quotation, transhistorical reference."
 },
 
 {
 id:"schnittke",
 era:"post",
-composer:[
-"schnittke",
-"alfred schnittke"
-],
-genre:[
-"string quartet",
-"quartet"
-],
+composer:["schnittke","alfred schnittke"],
+genre:["string quartet","quartet"],
 year:1983,
 title:"Alfred Schnittke — String Quartet No. 3",
-clue:
-"String quartet juxtaposes references to historical styles and quotations with modern dissonant writing.",
-discussion:
-"Polystylism, quotation, historical styles placed alongside modern language."
+clue:"String quartet juxtaposes historical-style references with modern dissonant writing.",
+discussion:"Polystylism, quotation."
 },
 
 {
 id:"adamsNixon",
 era:"post",
-composer:[
-"adams",
-"john adams"
-],
-genre:[
-"opera"
-],
+composer:["adams","john adams"],
+genre:["opera"],
 year:1987,
 title:"John Adams — Nixon in China",
-clue:
-"Opera about a major twentieth-century political event combines repeated minimalist pulsation with broader tonal harmony and dramatic orchestral writing.",
-discussion:
-"Postminimalism, opera, repetitive processes, tonal centers, historical subject."
+clue:"Opera about a major political event combines repeated minimalist pulsation with broader tonal harmony.",
+discussion:"Postminimalism, opera, repetitive processes."
 },
 
 {
 id:"saariaho",
 era:"post",
-composer:[
-"saariaho",
-"kaija saariaho"
-],
-genre:[
-"opera"
-],
+composer:["saariaho","kaija saariaho"],
+genre:["opera"],
 year:2000,
 title:"Kaija Saariaho — L'Amour de loin",
-clue:
-"Late twentieth-/early twenty-first-century opera emphasizes gradually transforming orchestral color, texture, spectral timbre, and a medieval troubadour subject.",
-discussion:
-"Opera, spectral/timbral thinking, slowly evolving orchestral color, medieval subject."
+clue:"Opera emphasizes slowly transforming orchestral color and a medieval troubadour subject.",
+discussion:"Opera, spectral/timbral thinking, evolving orchestral color."
 }
 
 ];
 
 
-
-/* =========================================================
-SCORE DISPLAY MODES
-========================================================= */
+/* SCORE DISPLAY MODES */
 
 function practiceAllScores(){
 
     mode = "study";
 
-    activeScores =
-    [...scoreBank];
+    activeScores = [...scoreBank];
 
     document.getElementById(
         "scoreModeDescription"
@@ -4221,8 +3057,7 @@ function practiceAllScores(){
 function randomFifteenScores(){
 
     activeScores =
-    shuffle(scoreBank)
-    .slice(0,15);
+    shuffle(scoreBank).slice(0,15);
 
     document.getElementById(
         "scoreModeDescription"
@@ -4244,10 +3079,7 @@ function shuffleCurrentScores(){
 }
 
 
-
-/* =========================================================
-SCORE RENDER
-========================================================= */
+/* SCORE RENDER */
 
 function renderScores(){
 
@@ -4263,18 +3095,24 @@ function renderScores(){
         const card =
         document.createElement("div");
 
-        card.className =
-        "card";
+        card.className = "card";
+        card.id = "scard"+index;
 
-        card.id =
-        "scard"+index;
+        card.innerHTML = `
 
-        const visual =
-        q.visual
-        ?
-        q.visual
-        :
-        `
+        <div class="meta">
+
+        <span class="badge ${q.era}">
+        ${q.era==="pre" ? "1700–1900" : "1900–Present"}
+        </span>
+
+        <span class="badge">
+        Unknown Excerpt ${index+1}
+        </span>
+
+        </div>
+
+
         <div class="score-clue">
 
         <strong>
@@ -4286,33 +3124,13 @@ function renderScores(){
         ${q.clue}
 
         </div>
-        `;
-
-        card.innerHTML = `
-
-        <div class="meta">
-
-        <span class="badge ${q.era}">
-        ${q.era === "pre" ? "1700–1900" : "1900–Present"}
-        </span>
-
-        <span class="badge">
-        Unknown Excerpt ${index+1}
-        </span>
-
-        </div>
-
-
-        ${visual}
 
 
         <div class="id-grid">
 
         <div>
 
-        <strong>
-        Composer
-        </strong>
+        <strong>Composer</strong>
 
         <input
         type="text"
@@ -4325,9 +3143,7 @@ function renderScores(){
 
         <div>
 
-        <strong>
-        Genre
-        </strong>
+        <strong>Genre</strong>
 
         <input
         type="text"
@@ -4340,9 +3156,7 @@ function renderScores(){
 
         <div>
 
-        <strong>
-        Approximate date
-        </strong>
+        <strong>Approximate date</strong>
 
         <input
         type="number"
@@ -4363,26 +3177,22 @@ function renderScores(){
 
         <div>
 
-        <strong>
-        Texture / scoring
-        </strong>
+        <strong>Texture / scoring</strong>
 
         <textarea
         id="stexture${index}"
-        placeholder="Describe texture, voices, instrumentation, density, ensemble..."></textarea>
+        placeholder="Describe texture, voices, instrumentation, ensemble..."></textarea>
 
         </div>
 
 
         <div>
 
-        <strong>
-        Form / stylistic evidence
-        </strong>
+        <strong>Form / stylistic evidence</strong>
 
         <textarea
         id="sanalysis${index}"
-        placeholder="Harmony, rhythm, form, melody, timbre, text setting, orchestration..."></textarea>
+        placeholder="Harmony, rhythm, form, timbre, text setting, orchestration..."></textarea>
 
         </div>
 
@@ -4390,6 +3200,14 @@ function renderScores(){
 
 
         <div class="actions">
+
+        <a
+        href="${getListenLink(q.title)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn listen-btn">
+        ▶ Listen
+        </a>
 
         <button
         class="btn"
@@ -4501,10 +3319,7 @@ function renderScores(){
 }
 
 
-
-/* =========================================================
-INDIVIDUAL SCORE FEEDBACK
-========================================================= */
+/* SCORE FEEDBACK */
 
 function evaluateScore(index){
 
@@ -4528,25 +3343,17 @@ function evaluateScore(index){
         ).value
     );
 
-    return {
+    return{
 
         composerOK:
-        accepts(
-            composer,
-            q.composer
-        ),
+        accepts(composer,q.composer),
 
         genreOK:
-        accepts(
-            genre,
-            q.genre
-        ),
+        accepts(genre,q.genre),
 
         dateOK:
         !!year &&
-        Math.abs(
-            year-q.year
-        ) <= 25,
+        Math.abs(year-q.year)<=25,
 
         composerEntered:
         !!composer.trim(),
@@ -4564,9 +3371,6 @@ function evaluateScore(index){
 
 function feedbackScore(index){
 
-    const q =
-    activeScores[index];
-
     const result =
     evaluateScore(index);
 
@@ -4581,15 +3385,11 @@ function feedbackScore(index){
     );
 
     feedback.classList.remove(
-        "good",
-        "bad",
-        "partial"
+        "good","bad","partial"
     );
 
     card.classList.remove(
-        "correct",
-        "incorrect",
-        "review"
+        "correct","incorrect","review"
     );
 
     if(
@@ -4602,30 +3402,12 @@ function feedbackScore(index){
         "Enter at least one identification before requesting feedback.";
 
         feedback.classList.add(
-            "show",
-            "partial"
+            "show","partial"
         );
 
         return;
 
     }
-
-
-    const composerText =
-    result.composerOK
-    ? "✓ Composer"
-    : "✗ Composer";
-
-    const genreText =
-    result.genreOK
-    ? "✓ Genre"
-    : "✗ Genre";
-
-    const dateText =
-    result.dateOK
-    ? "✓ Date"
-    : "✗ Date";
-
 
     const numberCorrect =
     [
@@ -4634,49 +3416,36 @@ function feedbackScore(index){
         result.dateOK
     ].filter(Boolean).length;
 
-
     feedback.innerHTML = `
 
     <strong>
-    ${composerText}
+    ${result.composerOK ? "✓ Composer" : "✗ Composer"}
     &nbsp;&nbsp;
-    ${genreText}
+    ${result.genreOK ? "✓ Genre" : "✗ Genre"}
     &nbsp;&nbsp;
-    ${dateText}
+    ${result.dateOK ? "✓ Date" : "✗ Date"}
     </strong>
 
     <br><br>
 
     ${numberCorrect}/3 identification elements correct.
 
-    <br><br>
-
-    <strong>
-    Discussion reminder:
-    </strong>
-
-    Compare your texture/form explanation against the identifying
-    features after you choose Show Answer.
-
     `;
 
-
-    if(numberCorrect === 3){
+    if(numberCorrect===3){
 
         feedback.classList.add(
-            "show",
-            "good"
+            "show","good"
         );
 
         card.classList.add(
             "correct"
         );
 
-    }else if(numberCorrect > 0){
+    }else if(numberCorrect>0){
 
         feedback.classList.add(
-            "show",
-            "partial"
+            "show","partial"
         );
 
         card.classList.add(
@@ -4686,8 +3455,7 @@ function feedbackScore(index){
     }else{
 
         feedback.classList.add(
-            "show",
-            "bad"
+            "show","bad"
         );
 
         card.classList.add(
@@ -4701,23 +3469,18 @@ function feedbackScore(index){
 
 function showScoreAnswer(index){
 
-    const box =
     document.getElementById(
         "sanswer"+index
-    );
-
-    box.classList.toggle(
-        "show"
-    );
+    ).classList.toggle("show");
 
 }
 
 
 function gradeScores(){
 
-    let composerCorrect = 0;
-    let genreCorrect = 0;
-    let dateCorrect = 0;
+    let composerCorrect=0;
+    let genreCorrect=0;
+    let dateCorrect=0;
 
     activeScores.forEach(function(q,index){
 
@@ -4743,25 +3506,19 @@ function gradeScores(){
     document.getElementById(
         "sComposer"
     ).textContent =
-    composerCorrect
-    + "/"
-    + activeScores.length;
+    composerCorrect+"/"+activeScores.length;
 
     document.getElementById(
         "sGenre"
     ).textContent =
-    genreCorrect
-    + "/"
-    + activeScores.length;
+    genreCorrect+"/"+activeScores.length;
 
     document.getElementById(
         "sDate"
     ).textContent =
-    dateCorrect
-    + "/"
-    + activeScores.length;
+    dateCorrect+"/"+activeScores.length;
 
-    return {
+    return{
         composerCorrect,
         genreCorrect,
         dateCorrect,
@@ -4773,7 +3530,7 @@ function gradeScores(){
 
 function updateScoreProgress(){
 
-    let attempted = 0;
+    let attempted=0;
 
     activeScores.forEach(function(q,index){
 
@@ -4800,9 +3557,7 @@ function updateScoreProgress(){
                 year.value.trim()
             )
         ){
-
             attempted++;
-
         }
 
     });
@@ -4815,18 +3570,13 @@ function updateScoreProgress(){
 }
 
 
-
-/* =========================================================
-SELF RATINGS
-========================================================= */
+/* SELF RATINGS */
 
 function toggleSelfRating(index){
 
     document.getElementById(
         "srating"+index
-    ).classList.toggle(
-        "show"
-    );
+    ).classList.toggle("show");
 
 }
 
@@ -4866,45 +3616,22 @@ function restoreRatingVisual(index,id){
         "rate-review-"+index
     );
 
-    if(!good){
-        return;
+    if(!good) return;
+
+    good.classList.remove("active-green");
+    almost.classList.remove("active-yellow");
+    review.classList.remove("active-red");
+
+    if(scoreRatings[id]==="gotit"){
+        good.classList.add("active-green");
     }
 
-    good.classList.remove(
-        "active-green"
-    );
-
-    almost.classList.remove(
-        "active-yellow"
-    );
-
-    review.classList.remove(
-        "active-red"
-    );
-
-
-    if(scoreRatings[id] === "gotit"){
-
-        good.classList.add(
-            "active-green"
-        );
-
+    if(scoreRatings[id]==="almost"){
+        almost.classList.add("active-yellow");
     }
 
-    if(scoreRatings[id] === "almost"){
-
-        almost.classList.add(
-            "active-yellow"
-        );
-
-    }
-
-    if(scoreRatings[id] === "review"){
-
-        review.classList.add(
-            "active-red"
-        );
-
+    if(scoreRatings[id]==="review"){
+        review.classList.add("active-red");
     }
 
 }
@@ -4914,9 +3641,7 @@ function saveRatings(){
 
     localStorage.setItem(
         "musicHistoryScoreRatings",
-        JSON.stringify(
-            scoreRatings
-        )
+        JSON.stringify(scoreRatings)
     );
 
 }
@@ -4930,10 +3655,8 @@ function loadRatings(){
     );
 
     if(saved){
-
         scoreRatings =
         JSON.parse(saved);
-
     }
 
 }
@@ -4946,9 +3669,7 @@ function resetScoreRatings(){
             "Clear all score self-ratings?"
         )
     ){
-
         return;
-
     }
 
     scoreRatings = {};
@@ -4960,22 +3681,14 @@ function resetScoreRatings(){
 }
 
 
-
-/* =========================================================
-READING
-========================================================= */
+/* READING */
 
 const readingBank = [
 
 {
 type:"mc",
 q:"According to the passage, eighteenth-century musical institutions regularly required:",
-choices:[
-"New music",
-"Only works by deceased composers",
-"Electronic music",
-"Only folk music"
-],
+choices:["New music","Only works by deceased composers","Electronic music","Only folk music"],
 answer:0,
 explanation:"The passage says that courts, churches, opera houses, and concert organizations regularly required new music."
 },
@@ -4983,12 +3696,7 @@ explanation:"The passage says that courts, churches, opera houses, and concert o
 {
 type:"mc",
 q:"What changed during the nineteenth century?",
-choices:[
-"Older music became increasingly important in concert life",
-"Symphonies disappeared",
-"Conservatories closed",
-"Composers stopped writing new music"
-],
+choices:["Older music became increasingly important in concert life","Symphonies disappeared","Conservatories closed","Composers stopped writing new music"],
 answer:0,
 explanation:"The passage emphasizes the growing authority of an established historical repertory."
 },
@@ -4996,9 +3704,7 @@ explanation:"The passage emphasizes the growing authority of an established hist
 {
 type:"fill",
 q:"The passage uses __________ as the composer whose symphonies created a powerful historical model.",
-accepted:[
-"beethoven"
-],
+accepted:["beethoven"],
 answerText:"Beethoven",
 explanation:"Beethoven is the explicit example in the passage."
 },
@@ -5006,12 +3712,7 @@ explanation:"Beethoven is the explicit example in the passage."
 {
 type:"mc",
 q:"The passage describes the musical past as potentially both:",
-choices:[
-"A model and a burden",
-"A dance and a song",
-"An opera and a symphony",
-"A court and a church"
-],
+choices:["A model and a burden","A dance and a song","An opera and a symphony","A court and a church"],
 answer:0,
 explanation:"The passage explicitly describes the past as both a model and a burden."
 },
@@ -5019,14 +3720,7 @@ explanation:"The passage explicitly describes the past as both a model and a bur
 {
 type:"short",
 q:"In one or two sentences, explain the main tension described at the end of the passage.",
-keywords:[
-"past",
-"preservation",
-"continuity",
-"change",
-"innovation",
-"progress"
-],
+keywords:["past","preservation","continuity","change","innovation","progress"],
 answerText:"The passage describes tension between preserving or learning from historical traditions and pursuing continued musical innovation or progress.",
 explanation:"A strong answer should mention preservation/continuity and change/innovation."
 }
@@ -5041,22 +3735,19 @@ function renderReading(){
         "readingQuestions"
     );
 
-    container.innerHTML = "";
+    container.innerHTML="";
 
     readingBank.forEach(function(q,index){
 
         const card =
         document.createElement("div");
 
-        card.className =
-        "card";
+        card.className="card";
+        card.id="rcard"+index;
 
-        card.id =
-        "rcard"+index;
+        let inputHTML="";
 
-        let inputHTML = "";
-
-        if(q.type === "mc"){
+        if(q.type==="mc"){
 
             inputHTML =
             q.choices.map(function(choice,i){
@@ -5083,9 +3774,9 @@ function renderReading(){
 
         }
 
-        if(q.type === "fill"){
+        if(q.type==="fill"){
 
-            inputHTML = `
+            inputHTML=`
             <input
             type="text"
             id="rinput${index}"
@@ -5094,9 +3785,9 @@ function renderReading(){
 
         }
 
-        if(q.type === "short"){
+        if(q.type==="short"){
 
-            inputHTML = `
+            inputHTML=`
             <textarea
             id="rinput${index}"
             placeholder="Answer from the passage..."></textarea>
@@ -5104,14 +3795,13 @@ function renderReading(){
 
         }
 
-        card.innerHTML = `
+        card.innerHTML=`
 
         <div class="question">
         ${index+1}. ${q.q}
         </div>
 
         ${inputHTML}
-
 
         <div class="actions">
 
@@ -5128,7 +3818,6 @@ function renderReading(){
         </button>
 
         </div>
-
 
         <div
         class="feedback"
@@ -5149,16 +3838,15 @@ function renderReading(){
 }
 
 
-
 function evaluateReading(index){
 
     const q =
     readingBank[index];
 
-    let ok = false;
-    let userAnswer = "";
+    let ok=false;
+    let userAnswer="";
 
-    if(q.type === "mc"){
+    if(q.type==="mc"){
 
         const selected =
         document.querySelector(
@@ -5173,15 +3861,13 @@ function evaluateReading(index){
             ];
 
             ok =
-            Number(selected.value)
-            === q.answer;
+            Number(selected.value)===q.answer;
 
         }
 
     }
 
-
-    if(q.type === "fill"){
+    if(q.type==="fill"){
 
         userAnswer =
         document.getElementById(
@@ -5196,8 +3882,7 @@ function evaluateReading(index){
 
     }
 
-
-    if(q.type === "short"){
+    if(q.type==="short"){
 
         userAnswer =
         document.getElementById(
@@ -5208,18 +3893,16 @@ function evaluateReading(index){
         keywordHits(
             userAnswer,
             q.keywords
-        ) >= 2;
+        )>=2;
 
     }
 
-
-    return {
+    return{
         ok,
         userAnswer
     };
 
 }
-
 
 
 function feedbackReading(index){
@@ -5236,28 +3919,21 @@ function feedbackReading(index){
     );
 
     box.classList.remove(
-        "good",
-        "bad",
-        "partial"
+        "good","bad","partial"
     );
 
-    if(
-        !result.userAnswer ||
-        !result.userAnswer.trim()
-    ){
+    if(!result.userAnswer.trim()){
 
         box.innerHTML =
         "Answer first, then request feedback.";
 
         box.classList.add(
-            "show",
-            "partial"
+            "show","partial"
         );
 
         return;
 
     }
-
 
     if(result.ok){
 
@@ -5266,8 +3942,7 @@ function feedbackReading(index){
         + q.explanation;
 
         box.classList.add(
-            "show",
-            "good"
+            "show","good"
         );
 
     }else{
@@ -5277,14 +3952,12 @@ function feedbackReading(index){
         + q.explanation;
 
         box.classList.add(
-            "show",
-            "bad"
+            "show","bad"
         );
 
     }
 
 }
-
 
 
 function showReadingAnswer(index){
@@ -5297,14 +3970,12 @@ function showReadingAnswer(index){
         "ranswer"+index
     );
 
-    let answer = "";
+    let answer="";
 
-    if(q.type === "mc"){
+    if(q.type==="mc"){
 
         answer =
-        String.fromCharCode(
-            97 + q.answer
-        )
+        String.fromCharCode(97+q.answer)
         + ". "
         + q.choices[q.answer];
 
@@ -5321,17 +3992,14 @@ function showReadingAnswer(index){
     + "<br><br>"
     + q.explanation;
 
-    box.classList.toggle(
-        "show"
-    );
+    box.classList.toggle("show");
 
 }
 
 
-
 function gradeReading(){
 
-    let correct = 0;
+    let correct=0;
 
     readingBank.forEach(function(q,index){
 
@@ -5339,16 +4007,14 @@ function gradeReading(){
         evaluateReading(index);
 
         if(result.ok){
-
             correct++;
-
         }
 
         feedbackReading(index);
 
     });
 
-    return {
+    return{
         correct,
         total:readingBank.length
     };
@@ -5356,10 +4022,7 @@ function gradeReading(){
 }
 
 
-
-/* =========================================================
-ESSAYS
-========================================================= */
+/* ESSAYS */
 
 function wordCount(id,countId){
 
@@ -5370,10 +4033,8 @@ function wordCount(id,countId){
 
     const count =
     text
-    ?
-    text.split(/\s+/).length
-    :
-    0;
+    ? text.split(/\s+/).length
+    : 0;
 
     document.getElementById(
         countId
@@ -5383,10 +4044,7 @@ function wordCount(id,countId){
 }
 
 
-
-/* =========================================================
-GRADE EVERYTHING
-========================================================= */
+/* GRADE ALL */
 
 function gradeAll(){
 
@@ -5399,33 +4057,27 @@ function gradeAll(){
     const reading =
     gradeReading();
 
-
-    if(mode === "exam"){
-
+    if(mode==="exam"){
         stopTimer();
-
     }
 
-
     const scoreCorrect =
-    scores.composerCorrect
-    + scores.genreCorrect
-    + scores.dateCorrect;
+    scores.composerCorrect +
+    scores.genreCorrect +
+    scores.dateCorrect;
 
     const scorePossible =
     scores.total * 3;
 
-
     const objectiveCorrect =
-    general.correct
-    + scoreCorrect
-    + reading.correct;
+    general.correct +
+    scoreCorrect +
+    reading.correct;
 
     const objectivePossible =
-    general.total
-    + scorePossible
-    + reading.total;
-
+    general.total +
+    scorePossible +
+    reading.total;
 
     const percent =
     Math.round(
@@ -5433,7 +4085,6 @@ function gradeAll(){
         objectivePossible *
         100
     );
-
 
     const essay1Words =
     Number(
@@ -5449,20 +4100,19 @@ function gradeAll(){
         ).textContent
     );
 
+    let message="";
 
-    let message = "";
-
-    if(percent >= 90){
+    if(percent>=90){
 
         message =
         "Very strong objective performance. Concentrate on precise score discussion and writing efficiently under time pressure.";
 
-    }else if(percent >= 80){
+    }else if(percent>=80){
 
         message =
-        "Strong foundation. Review missed composer-work associations and strengthen the evidence used in score identification.";
+        "Strong foundation. Review missed composer-work associations and strengthen score-identification evidence.";
 
-    }else if(percent >= 70){
+    }else if(percent>=70){
 
         message =
         "Moderate foundation. Prioritize chronology, genres, forms, and major composer-work-style relationships.";
@@ -5474,178 +4124,89 @@ function gradeAll(){
 
     }
 
-
     document.getElementById(
         "resultBox"
-    ).innerHTML = `
+    ).innerHTML=`
 
     <h2>
     ${percent}% Objective Score
     </h2>
 
-
     <div class="result-grid">
 
-
     <div class="result-cell">
-
     <strong>
     ${general.correct}/${general.total}
     </strong>
-
     General
-
     </div>
 
-
     <div class="result-cell">
-
     <strong>
     ${scoreCorrect}/${scorePossible}
     </strong>
-
     Score-ID Parts
-
     </div>
 
-
     <div class="result-cell">
-
     <strong>
     ${reading.correct}/${reading.total}
     </strong>
-
     Reading
-
     </div>
 
-
     <div class="result-cell">
-
     <strong>
     ${essay1Words}/${essay2Words}
     </strong>
-
     Essay Words
-
     </div>
 
-
     </div>
-
 
     <p style="margin-top:20px">
-
     ${message}
-
-    </p>
-
-    <p>
-
-    Remember: the automatic score does not grade the quality of your
-    score-discussion paragraphs or reflective essays.
-
     </p>
 
     `;
 
-
     renderRatingSummary();
 
-
-    if(general.missed.length){
-
-        document.getElementById(
-            "missedQuestions"
-        ).innerHTML = `
-
-        <div class="card">
-
-        <h3>
-        General Questions to Review
-        </h3>
-
-        <ol>
-
-        ${
-            general.missed
-            .map(
-                q => `<li>${q}</li>`
-            )
-            .join("")
-        }
-
-        </ol>
-
-        </div>
-
-        `;
-
-    }else{
-
-        document.getElementById(
-            "missedQuestions"
-        ).innerHTML = `
-
-        <div class="card">
-
-        No Section I questions missed.
-
-        </div>
-
-        `;
-
-    }
-
-
-    showSection(
-        "results"
-    );
+    showSection("results");
 
 }
 
 
-
-/* =========================================================
-RATING SUMMARY
-========================================================= */
+/* RATING SUMMARY */
 
 function renderRatingSummary(){
 
-    let gotit = [];
-    let almost = [];
-    let review = [];
-
+    let gotit=[];
+    let almost=[];
+    let review=[];
 
     scoreBank.forEach(function(q){
 
         const rating =
         scoreRatings[q.id];
 
-        if(rating === "gotit"){
-
+        if(rating==="gotit"){
             gotit.push(q.title);
-
         }
 
-        if(rating === "almost"){
-
+        if(rating==="almost"){
             almost.push(q.title);
-
         }
 
-        if(rating === "review"){
-
+        if(rating==="review"){
             review.push(q.title);
-
         }
 
     });
 
-
     document.getElementById(
         "ratingSummary"
-    ).innerHTML = `
+    ).innerHTML=`
 
     <div class="card">
 
@@ -5674,7 +4235,6 @@ function renderRatingSummary(){
     ${review.length}
     </p>
 
-
     ${
         review.length
         ?
@@ -5688,11 +4248,9 @@ function renderRatingSummary(){
         <ul>
 
         ${
-            review
-            .map(
-                item => `<li>${item}</li>`
-            )
-            .join("")
+            review.map(
+                item=>`<li>${item}</li>`
+            ).join("")
         }
 
         </ul>
@@ -5708,35 +4266,27 @@ function renderRatingSummary(){
 }
 
 
-
-/* =========================================================
-NEW EXAM
-========================================================= */
+/* NEW EXAM */
 
 function newExam(){
 
     chooseGeneral();
-
     renderGeneral();
 
     document.getElementById(
         "gScore"
-    ).textContent =
-    "—";
+    ).textContent="—";
 
     updateGeneralProgress();
 
 }
 
 
-
-/* =========================================================
-SAVE
-========================================================= */
+/* SAVE */
 
 function saveWork(){
 
-    const data = {
+    const data={
 
         essay1:
         document.getElementById(
@@ -5753,19 +4303,16 @@ function saveWork(){
 
     };
 
-
     localStorage.setItem(
         "musicHistoryStudyData",
         JSON.stringify(data)
     );
 
-
     alert(
-        "Your essay drafts and score self-ratings were saved in this browser."
+        "Your essay drafts and score self-ratings were saved."
     );
 
 }
-
 
 
 function loadSavedWork(){
@@ -5791,34 +4338,21 @@ function loadSavedWork(){
         data.essay2 || "";
 
         if(data.ratings){
-
             scoreRatings =
             data.ratings;
-
         }
 
     }
 
-
     loadRatings();
 
-    wordCount(
-        "essay1",
-        "wc1"
-    );
-
-    wordCount(
-        "essay2",
-        "wc2"
-    );
+    wordCount("essay1","wc1");
+    wordCount("essay2","wc2");
 
 }
 
 
-
-/* =========================================================
-INITIALIZATION
-========================================================= */
+/* INITIALIZE */
 
 loadSavedWork();
 
