@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Music History Placement Practice</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0b1220;
+    color: #eef2ff;
+    line-height: 1.6;
+}
+
+header {
+    background: #111827;
+    border-bottom: 1px solid #334155;
+    padding: 35px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0 0 10px;
+}
+
+header p {
+    color: #aebbd0;
+    max-width: 850px;
+    margin: auto;
+}
+
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #0f172a;
+    border-bottom: 1px solid #334155;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+button {
+    background: #1e293b;
+    color: white;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #334155;
+}
+
+button.primary {
+    background: #60a5fa;
+    color: #08111f;
+    font-weight: bold;
+}
+
+main {
+    max-width: 1000px;
+    margin: auto;
+    padding: 25px 18px 70px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.card {
+    background: #111827;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.question {
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.choice {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 9px;
+    margin: 6px 0;
+}
+
+.choice label {
+    cursor: pointer;
+    display: block;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    background: #07101d;
+    color: white;
+    border: 1px solid #475569;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 7px;
+}
+
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.correct {
+    border-color: #34d399 !important;
+}
+
+.incorrect {
+    border-color: #fb7185 !important;
+}
+
+.answer {
+    display: none;
+    margin-top: 12px;
+    background: #08111f;
+    border-left: 4px solid #a78bfa;
+    padding: 12px;
+}
+
+.answer.show {
+    display: block;
+}
+
+.score-clue {
+    padding: 18px;
+    background: #0c1728;
+    border: 1px dashed #64748b;
+    border-radius: 10px;
+    margin-bottom: 14px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.result {
+    background: #172033;
+    border: 1px solid #60a5fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.timer {
+    font-weight: bold;
+    color: #facc15;
+}
+
+.reading {
+    background: #08111f;
+    border: 1px solid #334155;
+    padding: 20px;
+    border-radius: 10px;
+    font-family: Georgia, serif;
+}
+
+.small {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+h2 {
+    border-bottom: 1px solid #334155;
+    padding-bottom: 8px;
+}
+
+@media (max-width: 700px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>Music History Placement Practice</h1>
+    <p>
+        Practice for a graduate placement exam covering Western classical
+        music from 1700 to the present.
+    </p>
+</header>
+
+<nav>
+    <button onclick="showSection('general')">I. General Knowledge</button>
+    <button onclick="showSection('scores')">II. Score ID</button>
+    <button onclick="showSection('reading')">III-A. Reading</button>
+    <button onclick="showSection('essays')">III-B. Essays</button>
+    <button onclick="showSection('results')">Results</button>
+    <button class="primary" onclick="gradeAll()">Grade</button>
+    <span class="timer" id="timer">90:00</span>
+</nav>
+
+<main>
+
+<section id="general" class="section active">
+
+<h2>Section I — General Knowledge</h2>
+
+<p class="small">
+This practice mixes multiple choice and short-answer questions from
+1700–1900 and 1900–present.
+</p>
+
+<div id="generalQuestions"></div>
+
+<button class="primary" onclick="gradeGeneral()">
+Grade Section I
+</button>
+
+</section>
+
+
+<section id="scores" class="section">
+
+<h2>Section II — Score Identification & Discussion</h2>
+
+<p>
+For each example, practice identifying the composer, genre, and approximate
+date. Because this version does not require separate image files, the cards
+describe the visual and musical clues you would see in a score.
+</p>
+
+<div id="scoreQuestions"></div>
+
+<button class="primary" onclick="gradeScores()">
+Grade Score IDs
+</button>
+
+</section>
+
+
+<section id="reading" class="section">
+
+<h2>Section III-A — Reading Comprehension</h2>
+
+<div class="reading">
+
+<h3>The Musical Past and the Nineteenth Century</h3>
+
+<p>
+During much of the eighteenth century, musical institutions regularly
+required new compositions. Courts, churches, opera houses, and concert
+organizations expected composers to produce music for immediate use.
+A successful work did not necessarily remain in the repertory for generations.
+</p>
+
+<p>
+During the nineteenth century, however, older works became increasingly
+important in concert life. Conservatories trained professional performers,
+concert organizations expanded, and critics began to describe certain works
+as permanent artistic monuments.
+</p>
+
+<p>
+This created a new challenge for composers. A symphonist working after
+Beethoven did not simply have to compose a successful new piece. The composer
+also worked in the shadow of an established repertory that audiences already
+considered authoritative.
+</p>
+
+<p>
+Some musicians therefore looked to the past for permanent artistic values,
+while others believed that the history of music demonstrated a need for
+continued progress.
+</p>
+
+</div>
+
+<div class="card">
+
+<div class="question">
+1. According to the passage, eighteenth-century institutions often required:
+</div>
+
+<div class="choice">
+<label>
+<input type="radio" name="r1" value="0">
+a. new compositions
+</label>
+</div>
+
+<div class="choice">
+<label>
+<input type="radio" name="r1" value="1">
+b. only music by deceased composers
+</label>
+</div>
+
+<div class="choice">
+<label>
+<input type="radio" name="r1" value="2">
+c. electronic music
+</label>
+</div>
+
+<div class="answer">
+Correct answer: a. new compositions
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="question">
+2. What became increasingly important during the nineteenth century?
+</div>
+
+<input type="text" id="r2" placeholder="Type your answer">
+
+<div class="answer">
+Older music / an established historical repertory became increasingly important.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="question">
+3. In the passage, which composer represents the weight of the established symphonic tradition?
+</div>
+
+<input type="text" id="r3" placeholder="Composer">
+
+<div class="answer">
+Beethoven.
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="question">
+4. In one or two sentences, explain the tension described in the final paragraph.
+</div>
+
+<textarea id="r4"></textarea>
+
+<div class="answer">
+A strong answer should explain the tension between treating the past as a source
+of permanent artistic values and viewing history as evidence that music should
+continue to progress.
+</div>
+
+</div>
+
+<button class="primary" onclick="gradeReading()">
+Grade Reading
+</button>
+
+</section>
+
+
+<section id="essays" class="section">
+
+<h2>Section III-B — Reflective Essays</h2>
+
+<div class="card">
+
+<h3>Essay 1 — Music through 1900</h3>
+
+<p>
+Reflect on your experience studying, performing, listening to, or teaching
+Western classical music through 1900.
+</p>
+
+<p>
+Discuss at least two specific composers, works, genres, or historical
+developments and explain how they affected your understanding of this music.
+</p>
+
+<textarea
+id="essay1"
+placeholder="Write in your own words..."
+oninput="countWords('essay1','count1')">
+</textarea>
+
+<p class="small">
+Word count: <span id="count1">0</span>
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>Essay 2 — Music from 1900 to the Present</h3>
+
+<p>
+Reflect on your experience with Western classical music from 1900 to the
+present.
+</p>
+
+<p>
+Discuss at least two composers or works and explain how they changed or
+expanded your understanding of harmony, rhythm, form, timbre, technology,
+or performance.
+</p>
+
+<textarea
+id="essay2"
+placeholder="Write in your own words..."
+oninput="countWords('essay2','count2')">
+</textarea>
+
+<p class="small">
+Word count: <span id="count2">0</span>
+</p>
+
+</div>
+
+</section>
+
+
+<section id="results" class="section">
+
+<h2>Results</h2>
+
+<div id="resultBox" class="result">
+You have not graded the exam yet.
+</div>
+
+</section>
+
+</main>
+
+
+<script>
+
+/* ==============================
+   TIMER
+============================== */
+
+let seconds = 90 * 60;
+
+setInterval(function() {
+
+    if (seconds <= 0) return;
+
+    seconds--;
+
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+
+    document.getElementById("timer").textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(secs).padStart(2, "0");
+
+}, 1000);
+
+
+/* ==============================
+   NAVIGATION
+============================== */
+
+function showSection(id) {
+
+    document.querySelectorAll(".section").forEach(function(section) {
+        section.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    window.scrollTo(0,0);
+}
+
+
+/* ==============================
+   GENERAL QUESTIONS
+============================== */
+
+const generalQuestions = [
+
+{
+q:"Which genre is best described as a miniature opera?",
+choices:["Serenata","Oratorio","Symphonic poem","Operetta"],
+answer:0,
+explanation:"Serenata is the term used in the test bank for a miniature opera."
+},
+
+{
+q:"Which term refers to serious Italian opera?",
+choices:["Opera buffa","Opera seria","Operetta","Singspiel"],
+answer:1,
+explanation:"Opera seria means serious Italian opera."
+},
+
+{
+q:"A short comic opera performed between the acts of an opera seria is called:",
+choices:["Intermezzo","Oratorio","Serenata","Grand opéra"],
+answer:0,
+explanation:"Pergolesi's La serva padrona is the major example."
+},
+
+{
+q:"Which form repeats the same music for each stanza?",
+choices:["Through-composed","Strophic","Sonata form","Rondo"],
+answer:1,
+explanation:"Schubert's Heidenröslein is a strophic Lied."
+},
+
+{
+q:"Schubert's Erlkönig is an example of:",
+choices:["Strophic form","Through-composed form","Ritornello form","Da capo form"],
+answer:1,
+explanation:"The music changes continuously in response to the text."
+},
+
+{
+q:"Which section of sonata form normally contains the greatest harmonic instability?",
+choices:["Exposition","Development","Recapitulation","Coda"],
+answer:1,
+explanation:"The development is generally the most modulatory section."
+},
+
+{
+q:"Which form alternates a recurring refrain with episodes?",
+choices:["Rondo","Fugue","Binary","Passacaglia"],
+answer:0,
+explanation:"A common pattern is A-B-A-C-A."
+},
+
+{
+q:"Which composer is identified as the 'Father of the Symphony' in the test bank?",
+choices:["Mozart","Haydn","Beethoven","Schubert"],
+answer:1,
+explanation:"Franz Joseph Haydn."
+},
+
+{
+q:"Who composed Symphonie fantastique?",
+choices:["Liszt","Berlioz","Wagner","Brahms"],
+answer:1,
+explanation:"Hector Berlioz."
+},
+
+{
+q:"The recurring theme representing the beloved in Symphonie fantastique is called:",
+choices:["Leitmotif","Idée fixe","Ground bass","Tone row"],
+answer:1,
+explanation:"Berlioz called it the idée fixe."
+},
+
+{
+q:"Which composer is most closely associated with the symphonic poem?",
+choices:["Liszt","Schubert","Rossini","Haydn"],
+answer:0,
+explanation:"Liszt cultivated the symphonic poem."
+},
+
+{
+q:"Thematic transformation is especially associated with:",
+choices:["Liszt","Pergolesi","Rossini","Vivaldi"],
+answer:0,
+explanation:"Liszt's Les préludes is a key example."
+},
+
+{
+q:"In a cantabile-cabaletta structure, the slower lyrical section is the:",
+choices:["Cabaletta","Cantabile","Stretta","Tempo di mezzo"],
+answer:1,
+explanation:"Cantabile is the slower lyrical portion."
+},
+
+{
+q:"In a scena ed aria, the section where a dramatic interruption or plot change occurs is:",
+choices:["Cantabile","Tempo di mezzo","Cabaletta","Overture"],
+answer:1,
+explanation:"The tempo di mezzo changes the dramatic situation."
+},
+
+{
+q:"Wagner's term for a recurring musical idea associated with a person, object, or concept is:",
+choices:["Idée fixe","Leitmotif","Rubato","Ostinato"],
+answer:1,
+explanation:"The leitmotif is central to Wagnerian music drama."
+},
+
+{
+q:"Wagner's term for the total work of art is:",
+choices:["Gesamtkunstwerk","Klangfarbenmelodie","Grundgestalt","Sprechstimme"],
+answer:0,
+explanation:"Gesamtkunstwerk means total or unified artwork."
+},
+
+{
+q:"Which genre is associated with Meyerbeer and spectacular five-act French opera?",
+choices:["Grand opéra","Operetta","Verismo","Singspiel"],
+answer:0,
+explanation:"Grand opéra uses chorus, ballet, large orchestra, and elaborate staging."
+},
+
+{
+q:"Cavalleria rusticana and Pagliacci are associated with:",
+choices:["Bel canto","Verismo","Opera seria","Grand opéra"],
+answer:1,
+explanation:"Verismo emphasizes realism and intense personal drama."
+},
+
+{
+q:"Which composer is most closely associated with musical Expressionism?",
+choices:["Debussy","Schoenberg","Haydn","Offenbach"],
+answer:1,
+explanation:"Schoenberg is a central Expressionist composer."
+},
+
+{
+q:"Which composer is most closely associated with musical Impressionism?",
+choices:["Debussy","Verdi","Brahms","Shostakovich"],
+answer:0,
+explanation:"Claude Debussy."
+},
+
+{
+q:"A scale made entirely of whole steps is called:",
+choices:["Octatonic","Whole-tone","Pentatonic","Diatonic"],
+answer:1,
+explanation:"Debussy's Voiles prominently uses whole-tone material."
+},
+
+{
+q:"A scale alternating whole and half steps is called:",
+choices:["Whole-tone","Octatonic","Pentatonic","Chromatic"],
+answer:1,
+explanation:"The octatonic scale alternates whole and half steps."
+},
+
+{
+q:"Which work is especially associated with Primitivism?",
+choices:["The Rite of Spring","Pierrot lunaire","Einstein on the Beach","Nixon in China"],
+answer:0,
+explanation:"Stravinsky's The Rite of Spring."
+},
+
+{
+q:"Schoenberg's speech-song technique in Pierrot lunaire is:",
+choices:["Rubato","Sprechstimme","Bel canto","Parlante"],
+answer:1,
+explanation:"Sprechstimme lies between speaking and singing."
+},
+
+{
+q:"Which three composers make up the Second Viennese School?",
+choices:[
+"Schoenberg, Berg, Webern",
+"Mahler, Strauss, Schoenberg",
+"Debussy, Ravel, Satie",
+"Stravinsky, Bartók, Ives"
+],
+answer:0,
+explanation:"Schoenberg, Berg, and Webern."
+},
+
+{
+q:"The original ordering of a twelve-tone row is called:",
+choices:["Prime","Retrograde","Inversion","Aggregate"],
+answer:0,
+explanation:"Prime is the original row form."
+},
+
+{
+q:"A tone row read backwards is called:",
+choices:["Prime","Retrograde","Inversion","Octatonic"],
+answer:1,
+explanation:"Retrograde reverses the row."
+},
+
+{
+q:"The official arts doctrine of the Soviet Union was:",
+choices:["Futurism","Socialist Realism","Expressionism","Minimalism"],
+answer:1,
+explanation:"Socialist Realism."
+},
+
+{
+q:"Which Shostakovich work restored him to official Soviet favor?",
+choices:["The Nose","Fifth Symphony","Lady Macbeth","First Symphony"],
+answer:1,
+explanation:"Symphony No. 5."
+},
+
+{
+q:"Who invented the prepared piano?",
+choices:["John Cage","Steve Reich","Milton Babbitt","Philip Glass"],
+answer:0,
+explanation:"John Cage."
+},
+
+{
+q:"Music involving chance procedures is called:",
+choices:["Aleatoric music","Verismo","Bel canto","Grand opéra"],
+answer:0,
+explanation:"Aleatoric or chance music is closely associated with Cage."
+},
+
+{
+q:"Total serialism extends serial organization to:",
+choices:[
+"Only pitch",
+"Parameters such as rhythm and dynamics as well as pitch",
+"Only orchestration",
+"Only text"
+],
+answer:1,
+explanation:"Total serialism applies serial procedures beyond pitch."
+},
+
+{
+q:"Musique concrète is based primarily on:",
+choices:[
+"Recorded real-world sounds",
+"Only synthesized electronic sounds",
+"Prepared piano",
+"Orchestral fugues"
+],
+answer:0,
+explanation:"Musique concrète manipulates recorded sound."
+},
+
+{
+q:"Which process gradually moves repeating patterns out of synchronization?",
+choices:["Phasing","Rubato","Stretto","Serialism"],
+answer:0,
+explanation:"Phasing is especially associated with Steve Reich."
+},
+
+{
+q:"Which composer is associated with additive structure?",
+choices:["Philip Glass","Pierre Boulez","Elliott Carter","Alban Berg"],
+answer:0,
+explanation:"The test bank associates additive structure with Philip Glass."
+},
+
+{
+q:"Einstein on the Beach is:",
+choices:["A minimalist opera","A Romantic symphony","A verismo opera","A Lied"],
+answer:0,
+explanation:"It is a major minimalist opera by Philip Glass."
+},
+
+{
+q:"Which composer developed the tintinnabuli style?",
+choices:["Arvo Pärt","Steve Reich","John Cage","Milton Babbitt"],
+answer:0,
+explanation:"Arvo Pärt."
+},
+
+{
+q:"Nixon in China was composed by:",
+choices:["John Adams","Philip Glass","Steve Reich","George Crumb"],
+answer:0,
+explanation:"John Adams."
+},
+
+{
+q:"Metric modulation is especially associated with:",
+choices:["Elliott Carter","John Cage","Debussy","Rossini"],
+answer:0,
+explanation:"Elliott Carter."
+},
+
+{
+q:"Tone clusters and unusual piano techniques are especially associated with:",
+choices:["Henry Cowell","Samuel Barber","Benjamin Britten","John Adams"],
+answer:0,
+explanation:"Henry Cowell."
+}
+
+];
+
+function renderGeneral() {
+
+    const container =
+        document.getElementById("generalQuestions");
+
+    container.innerHTML = "";
+
+    generalQuestions.forEach(function(q, index) {
+
+        let choices = "";
+
+        q.choices.forEach(function(choice, i) {
+
+            choices += `
+            <div class="choice">
+                <label>
+                    <input type="radio"
+                    name="g${index}"
+                    value="${i}">
+                    ${String.fromCharCode(97 + i)}. ${choice}
+                </label>
+            </div>
+            `;
+        });
+
+        container.innerHTML += `
+        <div class="card" id="gcard${index}">
+            <div class="question">
+                ${index + 1}. ${q.q}
+            </div>
+
+            ${choices}
+
+            <div class="answer" id="ganswer${index}">
+                <strong>Correct answer:</strong>
+                ${String.fromCharCode(97 + q.answer)}.
+                ${q.choices[q.answer]}
+                <br><br>
+                ${q.explanation}
+            </div>
+        </div>
+        `;
+    });
+}
+
+function gradeGeneral() {
+
+    let correct = 0;
+
+    generalQuestions.forEach(function(q, index) {
+
+        const selected =
+            document.querySelector(
+                `input[name="g${index}"]:checked`
+            );
+
+        const card =
+            document.getElementById(
+                `gcard${index}`
+            );
+
+        card.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        if (
+            selected &&
+            Number(selected.value) === q.answer
+        ) {
+            correct++;
+            card.classList.add("correct");
+        } else {
+            card.classList.add("incorrect");
+        }
+
+        document
+            .getElementById(`ganswer${index}`)
+            .classList.add("show");
+    });
+
+    return {
+        correct: correct,
+        total: generalQuestions.length
+    };
+}
+
+
+/* ==============================
+   SCORE IDENTIFICATION
+============================== */
+
+const scoreQuestions = [
+
+{
+clue:
+"Solo voice and piano. The piano has relentless repeated notes suggesting galloping movement. The song continuously changes rather than repeating the same stanza music.",
+composer:["schubert"],
+genre:["lied","art song","song"],
+year:1815,
+title:"Erlkönig",
+answer:
+"Franz Schubert — Lied — c. 1815. Through-composed form, voice and piano, repeated-note accompaniment, dramatic character differentiation."
+},
+
+{
+clue:
+"Orchestral score. A short-short-short-long rhythmic motive dominates the music and is developed repeatedly across the movement.",
+composer:["beethoven"],
+genre:["symphony"],
+year:1808,
+title:"Symphony No. 5",
+answer:
+"Ludwig van Beethoven — Symphony — c. 1808. Extremely concentrated motivic development and the famous four-note rhythmic cell."
+},
+
+{
+clue:
+"Large Romantic orchestra. A recurring theme represents the composer's beloved and returns transformed in different movements. The final movement depicts a witches' sabbath.",
+composer:["berlioz"],
+genre:["symphony","program symphony"],
+year:1830,
+title:"Symphonie fantastique",
+answer:
+"Hector Berlioz — Program symphony — c. 1830. Idée fixe, programmatic narrative, vivid orchestration."
+},
+
+{
+clue:
+"Highly chromatic opera score. Harmonic resolution is repeatedly delayed. The opening contains a famously ambiguous sonority associated with longing.",
+composer:["wagner"],
+genre:["opera","music drama"],
+year:1859,
+title:"Tristan und Isolde",
+answer:
+"Richard Wagner — Music drama / opera — c. 1859. Extreme chromaticism, delayed resolution, Tristan sonority, leitmotivic writing."
+},
+
+{
+clue:
+"Large orchestral ballet score. Repeated ostinati, harsh chords, rapidly changing meters, and displaced accents dominate the page.",
+composer:["stravinsky"],
+genre:["ballet"],
+year:1913,
+title:"The Rite of Spring",
+answer:
+"Igor Stravinsky — Ballet — c. 1913. Primitivism, irregular accent, ostinato, block construction, vivid orchestration."
+},
+
+{
+clue:
+"Vocal score for a small mixed chamber ensemble. The singer moves between speaking and singing. The musical language is atonal and highly expressionistic.",
+composer:["schoenberg"],
+genre:["song cycle","vocal chamber work"],
+year:1912,
+title:"Pierrot lunaire",
+answer:
+"Arnold Schoenberg — Song cycle / vocal chamber work — c. 1912. Sprechstimme, atonality, Expressionism, changing chamber colors."
+},
+
+{
+clue:
+"Solo piano work using an instrument altered by objects inserted between or placed on the strings, creating unusual percussive sounds.",
+composer:["cage"],
+genre:["piano piece","prepared piano piece"],
+year:1940,
+title:"Bacchanale",
+answer:
+"John Cage — Prepared-piano work — c. 1940. The prepared piano is the decisive identifying feature."
+},
+
+{
+clue:
+"Large ensemble built on a steady pulse. Short patterns repeat and interlock. Harmonic changes occur gradually rather than through traditional thematic development.",
+composer:["reich"],
+genre:["minimalist ensemble work","ensemble piece","minimalism"],
+year:1976,
+title:"Music for 18 Musicians",
+answer:
+"Steve Reich — Minimalist ensemble work — c. 1976. Pulse, repetition, interlocking patterns, gradual process."
+},
+
+{
+clue:
+"Stage work built from repeated cells and additive rhythmic patterns. Voices often sing numbers or solfège syllables. The subject is Albert Einstein.",
+composer:["glass"],
+genre:["opera"],
+year:1976,
+title:"Einstein on the Beach",
+answer:
+"Philip Glass — Opera — c. 1976. Minimalism, additive structure, repeated cells, unconventional theatrical form."
+},
+
+{
+clue:
+"Opera combining repetitive minimalist processes with richer orchestral harmony and dramatic vocal writing. The plot concerns an American president's 1972 visit to China.",
+composer:["adams"],
+genre:["opera"],
+year:1987,
+title:"Nixon in China",
+answer:
+"John Adams — Opera — c. 1987. Postminimalism, repetition, orchestral drama, contemporary historical subject."
+}
+
+];
+
+function renderScores() {
+
+    const container =
+        document.getElementById("scoreQuestions");
+
+    container.innerHTML = "";
+
+    scoreQuestions.forEach(function(q, index) {
+
+        container.innerHTML += `
+        <div class="card" id="scard${index}">
+
+            <h3>Unknown Excerpt ${index + 1}</h3>
+
+            <div class="score-clue">
+                ${q.clue}
+            </div>
+
+            <div class="grid">
+
+                <div>
+                    <strong>Composer</strong>
+                    <input
+                    type="text"
+                    id="scomposer${index}"
+                    placeholder="Composer">
+                </div>
+
+                <div>
+                    <strong>Genre</strong>
+                    <input
+                    type="text"
+                    id="sgenre${index}"
+                    placeholder="Genre">
+                </div>
+
+                <div>
+                    <strong>Approximate Date</strong>
+                    <input
+                    type="number"
+                    id="syear${index}"
+                    placeholder="Year">
+                </div>
+
+            </div>
+
+            <p>
+                <strong>What musical features support your answer?</strong>
+            </p>
+
+            <textarea
+            id="sdiscussion${index}"
+            placeholder="Texture, form, harmony, rhythm, orchestration, text setting, etc.">
+            </textarea>
+
+            <div class="answer" id="sanswer${index}">
+                <strong>${q.title}</strong><br><br>
+                ${q.answer}
+            </div>
+
+        </div>
+        `;
+    });
+}
+
+function containsAnswer(value, answers) {
+
+    value = value
+        .toLowerCase()
+        .trim();
+
+    return answers.some(function(answer) {
+        return value.includes(answer);
+    });
+}
+
+function gradeScores() {
+
+    let correctParts = 0;
+    let possible = scoreQuestions.length * 3;
+
+    scoreQuestions.forEach(function(q, index) {
+
+        const composer =
+            document
+            .getElementById(
+                `scomposer${index}`
+            )
+            .value
+            .toLowerCase();
+
+        const genre =
+            document
+            .getElementById(
+                `sgenre${index}`
+            )
+            .value
+            .toLowerCase();
+
+        const year =
+            Number(
+                document
+                .getElementById(
+                    `syear${index}`
+                )
+                .value
+            );
+
+        const composerOK =
+            containsAnswer(
+                composer,
+                q.composer
+            );
+
+        const genreOK =
+            containsAnswer(
+                genre,
+                q.genre
+            );
+
+        const yearOK =
+            year &&
+            Math.abs(year - q.year) <= 25;
+
+        if (composerOK) correctParts++;
+        if (genreOK) correctParts++;
+        if (yearOK) correctParts++;
+
+        const card =
+            document.getElementById(
+                `scard${index}`
+            );
+
+        card.classList.remove(
+            "correct",
+            "incorrect"
+        );
+
+        if (
+            composerOK &&
+            genreOK &&
+            yearOK
+        ) {
+            card.classList.add("correct");
+        } else {
+            card.classList.add("incorrect");
+        }
+
+        document
+            .getElementById(
+                `sanswer${index}`
+            )
+            .classList.add("show");
+    });
+
+    return {
+        correct: correctParts,
+        total: possible
+    };
+}
+
+
+/* ==============================
+   READING
+============================== */
+
+function gradeReading() {
+
+    let correct = 0;
+    let total = 3;
+
+    const r1 =
+        document.querySelector(
+            'input[name="r1"]:checked'
+        );
+
+    if (
+        r1 &&
+        Number(r1.value) === 0
+    ) {
+        correct++;
+    }
+
+    const r2 =
+        document
+        .getElementById("r2")
+        .value
+        .toLowerCase();
+
+    if (
+        r2.includes("older") ||
+        r2.includes("past") ||
+        r2.includes("repert")
+    ) {
+        correct++;
+    }
+
+    const r3 =
+        document
+        .getElementById("r3")
+        .value
+        .toLowerCase();
+
+    if (r3.includes("beethoven")) {
+        correct++;
+    }
+
+    document
+        .querySelectorAll(
+            "#reading .answer"
+        )
+        .forEach(function(answer) {
+            answer.classList.add("show");
+        });
+
+    return {
+        correct: correct,
+        total: total
+    };
+}
+
+
+/* ==============================
+   RESULTS
+============================== */
+
+function gradeAll() {
+
+    const general =
+        gradeGeneral();
+
+    const scores =
+        gradeScores();
+
+    const reading =
+        gradeReading();
+
+    const correct =
+        general.correct +
+        scores.correct +
+        reading.correct;
+
+    const total =
+        general.total +
+        scores.total +
+        reading.total;
+
+    const percent =
+        Math.round(
+            correct / total * 100
+        );
+
+    document.getElementById(
+        "resultBox"
+    ).innerHTML = `
+
+        <h2>${percent}% Objective Score</h2>
+
+        <p>
+            <strong>General knowledge:</strong>
+            ${general.correct}/${general.total}
+        </p>
+
+        <p>
+            <strong>Score identification:</strong>
+            ${scores.correct}/${scores.total}
+            identification points
+        </p>
+
+        <p>
+            <strong>Reading comprehension:</strong>
+            ${reading.correct}/${reading.total}
+        </p>
+
+        <p>
+            Your score-discussion paragraphs and reflective essays
+            are not automatically graded. Review them for specific
+            composers, works, forms, textures, harmony, rhythm,
+            orchestration, and historical context.
+        </p>
+    `;
+
+    showSection("results");
+}
+
+
+/* ==============================
+   WORD COUNTS
+============================== */
+
+function countWords(textareaId, countId) {
+
+    const text =
+        document
+        .getElementById(textareaId)
+        .value
+        .trim();
+
+    let count = 0;
+
+    if (text !== "") {
+        count =
+            text.split(/\s+/).length;
+    }
+
+    document
+        .getElementById(countId)
+        .textContent = count;
+}
+
+
+/* ==============================
+   START PAGE
+============================== */
+
+renderGeneral();
+renderScores();
+
+</script>
+
+</body>
+</html>
