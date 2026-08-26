@@ -1,0 +1,3676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Graduate Music Theory Placement Trainer</title>
+
+<style>
+:root{
+    --bg:#08111d;
+    --panel:#111d2e;
+    --panel2:#17263b;
+    --panel3:#0b1625;
+    --border:#344761;
+    --text:#eff6ff;
+    --muted:#9fb0c6;
+    --blue:#60a5fa;
+    --cyan:#38bdf8;
+    --green:#34d399;
+    --yellow:#facc15;
+    --orange:#fb923c;
+    --red:#fb7185;
+    --purple:#c084fc;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 0%,rgba(59,130,246,.13),transparent 30%),
+      linear-gradient(180deg,#07101b,var(--bg));
+    color:var(--text);
+    font-family:Arial,Helvetica,sans-serif;
+    line-height:1.55;
+}
+
+button,
+input,
+select,
+textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:rgba(8,17,29,.96);
+    border-bottom:1px solid var(--border);
+    backdrop-filter:blur(10px);
+}
+
+.topbar-inner{
+    max-width:1250px;
+    margin:auto;
+    padding:10px 14px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    align-items:center;
+}
+
+.topbar button{
+    border:1px solid var(--border);
+    background:var(--panel2);
+    color:white;
+    border-radius:8px;
+    padding:9px 11px;
+}
+
+.topbar button:hover{
+    border-color:var(--blue);
+}
+
+.topbar .primary{
+    background:var(--blue);
+    color:#06101d;
+    font-weight:bold;
+}
+
+header{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 18px 24px;
+}
+
+header h1{
+    font-size:clamp(2rem,5vw,3.8rem);
+    margin:0 0 8px;
+}
+
+header p{
+    max-width:900px;
+    color:var(--muted);
+}
+
+main{
+    max-width:1200px;
+    margin:auto;
+    padding:0 18px 70px;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+.card{
+    background:linear-gradient(145deg,var(--panel),var(--panel3));
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:18px;
+    margin-bottom:15px;
+}
+
+.card.good{
+    border-color:var(--green);
+}
+
+.card.bad{
+    border-color:var(--red);
+}
+
+.card.warn{
+    border-color:var(--yellow);
+}
+
+.grid2{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+.grid3{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+}
+
+.grid4{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:10px;
+}
+
+.stat{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    text-align:center;
+    padding:12px;
+}
+
+.stat strong{
+    display:block;
+    font-size:1.5rem;
+}
+
+.stat small{
+    color:var(--muted);
+}
+
+.btn{
+    border:1px solid var(--border);
+    background:var(--panel2);
+    color:white;
+    border-radius:8px;
+    padding:9px 13px;
+}
+
+.btn:hover{
+    border-color:var(--blue);
+}
+
+.btn.primary{
+    background:var(--blue);
+    color:#07101a;
+    font-weight:bold;
+}
+
+.btn.green{
+    border-color:var(--green);
+}
+
+.btn.yellow{
+    border-color:var(--yellow);
+}
+
+.btn.red{
+    border-color:var(--red);
+}
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+input[type=text],
+input[type=number],
+select,
+textarea{
+    width:100%;
+    background:#07101b;
+    color:white;
+    border:1px solid #455a76;
+    border-radius:8px;
+    padding:10px;
+}
+
+textarea{
+    min-height:90px;
+}
+
+label{
+    display:block;
+}
+
+label span{
+    display:block;
+    margin-bottom:4px;
+    font-weight:bold;
+}
+
+.small{
+    color:var(--muted);
+    font-size:.88rem;
+}
+
+.badge{
+    display:inline-block;
+    padding:3px 8px;
+    border-radius:999px;
+    background:#20324b;
+    font-size:.75rem;
+    margin-right:5px;
+}
+
+.feedback{
+    display:none;
+    margin-top:12px;
+    background:#0a1726;
+    border-left:4px solid var(--cyan);
+    padding:12px;
+}
+
+.feedback.show{
+    display:block;
+}
+
+.feedback.good{
+    border-left-color:var(--green);
+}
+
+.feedback.bad{
+    border-left-color:var(--red);
+}
+
+.feedback.warn{
+    border-left-color:var(--yellow);
+}
+
+.answer{
+    display:none;
+    margin-top:12px;
+    background:#0b1524;
+    border-left:4px solid var(--purple);
+    padding:12px;
+}
+
+.answer.show{
+    display:block;
+}
+
+.note-grid{
+    display:grid;
+    grid-template-columns:90px repeat(5,minmax(100px,1fr));
+    gap:8px;
+    align-items:center;
+    overflow-x:auto;
+}
+
+.note-grid .head{
+    font-weight:bold;
+    color:var(--muted);
+}
+
+.chordbox{
+    min-width:110px;
+    text-align:center;
+    background:#0a1524;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:10px 5px;
+}
+
+.voice-label{
+    font-weight:bold;
+}
+
+.tonight{
+    border:1px solid rgba(250,204,21,.4);
+    background:rgba(250,204,21,.05);
+}
+
+.priority{
+    font-size:1.15rem;
+    font-weight:bold;
+}
+
+.warning{
+    border-left:4px solid var(--yellow);
+    padding:10px 13px;
+    background:#191609;
+    margin:12px 0;
+}
+
+.success{
+    border-left:4px solid var(--green);
+    padding:10px 13px;
+    background:#071a14;
+    margin:12px 0;
+}
+
+.error{
+    border-left:4px solid var(--red);
+    padding:10px 13px;
+    background:#1c0b10;
+    margin:12px 0;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,
+td{
+    border-bottom:1px solid var(--border);
+    padding:9px;
+    text-align:left;
+}
+
+th{
+    color:var(--muted);
+}
+
+hr{
+    border:0;
+    border-top:1px solid var(--border);
+    margin:20px 0;
+}
+
+footer{
+    color:var(--muted);
+    text-align:center;
+    border-top:1px solid var(--border);
+    padding:24px;
+}
+
+@media(max-width:750px){
+    .grid2,
+    .grid3,
+    .grid4{
+        grid-template-columns:1fr;
+    }
+
+    .note-grid{
+        grid-template-columns:75px repeat(5,120px);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div class="topbar-inner">
+
+<button onclick="showSection('home')">Tonight</button>
+<button onclick="showSection('fundamentals')">Fundamentals</button>
+<button onclick="showSection('figured')">Figured Bass</button>
+<button onclick="showSection('melody')">Melody Harmonization</button>
+<button onclick="showSection('analysis')">Harmonic Analysis</button>
+<button onclick="showSection('form')">Form</button>
+<button onclick="showSection('mock')">Mock Exam</button>
+<button onclick="showSection('mistakes')">Mistake Log</button>
+
+<button class="primary" onclick="newAll()">
+New Exercises
+</button>
+
+</div>
+</div>
+
+
+<header>
+
+<h1>
+Graduate Music Theory Placement Trainer
+</h1>
+
+<p>
+Focused review for figured bass realization, four-part harmonization,
+harmonic analysis, tonal form, and the fundamentals required to do
+those tasks efficiently.
+</p>
+
+</header>
+
+
+<main>
+
+<!-- =========================================================
+HOME
+========================================================= -->
+
+<section id="home" class="section active">
+
+<div class="card tonight">
+
+<h2>
+Tonight's Study Plan
+</h2>
+
+<p>
+Your exam description is unusually helpful because it tells us exactly
+what will be tested and what will <strong>not</strong> be tested.
+</p>
+
+<p class="priority">
+Do not spend tonight studying species counterpoint, twelve-tone theory,
+serialism, or post-1900 analytical systems.
+</p>
+
+<div class="grid4">
+
+<div class="stat">
+<strong>1</strong>
+<small>Fundamentals check</small>
+</div>
+
+<div class="stat">
+<strong>2</strong>
+<small>Roman numerals</small>
+</div>
+
+<div class="stat">
+<strong>3</strong>
+<small>SATB voice leading</small>
+</div>
+
+<div class="stat">
+<strong>4</strong>
+<small>Form recognition</small>
+</div>
+
+</div>
+
+<hr>
+
+<h3>
+Suggested order for tonight
+</h3>
+
+<p>
+<strong>First:</strong> spend a short block on Fundamentals.
+If key signatures, chord spelling, inversions, and Roman numerals are
+slow, everything else becomes harder.
+</p>
+
+<p>
+<strong>Second:</strong> spend the largest block on Figured Bass and
+Harmonic Analysis. These skills overlap heavily.
+</p>
+
+<p>
+<strong>Third:</strong> practice Melody Harmonization. Focus first on
+choosing sensible harmonic functions and cadences, then on elegant
+voice leading.
+</p>
+
+<p>
+<strong>Fourth:</strong> finish with Form Analysis. It is easier to
+refresh quickly than four-part writing.
+</p>
+
+<p>
+<strong>Last:</strong> take the Mock Exam once without hints.
+</p>
+
+<div class="warning">
+
+<strong>High-yield rule:</strong>
+
+If you are weak on voice leading, prioritize avoiding
+parallel perfect fifths/octaves, resolving leading tones,
+resolving chordal sevenths downward, keeping voices in range,
+and writing a convincing cadence.
+
+</div>
+
+</div>
+
+
+<div class="grid2">
+
+<div class="card">
+
+<h3>
+What the exam explicitly requires
+</h3>
+
+<p>
+✓ Four-voice realization from figured bass
+</p>
+
+<p>
+✓ Four-voice harmonization of a melody
+</p>
+
+<p>
+✓ Harmonic analysis of a chorale-like passage
+</p>
+
+<p>
+✓ Analysis of musical forms
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+What the exam explicitly excludes
+</h3>
+
+<p>
+✗ Counterpoint as a separate tested subject
+</p>
+
+<p>
+✗ Post-1900 practices
+</p>
+
+<p>
+So tonight's trainer stays primarily inside common-practice tonal theory.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Essential checklist before you walk into the exam
+</h3>
+
+<p>
+You should be able to do the following without much hesitation:
+</p>
+
+<p>
+• spell major, minor, diminished, and augmented triads<br>
+• spell dominant, major, minor, half-diminished, and diminished sevenths<br>
+• identify root position, 6, 6/4, 7, 6/5, 4/3, and 4/2<br>
+• identify diatonic Roman numerals in major and minor<br>
+• recognize tonic, predominant, and dominant functions<br>
+• recognize authentic, half, deceptive, and plagal cadences<br>
+• detect parallel fifths and octaves<br>
+• resolve scale degree 7 correctly in dominant-tonic motion<br>
+• resolve chordal sevenths downward<br>
+• identify phrases, periods, binary, rounded binary, ternary, rondo,
+and sonata form.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+FUNDAMENTALS
+========================================================= -->
+
+<section id="fundamentals" class="section">
+
+<div class="card">
+
+<h2>
+Fundamentals Diagnostic
+</h2>
+
+<p class="small">
+These are deliberately fast questions. If these feel difficult,
+do not skip them: the larger exam tasks depend on them.
+</p>
+
+<div class="grid3">
+
+<div class="stat">
+<strong id="fundScore">—</strong>
+<small>Score</small>
+</div>
+
+<div class="stat">
+<strong id="fundAnswered">0</strong>
+<small>Answered</small>
+</div>
+
+<div class="stat">
+<strong>20</strong>
+<small>Questions per set</small>
+</div>
+
+</div>
+
+</div>
+
+<div id="fundQuestions"></div>
+
+<div class="actions">
+
+<button class="btn primary" onclick="gradeFundamentals()">
+Grade Fundamentals
+</button>
+
+<button class="btn" onclick="generateFundamentals()">
+New Set
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+FIGURED BASS
+========================================================= -->
+
+<section id="figured" class="section">
+
+<div class="card">
+
+<h2>
+Figured Bass → SATB
+</h2>
+
+<p>
+The bass note is supplied. Enter soprano, alto, and tenor notes using
+scientific pitch notation:
+</p>
+
+<p>
+<strong>C4, F#4, Bb3, G3</strong>
+</p>
+
+<p class="small">
+The app checks chord membership, voice ranges, voice crossing,
+spacing, and obvious parallel fifths/octaves. Real four-part writing
+can allow multiple correct realizations, so the feedback is diagnostic
+rather than claiming there is only one solution.
+</p>
+
+<div class="warning">
+
+<strong>Remember:</strong>
+
+5/3 = root position<br>
+6 = first inversion<br>
+6/4 = second inversion<br>
+7 = root-position seventh chord<br>
+6/5 = first inversion seventh chord<br>
+4/3 = second inversion seventh chord<br>
+4/2 = third inversion seventh chord
+
+</div>
+
+</div>
+
+<div id="figuredExercise"></div>
+
+<div class="actions">
+
+<button class="btn primary" onclick="gradeFiguredBass()">
+Check My SATB
+</button>
+
+<button class="btn" onclick="newFiguredBass()">
+New Figured Bass
+</button>
+
+<button class="btn" onclick="showFiguredModel()">
+Show One Model
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+MELODY
+========================================================= -->
+
+<section id="melody" class="section">
+
+<div class="card">
+
+<h2>
+Given Melody → Harmonic Plan
+</h2>
+
+<p>
+The real exam asks for four-part harmonization. Tonight, first make sure
+you can create a sensible <strong>harmonic skeleton</strong>.
+</p>
+
+<p>
+For each soprano note, choose a Roman numeral. Then compare your plan
+with one strong model solution.
+</p>
+
+<div class="warning">
+
+There can be more than one musically correct harmonization.
+The app grades against a model progression, but alternative solutions
+may also be defensible if the melody belongs to the chosen chords and
+the voice leading works.
+
+</div>
+
+</div>
+
+<div id="melodyExercise"></div>
+
+<div class="actions">
+
+<button class="btn primary" onclick="gradeMelody()">
+Check Harmonic Plan
+</button>
+
+<button class="btn" onclick="newMelody()">
+New Melody
+</button>
+
+<button class="btn" onclick="showMelodyModel()">
+Show Model
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+HARMONIC ANALYSIS
+========================================================= -->
+
+<section id="analysis" class="section">
+
+<div class="card">
+
+<h2>
+Harmonic Analysis
+</h2>
+
+<p>
+For each chord, identify the Roman numeral and inversion.
+Then identify the cadence at the end of the phrase.
+</p>
+
+<p class="small">
+The examples use chorale-style SATB note collections rather than
+engraved notation so you can focus on harmonic recognition tonight.
+</p>
+
+</div>
+
+<div id="analysisExercise"></div>
+
+<div class="actions">
+
+<button class="btn primary" onclick="gradeAnalysis()">
+Grade Analysis
+</button>
+
+<button class="btn" onclick="newAnalysis()">
+New Chorale
+</button>
+
+<button class="btn" onclick="showAnalysisAnswers()">
+Show Answers
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+FORM
+========================================================= -->
+
+<section id="form" class="section">
+
+<div class="card">
+
+<h2>
+Form Analysis
+</h2>
+
+<p>
+Identify formal designs from descriptions of themes, cadences,
+returns, and tonal structure.
+</p>
+
+</div>
+
+<div id="formQuestions"></div>
+
+<div class="actions">
+
+<button class="btn primary" onclick="gradeForm()">
+Grade Form
+</button>
+
+<button class="btn" onclick="generateFormSet()">
+New Form Set
+</button>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+MOCK
+========================================================= -->
+
+<section id="mock" class="section">
+
+<div class="card">
+
+<h2>
+Tonight's Mock Placement
+</h2>
+
+<p>
+Do this <strong>after</strong> the individual drills.
+No hints until you finish.
+</p>
+
+<div id="mockList"></div>
+
+<div class="actions">
+
+<button class="btn primary" onclick="generateMock()">
+Generate New Mock
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- =========================================================
+MISTAKES
+========================================================= -->
+
+<section id="mistakes" class="section">
+
+<div class="card">
+
+<h2>
+Mistake Log
+</h2>
+
+<p>
+The app tracks categories you miss during this browser session.
+Use this page to decide what to review next.
+</p>
+
+<div id="mistakeLog"></div>
+
+<div class="actions">
+
+<button class="btn red" onclick="clearMistakes()">
+Clear Mistake Log
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+Graduate Music Theory Placement Review
+</footer>
+
+
+<script>
+
+/* =========================================================
+STATE
+========================================================= */
+
+const mistakeCounts = {};
+
+let currentFundamentals = [];
+let currentFigured = null;
+let currentMelody = null;
+let currentAnalysis = null;
+let currentForm = [];
+
+
+/* =========================================================
+GENERAL HELPERS
+========================================================= */
+
+function showSection(id){
+
+    document.querySelectorAll(".section")
+    .forEach(function(section){
+        section.classList.remove("active");
+    });
+
+    document.getElementById(id)
+    .classList.add("active");
+
+    if(id === "mistakes"){
+        renderMistakeLog();
+    }
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+function shuffle(array){
+
+    const result = [...array];
+
+    for(let i=result.length-1;i>0;i--){
+
+        const j =
+        Math.floor(
+            Math.random()*(i+1)
+        );
+
+        [result[i],result[j]] =
+        [result[j],result[i]];
+
+    }
+
+    return result;
+}
+
+
+function addMistake(category){
+
+    mistakeCounts[category] =
+    (mistakeCounts[category] || 0) + 1;
+
+}
+
+
+function normalizeRoman(value){
+
+    return (value || "")
+    .replace(/\s+/g,"")
+    .replace(/°/g,"o")
+    .replace(/ø/g,"half")
+    .toLowerCase();
+
+}
+
+
+/* =========================================================
+NOTE UTILITIES
+========================================================= */
+
+const pcMap = {
+    "C":0,
+    "B#":0,
+    "C#":1,
+    "DB":1,
+    "D":2,
+    "D#":3,
+    "EB":3,
+    "E":4,
+    "FB":4,
+    "E#":5,
+    "F":5,
+    "F#":6,
+    "GB":6,
+    "G":7,
+    "G#":8,
+    "AB":8,
+    "A":9,
+    "A#":10,
+    "BB":10,
+    "B":11,
+    "CB":11
+};
+
+
+function parseNote(note){
+
+    if(!note){
+        return null;
+    }
+
+    const value =
+    note.trim()
+    .replace("♭","b")
+    .replace("♯","#");
+
+    const match =
+    value.match(
+        /^([A-Ga-g])([#b]?)(-?\d)$/
+    );
+
+    if(!match){
+        return null;
+    }
+
+    const pitchName =
+    (
+        match[1].toUpperCase()
+        +
+        match[2]
+    ).toUpperCase();
+
+    const octave =
+    Number(match[3]);
+
+    const pc =
+    pcMap[pitchName];
+
+    if(pc === undefined){
+        return null;
+    }
+
+    const midi =
+    (octave + 1) * 12 + pc;
+
+    return{
+        name:value,
+        pc,
+        midi
+    };
+}
+
+
+function intervalClass(a,b){
+
+    if(!a || !b){
+        return null;
+    }
+
+    return Math.abs(
+        b.midi - a.midi
+    ) % 12;
+
+}
+
+
+/* =========================================================
+FUNDAMENTALS BANK
+========================================================= */
+
+const fundamentalBank = [
+
+{
+category:"Key Signatures",
+q:"How many sharps are in E major?",
+answer:"4",
+acceptable:["4","four"],
+explanation:"E major has F#, C#, G#, and D#."
+},
+
+{
+category:"Key Signatures",
+q:"How many flats are in Ab major?",
+answer:"4",
+acceptable:["4","four"],
+explanation:"Ab major has Bb, Eb, Ab, Db."
+},
+
+{
+category:"Key Signatures",
+q:"What is the relative minor of C major?",
+answer:"A minor",
+acceptable:["a minor","am"],
+explanation:"The relative minor begins on scale degree 6."
+},
+
+{
+category:"Key Signatures",
+q:"What is the relative major of F# minor?",
+answer:"A major",
+acceptable:["a major"],
+explanation:"F# minor and A major share three sharps."
+},
+
+{
+category:"Intervals",
+q:"What interval is C up to G?",
+answer:"Perfect fifth",
+acceptable:["perfect fifth","p5"],
+explanation:"C–G spans five letter names and seven semitones."
+},
+
+{
+category:"Intervals",
+q:"What interval is B up to F?",
+answer:"Diminished fifth",
+acceptable:["diminished fifth","dim 5","d5","tritone"],
+explanation:"B–F is a diminished fifth / tritone."
+},
+
+{
+category:"Intervals",
+q:"What interval is C up to Ab?",
+answer:"Minor sixth",
+acceptable:["minor sixth","m6"],
+explanation:"C–A is a sixth; Ab makes it minor."
+},
+
+{
+category:"Chord Spelling",
+q:"Spell a D major triad.",
+answer:"D F# A",
+acceptable:["d f# a","d-f#-a","d f sharp a"],
+explanation:"Root, major third, perfect fifth."
+},
+
+{
+category:"Chord Spelling",
+q:"Spell a B diminished triad.",
+answer:"B D F",
+acceptable:["b d f","b-d-f"],
+explanation:"B–D is a minor third and D–F is a minor third."
+},
+
+{
+category:"Chord Spelling",
+q:"Spell a G7 chord.",
+answer:"G B D F",
+acceptable:["g b d f","g-b-d-f"],
+explanation:"A dominant seventh has major triad + minor seventh."
+},
+
+{
+category:"Chord Quality",
+q:"What is the quality of B-D-F in C major?",
+answer:"Diminished",
+acceptable:["diminished","dim"],
+explanation:"The leading-tone triad is diminished."
+},
+
+{
+category:"Roman Numerals",
+q:"In C major, what Roman numeral is D-F-A?",
+answer:"ii",
+acceptable:["ii","2"],
+explanation:"D is scale degree 2 and the diatonic triad is minor."
+},
+
+{
+category:"Roman Numerals",
+q:"In G major, what Roman numeral is D-F#-A-C?",
+answer:"V7",
+acceptable:["v7","V7"],
+explanation:"D is dominant of G; the chord is a dominant seventh."
+},
+
+{
+category:"Roman Numerals",
+q:"In A minor, what Roman numeral is E-G#-B?",
+answer:"V",
+acceptable:["v","V"],
+explanation:"Harmonic minor raises G to G# to create a major dominant."
+},
+
+{
+category:"Inversions",
+q:"What figured-bass symbol indicates a first-inversion triad?",
+answer:"6",
+acceptable:["6"],
+explanation:"First-inversion triads are abbreviated 6."
+},
+
+{
+category:"Inversions",
+q:"What figured-bass symbol indicates a second-inversion triad?",
+answer:"6/4",
+acceptable:["6/4","64"],
+explanation:"The fifth of the chord is in the bass."
+},
+
+{
+category:"Inversions",
+q:"What inversion does 6/5 indicate?",
+answer:"First inversion seventh chord",
+acceptable:[
+"first inversion seventh chord",
+"first inversion",
+"1st inversion"
+],
+explanation:"The third of the seventh chord is in the bass."
+},
+
+{
+category:"Cadences",
+q:"V–I with scale degree 1 in the soprano at the final tonic is typically what cadence?",
+answer:"Perfect authentic cadence",
+acceptable:[
+"perfect authentic cadence",
+"pac"
+],
+explanation:"PAC requires root-position V and I and tonic in soprano."
+},
+
+{
+category:"Cadences",
+q:"A phrase ending on V has what cadence?",
+answer:"Half cadence",
+acceptable:["half cadence","hc"],
+explanation:"A half cadence ends on dominant harmony."
+},
+
+{
+category:"Cadences",
+q:"V–vi is what cadence?",
+answer:"Deceptive cadence",
+acceptable:["deceptive cadence","dc"],
+explanation:"The expected tonic is replaced by vi."
+},
+
+{
+category:"Voice Leading",
+q:"In V–I, scale degree 7 normally resolves to which scale degree?",
+answer:"1",
+acceptable:["1","tonic","scale degree 1"],
+explanation:"The leading tone normally rises by semitone to tonic."
+},
+
+{
+category:"Voice Leading",
+q:"A chordal seventh normally resolves in what direction?",
+answer:"Down by step",
+acceptable:[
+"down",
+"down by step",
+"descending step",
+"downward"
+],
+explanation:"Chordal sevenths normally resolve downward by step."
+},
+
+{
+category:"Voice Leading",
+q:"Which two perfect intervals are especially avoided in parallel motion between voices?",
+answer:"Fifths and octaves",
+acceptable:[
+"fifths and octaves",
+"parallel fifths and octaves",
+"5ths and octaves",
+"5 and 8"
+],
+explanation:"Parallel perfect fifths and octaves undermine voice independence."
+},
+
+{
+category:"Function",
+q:"What is the harmonic function of ii and IV?",
+answer:"Predominant",
+acceptable:[
+"predominant",
+"pre dominant",
+"predominant function"
+],
+explanation:"ii and IV commonly lead toward dominant harmony."
+},
+
+{
+category:"Function",
+q:"What is the harmonic function of V and vii°?",
+answer:"Dominant",
+acceptable:["dominant","dominant function"],
+explanation:"Both contain strong tendency toward tonic."
+}
+
+];
+
+
+function generateFundamentals(){
+
+    currentFundamentals =
+    shuffle(fundamentalBank)
+    .slice(0,20);
+
+    const container =
+    document.getElementById(
+        "fundQuestions"
+    );
+
+    container.innerHTML = "";
+
+    currentFundamentals
+    .forEach(function(q,index){
+
+        container.innerHTML += `
+
+        <div class="card" id="fundCard${index}">
+
+        <span class="badge">
+        ${q.category}
+        </span>
+
+        <h3>
+        ${index+1}. ${q.q}
+        </h3>
+
+        <input
+        type="text"
+        id="fundInput${index}"
+        placeholder="Type your answer"
+        oninput="updateFundAnswered()">
+
+        <div class="actions">
+
+        <button
+        class="btn"
+        onclick="checkFundamental(${index})">
+        Feedback
+        </button>
+
+        <button
+        class="btn"
+        onclick="showFundAnswer(${index})">
+        Show Answer
+        </button>
+
+        </div>
+
+        <div
+        class="feedback"
+        id="fundFeedback${index}">
+        </div>
+
+        <div
+        class="answer"
+        id="fundAnswer${index}">
+
+        <strong>
+        ${q.answer}
+        </strong>
+
+        <br><br>
+
+        ${q.explanation}
+
+        </div>
+
+        </div>
+
+        `;
+
+    });
+
+    document.getElementById(
+        "fundScore"
+    ).textContent = "—";
+
+    updateFundAnswered();
+
+}
+
+
+function isAcceptable(value,answers){
+
+    const normalized =
+    value.toLowerCase()
+    .trim()
+    .replace(/\s+/g," ");
+
+    return answers.some(function(answer){
+
+        return normalized ===
+        answer.toLowerCase().trim();
+
+    });
+
+}
+
+
+function checkFundamental(index){
+
+    const q =
+    currentFundamentals[index];
+
+    const value =
+    document.getElementById(
+        "fundInput"+index
+    ).value;
+
+    const feedback =
+    document.getElementById(
+        "fundFeedback"+index
+    );
+
+    const card =
+    document.getElementById(
+        "fundCard"+index
+    );
+
+    card.classList.remove(
+        "good",
+        "bad"
+    );
+
+    feedback.classList.remove(
+        "good",
+        "bad"
+    );
+
+    if(!value.trim()){
+
+        feedback.innerHTML =
+        "Enter an answer first.";
+
+        feedback.classList.add(
+            "show",
+            "warn"
+        );
+
+        return false;
+    }
+
+    const correct =
+    isAcceptable(
+        value,
+        q.acceptable
+    );
+
+    if(correct){
+
+        card.classList.add("good");
+
+        feedback.innerHTML =
+        "<strong>Correct.</strong> "
+        + q.explanation;
+
+        feedback.classList.add(
+            "show",
+            "good"
+        );
+
+    }else{
+
+        card.classList.add("bad");
+
+        feedback.innerHTML =
+        "<strong>Review this.</strong> "
+        + q.explanation;
+
+        feedback.classList.add(
+            "show",
+            "bad"
+        );
+
+        addMistake(q.category);
+
+    }
+
+    return correct;
+
+}
+
+
+function showFundAnswer(index){
+
+    document.getElementById(
+        "fundAnswer"+index
+    ).classList.toggle("show");
+
+}
+
+
+function gradeFundamentals(){
+
+    let correct = 0;
+
+    currentFundamentals
+    .forEach(function(q,index){
+
+        if(checkFundamental(index)){
+            correct++;
+        }
+
+    });
+
+    const percent =
+    Math.round(
+        correct /
+        currentFundamentals.length *
+        100
+    );
+
+    document.getElementById(
+        "fundScore"
+    ).textContent =
+    percent+"%";
+
+}
+
+
+function updateFundAnswered(){
+
+    let count = 0;
+
+    currentFundamentals
+    .forEach(function(q,index){
+
+        const element =
+        document.getElementById(
+            "fundInput"+index
+        );
+
+        if(
+            element &&
+            element.value.trim()
+        ){
+            count++;
+        }
+
+    });
+
+    document.getElementById(
+        "fundAnswered"
+    ).textContent =
+    count;
+
+}
+
+
+/* =========================================================
+FIGURED BASS EXERCISES
+========================================================= */
+
+const figuredBassBank = [
+
+{
+key:"C major",
+description:"Basic predominant → dominant → tonic progression",
+chords:[
+
+{
+bass:"C3",
+figure:"5/3",
+rn:"I",
+pcs:[0,4,7],
+model:["G4","E4","C4"]
+},
+
+{
+bass:"F2",
+figure:"5/3",
+rn:"IV",
+pcs:[5,9,0],
+model:["A4","F4","C4"]
+},
+
+{
+bass:"D3",
+figure:"6",
+rn:"ii6",
+pcs:[2,5,9],
+model:["A4","F4","D4"]
+},
+
+{
+bass:"G2",
+figure:"7",
+rn:"V7",
+pcs:[7,11,2,5],
+model:["B4","F4","D4"]
+},
+
+{
+bass:"C3",
+figure:"5/3",
+rn:"I",
+pcs:[0,4,7],
+model:["C5","E4","C4"]
+}
+
+]
+},
+
+{
+key:"G major",
+description:"First-inversion predominant and dominant-tonic",
+chords:[
+
+{
+bass:"G2",
+figure:"5/3",
+rn:"I",
+pcs:[7,11,2],
+model:["B4","G4","D4"]
+},
+
+{
+bass:"C3",
+figure:"6",
+rn:"ii6",
+pcs:[9,0,4],
+model:["A4","E4","C4"]
+},
+
+{
+bass:"C3",
+figure:"5/3",
+rn:"IV",
+pcs:[0,4,7],
+model:["G4","E4","C4"]
+},
+
+{
+bass:"D3",
+figure:"7",
+rn:"V7",
+pcs:[2,6,9,0],
+model:["F#4","C4","A3"]
+},
+
+{
+bass:"G2",
+figure:"5/3",
+rn:"I",
+pcs:[7,11,2],
+model:["G4","B3","D4"]
+}
+
+]
+},
+
+{
+key:"F major",
+description:"Predominant and dominant seventh",
+chords:[
+
+{
+bass:"F2",
+figure:"5/3",
+rn:"I",
+pcs:[5,9,0],
+model:["A4","F4","C4"]
+},
+
+{
+bass:"Bb2",
+figure:"6",
+rn:"ii6",
+pcs:[7,10,2],
+model:["G4","D4","Bb3"]
+},
+
+{
+bass:"Bb2",
+figure:"5/3",
+rn:"IV",
+pcs:[10,2,5],
+model:["F4","D4","Bb3"]
+},
+
+{
+bass:"C3",
+figure:"7",
+rn:"V7",
+pcs:[0,4,7,10],
+model:["E4","Bb3","G3"]
+},
+
+{
+bass:"F2",
+figure:"5/3",
+rn:"I",
+pcs:[5,9,0],
+model:["F4","C4","A3"]
+}
+
+]
+}
+
+];
+
+
+function newFiguredBass(){
+
+    currentFigured =
+    figuredBassBank[
+        Math.floor(
+            Math.random() *
+            figuredBassBank.length
+        )
+    ];
+
+    renderFiguredBass();
+
+}
+
+
+function renderFiguredBass(){
+
+    const exercise =
+    currentFigured;
+
+    const container =
+    document.getElementById(
+        "figuredExercise"
+    );
+
+    let html = `
+
+    <div class="card">
+
+    <span class="badge">
+    Key: ${exercise.key}
+    </span>
+
+    <span class="badge">
+    ${exercise.description}
+    </span>
+
+    <div class="note-grid" style="margin-top:15px">
+
+    <div class="head">
+    Voice
+    </div>
+
+    ${
+        exercise.chords
+        .map(
+            (c,i)=>
+            `<div class="head">Chord ${i+1}</div>`
+        )
+        .join("")
+    }
+
+
+    <div class="voice-label">
+    Figure
+    </div>
+
+    ${
+        exercise.chords
+        .map(
+            c=>
+            `<div class="chordbox">${c.figure}</div>`
+        )
+        .join("")
+    }
+
+
+    <div class="voice-label">
+    Bass
+    </div>
+
+    ${
+        exercise.chords
+        .map(
+            c=>
+            `<div class="chordbox">${c.bass}</div>`
+        )
+        .join("")
+    }
+
+
+    <div class="voice-label">
+    Tenor
+    </div>
+
+    ${
+        exercise.chords
+        .map(
+            (c,i)=>
+            `<input type="text" id="figT${i}" placeholder="e.g. C4">`
+        )
+        .join("")
+    }
+
+
+    <div class="voice-label">
+    Alto
+    </div>
+
+    ${
+        exercise.chords
+        .map(
+            (c,i)=>
+            `<input type="text" id="figA${i}" placeholder="e.g. E4">`
+        )
+        .join("")
+    }
+
+
+    <div class="voice-label">
+    Soprano
+    </div>
+
+    ${
+        exercise.chords
+        .map(
+            (c,i)=>
+            `<input type="text" id="figS${i}" placeholder="e.g. G4">`
+        )
+        .join("")
+    }
+
+    </div>
+
+    <div
+    class="feedback"
+    id="figFeedback">
+    </div>
+
+    <div
+    class="answer"
+    id="figModel">
+    </div>
+
+    </div>
+
+    `;
+
+    container.innerHTML =
+    html;
+
+}
+
+
+function voiceRangeOK(voice,note){
+
+    if(!note){
+        return false;
+    }
+
+    const ranges = {
+        S:[60,81],
+        A:[55,74],
+        T:[48,69],
+        B:[40,64]
+    };
+
+    const range =
+    ranges[voice];
+
+    return (
+        note.midi >= range[0] &&
+        note.midi <= range[1]
+    );
+
+}
+
+
+function gradeFiguredBass(){
+
+    const ex =
+    currentFigured;
+
+    let errors = [];
+    let validChords = 0;
+
+    const voicesByChord = [];
+
+
+    ex.chords.forEach(function(chord,i){
+
+        const bass =
+        parseNote(chord.bass);
+
+        const tenor =
+        parseNote(
+            document.getElementById(
+                "figT"+i
+            ).value
+        );
+
+        const alto =
+        parseNote(
+            document.getElementById(
+                "figA"+i
+            ).value
+        );
+
+        const soprano =
+        parseNote(
+            document.getElementById(
+                "figS"+i
+            ).value
+        );
+
+
+        if(
+            !tenor ||
+            !alto ||
+            !soprano
+        ){
+
+            errors.push(
+                `Chord ${i+1}: use note names such as C4, F#4, Bb3.`
+            );
+
+            voicesByChord.push(null);
+
+            return;
+
+        }
+
+
+        const upper =
+        [tenor,alto,soprano];
+
+        const membershipOK =
+        upper.every(
+            note =>
+            chord.pcs.includes(note.pc)
+        );
+
+
+        if(!membershipOK){
+
+            errors.push(
+                `Chord ${i+1}: one or more upper voices are not members of ${chord.rn}.`
+            );
+
+            addMistake(
+                "Chord spelling"
+            );
+
+        }
+
+
+        if(
+            !voiceRangeOK("T",tenor) ||
+            !voiceRangeOK("A",alto) ||
+            !voiceRangeOK("S",soprano)
+        ){
+
+            errors.push(
+                `Chord ${i+1}: one or more voices are outside a normal SATB range.`
+            );
+
+            addMistake(
+                "Voice ranges"
+            );
+
+        }
+
+
+        if(
+            tenor.midi > alto.midi ||
+            alto.midi > soprano.midi
+        ){
+
+            errors.push(
+                `Chord ${i+1}: voice crossing detected.`
+            );
+
+            addMistake(
+                "Voice crossing"
+            );
+
+        }
+
+
+        if(
+            soprano.midi -
+            alto.midi > 12
+        ){
+
+            errors.push(
+                `Chord ${i+1}: soprano and alto are more than an octave apart.`
+            );
+
+            addMistake(
+                "Upper-voice spacing"
+            );
+
+        }
+
+
+        if(
+            alto.midi -
+            tenor.midi > 12
+        ){
+
+            errors.push(
+                `Chord ${i+1}: alto and tenor are more than an octave apart.`
+            );
+
+            addMistake(
+                "Upper-voice spacing"
+            );
+
+        }
+
+
+        if(
+            membershipOK
+        ){
+            validChords++;
+        }
+
+
+        voicesByChord.push([
+            soprano,
+            alto,
+            tenor,
+            bass
+        ]);
+
+    });
+
+
+    /* parallel fifths / octaves */
+
+    for(
+        let c=0;
+        c<voicesByChord.length-1;
+        c++
+    ){
+
+        const first =
+        voicesByChord[c];
+
+        const second =
+        voicesByChord[c+1];
+
+        if(!first || !second){
+            continue;
+        }
+
+
+        for(let v1=0;v1<4;v1++){
+
+            for(let v2=v1+1;v2<4;v2++){
+
+                const int1 =
+                intervalClass(
+                    first[v1],
+                    first[v2]
+                );
+
+                const int2 =
+                intervalClass(
+                    second[v1],
+                    second[v2]
+                );
+
+
+                const move1 =
+                second[v1].midi -
+                first[v1].midi;
+
+                const move2 =
+                second[v2].midi -
+                first[v2].midi;
+
+
+                const similar =
+                (
+                    move1 > 0 &&
+                    move2 > 0
+                )
+                ||
+                (
+                    move1 < 0 &&
+                    move2 < 0
+                );
+
+
+                if(
+                    similar &&
+                    int1 === 7 &&
+                    int2 === 7
+                ){
+
+                    errors.push(
+                        `Between chords ${c+1} and ${c+2}: possible parallel perfect fifth.`
+                    );
+
+                    addMistake(
+                        "Parallel fifths"
+                    );
+
+                }
+
+
+                if(
+                    similar &&
+                    int1 === 0 &&
+                    int2 === 0
+                ){
+
+                    errors.push(
+                        `Between chords ${c+1} and ${c+2}: possible parallel octave/unison.`
+                    );
+
+                    addMistake(
+                        "Parallel octaves"
+                    );
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    const feedback =
+    document.getElementById(
+        "figFeedback"
+    );
+
+    feedback.classList.remove(
+        "good",
+        "bad",
+        "warn"
+    );
+
+
+    if(errors.length === 0){
+
+        feedback.innerHTML = `
+
+        <strong>
+        Strong realization.
+        </strong>
+
+        <br><br>
+
+        All ${validChords} chords contain appropriate chord tones,
+        the voices remain in range and properly ordered, and the
+        checker found no obvious parallel fifths or octaves.
+
+        <br><br>
+
+        Now inspect the line melodically:
+        are the individual voices singable?
+        Did the leading tone resolve?
+        Did the chordal seventh descend?
+
+        `;
+
+        feedback.classList.add(
+            "show",
+            "good"
+        );
+
+    }else{
+
+        feedback.innerHTML = `
+
+        <strong>
+        ${errors.length} item(s) to review:
+        </strong>
+
+        <ul>
+
+        ${
+            errors
+            .map(
+                e=>`<li>${e}</li>`
+            )
+            .join("")
+        }
+
+        </ul>
+
+        `;
+
+        feedback.classList.add(
+            "show",
+            "bad"
+        );
+
+    }
+
+}
+
+
+function showFiguredModel(){
+
+    const ex =
+    currentFigured;
+
+    const box =
+    document.getElementById(
+        "figModel"
+    );
+
+    box.innerHTML = `
+
+    <strong>
+    One possible model realization
+    </strong>
+
+    <br><br>
+
+    <table>
+
+    <tr>
+    <th>Chord</th>
+    <th>RN</th>
+    <th>Bass</th>
+    <th>Tenor</th>
+    <th>Alto</th>
+    <th>Soprano</th>
+    </tr>
+
+    ${
+        ex.chords.map(function(c,i){
+
+            return `
+
+            <tr>
+            <td>${i+1}</td>
+            <td>${c.rn}</td>
+            <td>${c.bass}</td>
+            <td>${c.model[2]}</td>
+            <td>${c.model[1]}</td>
+            <td>${c.model[0]}</td>
+            </tr>
+
+            `;
+
+        }).join("")
+    }
+
+    </table>
+
+    <p class="small">
+
+    This is one realization, not the only possible correct solution.
+
+    </p>
+
+    `;
+
+    box.classList.toggle(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+MELODY HARMONIZATION
+========================================================= */
+
+const melodyBank = [
+
+{
+key:"C major",
+melody:[
+"G4","A4","G4","F4","E4","D4","B4","C5"
+],
+model:[
+"I","IV","I","ii6","I6","ii","V7","I"
+],
+cadence:"Perfect authentic cadence",
+notes:
+"Plan tonic → predominant → dominant → tonic. The final B–C in the soprano strongly supports V–I."
+},
+
+{
+key:"G major",
+melody:[
+"B4","C5","D5","B4","A4","C5","F#4","G4"
+],
+model:[
+"I","IV","V","I6","ii","IV","V7","I"
+],
+cadence:"Perfect authentic cadence",
+notes:
+"Scale degree 7 (F#) moving to G strongly suggests dominant-tonic closure."
+},
+
+{
+key:"F major",
+melody:[
+"A4","Bb4","C5","A4","G4","F4","E4","F4"
+],
+model:[
+"I","IV","V","I6","ii6","IV","V7","I"
+],
+cadence:"Perfect authentic cadence",
+notes:
+"The final E–F motion is leading tone to tonic."
+}
+
+];
+
+
+const rnOptions = [
+"I",
+"I6",
+"I6/4",
+"ii",
+"ii6",
+"iii",
+"IV",
+"IV6",
+"V",
+"V6",
+"V7",
+"vi",
+"vii°6"
+];
+
+
+function newMelody(){
+
+    currentMelody =
+    melodyBank[
+        Math.floor(
+            Math.random() *
+            melodyBank.length
+        )
+    ];
+
+    renderMelody();
+
+}
+
+
+function renderMelody(){
+
+    const ex =
+    currentMelody;
+
+    const container =
+    document.getElementById(
+        "melodyExercise"
+    );
+
+    container.innerHTML = `
+
+    <div class="card">
+
+    <span class="badge">
+    ${ex.key}
+    </span>
+
+    <div class="note-grid"
+    style="grid-template-columns:90px repeat(8,minmax(95px,1fr)); margin-top:15px">
+
+    <div class="head">
+    Beat
+    </div>
+
+    ${
+        ex.melody.map(
+            (n,i)=>
+            `<div class="head">${i+1}</div>`
+        ).join("")
+    }
+
+
+    <div class="voice-label">
+    Soprano
+    </div>
+
+    ${
+        ex.melody.map(
+            n=>
+            `<div class="chordbox">${n}</div>`
+        ).join("")
+    }
+
+
+    <div class="voice-label">
+    Harmony
+    </div>
+
+    ${
+        ex.melody.map(function(n,i){
+
+            return `
+
+            <select id="melRN${i}">
+
+            <option value="">
+            choose
+            </option>
+
+            ${
+                rnOptions.map(
+                    rn=>
+                    `<option value="${rn}">${rn}</option>`
+                ).join("")
+            }
+
+            </select>
+
+            `;
+
+        }).join("")
+    }
+
+    </div>
+
+
+    <div
+    class="feedback"
+    id="melFeedback"
+    style="grid-column:1/-1">
+    </div>
+
+    <div
+    class="answer"
+    id="melModel"
+    style="grid-column:1/-1">
+    </div>
+
+    </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function gradeMelody(){
+
+    const ex =
+    currentMelody;
+
+    let correct = 0;
+
+    ex.model.forEach(function(rn,i){
+
+        const selected =
+        document.getElementById(
+            "melRN"+i
+        ).value;
+
+        if(
+            normalizeRoman(selected)
+            ===
+            normalizeRoman(rn)
+        ){
+
+            correct++;
+
+        }
+
+    });
+
+
+    const feedback =
+    document.getElementById(
+        "melFeedback"
+    );
+
+    const percent =
+    Math.round(
+        correct /
+        ex.model.length *
+        100
+    );
+
+
+    if(percent >= 75){
+
+        feedback.className =
+        "feedback show good";
+
+    }else{
+
+        feedback.className =
+        "feedback show warn";
+
+        addMistake(
+            "Melody harmonization"
+        );
+
+    }
+
+
+    feedback.innerHTML = `
+
+    <strong>
+    ${correct}/${ex.model.length}
+    model harmonies matched.
+    </strong>
+
+    <br><br>
+
+    ${ex.notes}
+
+    <br><br>
+
+    Remember: a different progression can still be correct if the soprano
+    note belongs to each chord and the harmonic syntax and voice leading
+    are convincing.
+
+    `;
+
+}
+
+
+function showMelodyModel(){
+
+    const ex =
+    currentMelody;
+
+    const box =
+    document.getElementById(
+        "melModel"
+    );
+
+    box.innerHTML = `
+
+    <strong>
+    Model harmonic plan:
+    </strong>
+
+    <br><br>
+
+    ${ex.model.join(" – ")}
+
+    <br><br>
+
+    <strong>
+    Cadence:
+    </strong>
+
+    ${ex.cadence}
+
+    <br><br>
+
+    ${ex.notes}
+
+    `;
+
+    box.classList.toggle(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+HARMONIC ANALYSIS
+========================================================= */
+
+const analysisBank = [
+
+{
+key:"C major",
+chords:[
+
+{
+notes:"C3 C4 E4 G4",
+answer:"I"
+},
+
+{
+notes:"F3 A3 C4 F4",
+answer:"IV"
+},
+
+{
+notes:"D3 F3 A3 D4",
+answer:"ii"
+},
+
+{
+notes:"G2 F3 B3 D4",
+answer:"V7"
+},
+
+{
+notes:"C3 E3 G3 C4",
+answer:"I"
+}
+
+],
+cadence:"PAC"
+},
+
+{
+key:"G major",
+chords:[
+
+{
+notes:"G2 D3 G3 B3",
+answer:"I"
+},
+
+{
+notes:"C3 E3 G3 C4",
+answer:"IV"
+},
+
+{
+notes:"C3 E3 A3 C4",
+answer:"ii6"
+},
+
+{
+notes:"D3 C4 F#4 A4",
+answer:"V7"
+},
+
+{
+notes:"G2 D3 B3 G4",
+answer:"I"
+}
+
+],
+cadence:"PAC"
+},
+
+{
+key:"F major",
+chords:[
+
+{
+notes:"F2 C3 F3 A3",
+answer:"I"
+},
+
+{
+notes:"Bb2 D3 G3 Bb3",
+answer:"ii6"
+},
+
+{
+notes:"C3 G3 C4 E4",
+answer:"V"
+},
+
+{
+notes:"D3 A3 D4 F4",
+answer:"vi"
+}
+
+],
+cadence:"Deceptive"
+},
+
+{
+key:"C major",
+chords:[
+
+{
+notes:"C3 G3 C4 E4",
+answer:"I"
+},
+
+{
+notes:"A2 A3 C4 F4",
+answer:"IV6"
+},
+
+{
+notes:"D3 A3 D4 F4",
+answer:"ii"
+},
+
+{
+notes:"G2 D3 G3 B3",
+answer:"V"
+}
+
+],
+cadence:"Half"
+}
+
+];
+
+
+const cadenceOptions = [
+"",
+"PAC",
+"IAC",
+"Half",
+"Deceptive",
+"Plagal"
+];
+
+
+function newAnalysis(){
+
+    currentAnalysis =
+    analysisBank[
+        Math.floor(
+            Math.random() *
+            analysisBank.length
+        )
+    ];
+
+    renderAnalysis();
+
+}
+
+
+function renderAnalysis(){
+
+    const ex =
+    currentAnalysis;
+
+    const container =
+    document.getElementById(
+        "analysisExercise"
+    );
+
+    container.innerHTML = `
+
+    <div class="card">
+
+    <span class="badge">
+    Key: ${ex.key}
+    </span>
+
+    <table style="margin-top:15px">
+
+    <tr>
+    <th>Chord</th>
+    <th>Notes, low → high</th>
+    <th>Your Roman numeral</th>
+    </tr>
+
+    ${
+        ex.chords.map(function(c,i){
+
+            return `
+
+            <tr>
+
+            <td>
+            ${i+1}
+            </td>
+
+            <td>
+            ${c.notes}
+            </td>
+
+            <td>
+
+            <input
+            type="text"
+            id="anaRN${i}"
+            placeholder="e.g. ii6, V7">
+
+            </td>
+
+            </tr>
+
+            `;
+
+        }).join("")
+    }
+
+    </table>
+
+
+    <hr>
+
+
+    <label>
+
+    <span>
+    Cadence at the end
+    </span>
+
+    <select id="anaCadence">
+
+    ${
+        cadenceOptions
+        .map(
+            c=>
+            `<option value="${c}">${c || "choose"}</option>`
+        )
+        .join("")
+    }
+
+    </select>
+
+    </label>
+
+
+    <div
+    class="feedback"
+    id="anaFeedback">
+    </div>
+
+    <div
+    class="answer"
+    id="anaAnswers">
+    </div>
+
+    </div>
+
+    `;
+
+}
+
+
+function gradeAnalysis(){
+
+    const ex =
+    currentAnalysis;
+
+    let correct = 0;
+
+
+    ex.chords.forEach(function(c,i){
+
+        const entered =
+        document.getElementById(
+            "anaRN"+i
+        ).value;
+
+        if(
+            normalizeRoman(entered)
+            ===
+            normalizeRoman(c.answer)
+        ){
+
+            correct++;
+
+        }else{
+
+            addMistake(
+                "Roman numeral analysis"
+            );
+
+        }
+
+    });
+
+
+    const cadence =
+    document.getElementById(
+        "anaCadence"
+    ).value;
+
+
+    const cadenceCorrect =
+    cadence.toLowerCase()
+    ===
+    ex.cadence.toLowerCase();
+
+
+    if(cadenceCorrect){
+
+        correct++;
+
+    }else{
+
+        addMistake(
+            "Cadences"
+        );
+
+    }
+
+
+    const possible =
+    ex.chords.length + 1;
+
+
+    const feedback =
+    document.getElementById(
+        "anaFeedback"
+    );
+
+
+    if(correct === possible){
+
+        feedback.className =
+        "feedback show good";
+
+    }else{
+
+        feedback.className =
+        "feedback show warn";
+
+    }
+
+
+    feedback.innerHTML = `
+
+    <strong>
+    ${correct}/${possible}
+    correct.
+    </strong>
+
+    <br><br>
+
+    When analyzing, always work in this order:
+
+    <br>
+
+    1. establish the key<br>
+    2. find the bass note<br>
+    3. reorder pitches mentally into thirds<br>
+    4. identify the root<br>
+    5. assign Roman numeral<br>
+    6. determine inversion<br>
+    7. interpret harmonic function<br>
+    8. examine the phrase ending for cadence
+
+    `;
+
+}
+
+
+function showAnalysisAnswers(){
+
+    const ex =
+    currentAnalysis;
+
+    const box =
+    document.getElementById(
+        "anaAnswers"
+    );
+
+    box.innerHTML = `
+
+    <strong>
+    Answers:
+    </strong>
+
+    <br><br>
+
+    ${
+        ex.chords
+        .map(
+            (c,i)=>
+            `Chord ${i+1}: ${c.answer}`
+        )
+        .join("<br>")
+    }
+
+    <br><br>
+
+    <strong>
+    Cadence:
+    </strong>
+
+    ${ex.cadence}
+
+    `;
+
+    box.classList.toggle(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+FORM ANALYSIS
+========================================================= */
+
+const formBank = [
+
+{
+q:"A phrase ends with a half cadence; a second phrase begins similarly and ends with a perfect authentic cadence. What is the larger structure?",
+choices:[
+"Parallel period",
+"Contrasting period",
+"Rounded binary",
+"Rondo"
+],
+answer:0,
+explanation:
+"The antecedent and consequent begin similarly, so this is a parallel period."
+},
+
+{
+q:"Two phrases form an antecedent-consequent relationship, but the second phrase begins with different material. What type of period?",
+choices:[
+"Parallel period",
+"Contrasting period",
+"Sentence",
+"Sonata"
+],
+answer:1,
+explanation:
+"A contrasting period uses different opening material in the consequent."
+},
+
+{
+q:"Section A modulates to the dominant. Section B explores other material and closes by bringing back the opening idea in the tonic. Which form?",
+choices:[
+"Rounded binary",
+"Simple ternary",
+"Rondo",
+"Theme and variations"
+],
+answer:0,
+explanation:
+"Rounded binary is often represented ||: A :||: B A' :||."
+},
+
+{
+q:"A complete A section is followed by a contrasting B section, after which the entire A section returns. Which form?",
+choices:[
+"Ternary",
+"Binary",
+"Sonata",
+"Period"
+],
+answer:0,
+explanation:
+"Simple ternary is A–B–A."
+},
+
+{
+q:"A principal theme repeatedly returns between contrasting episodes: A–B–A–C–A. Which form?",
+choices:[
+"Rondo",
+"Theme and variations",
+"Binary",
+"Sonata"
+],
+answer:0,
+explanation:
+"The defining feature of rondo is the recurring refrain."
+},
+
+{
+q:"One theme is followed by a series of sections that retain its identity while altering rhythm, texture, harmony, mode, or figuration.",
+choices:[
+"Theme and variations",
+"Rondo",
+"Rounded binary",
+"Sonata"
+],
+answer:0,
+explanation:
+"Variation form repeatedly transforms a theme."
+},
+
+{
+q:"An exposition establishes primary and secondary thematic areas, followed by a modulatory development and tonic-centered recapitulation.",
+choices:[
+"Sonata form",
+"Rondo",
+"Ternary",
+"Passacaglia"
+],
+answer:0,
+explanation:
+"Exposition–development–recapitulation is the core sonata principle."
+},
+
+{
+q:"In a major-key sonata exposition, the secondary theme is most commonly presented in which key area?",
+choices:[
+"Dominant",
+"Subdominant",
+"Parallel minor",
+"Neapolitan"
+],
+answer:0,
+explanation:
+"The dominant is the conventional secondary key in a major-key sonata exposition."
+},
+
+{
+q:"In many minor-key sonata expositions, the secondary thematic area commonly moves to:",
+choices:[
+"Relative major",
+"Parallel major only",
+"Subdominant minor",
+"Neapolitan"
+],
+answer:0,
+explanation:
+"The relative major is common in minor-key sonata expositions."
+},
+
+{
+q:"Which sonata-form section normally contains the most modulation, fragmentation, sequencing, and thematic instability?",
+choices:[
+"Development",
+"Exposition",
+"Recapitulation",
+"Coda"
+],
+answer:0,
+explanation:
+"The development is typically the most unstable section."
+},
+
+{
+q:"In a minuet and trio, after the Trio is performed, what usually happens?",
+choices:[
+"The Minuet returns",
+"The exposition repeats",
+"A development begins",
+"The theme is inverted"
+],
+answer:0,
+explanation:
+"The overall plan is Minuet–Trio–Minuet."
+},
+
+{
+q:"A short unit presents a basic idea, repeats or varies it, and then drives toward a cadence through fragmentation or acceleration. This phrase type is:",
+choices:[
+"Sentence",
+"Period",
+"Rondo",
+"Binary"
+],
+answer:0,
+explanation:
+"The sentence often follows presentation + continuation."
+},
+
+{
+q:"A formal unit consists of an antecedent that creates an open question and a consequent that provides a stronger closure.",
+choices:[
+"Period",
+"Sentence",
+"Rondo",
+"Theme and variations"
+],
+answer:0,
+explanation:
+"Question-answer phrase structure is characteristic of a period."
+},
+
+{
+q:"Which cadence is normally stronger as a final close: half cadence or perfect authentic cadence?",
+choices:[
+"Perfect authentic cadence",
+"Half cadence",
+"They are identical",
+"Neither"
+],
+answer:0,
+explanation:
+"A PAC provides tonic closure; a half cadence ends on dominant."
+},
+
+{
+q:"A recapitulation differs from an exposition mainly because:",
+choices:[
+"Secondary material returns in the tonic rather than the exposition's contrasting key",
+"It always removes the main theme",
+"It is entirely developmental",
+"It must be shorter than the exposition"
+],
+answer:0,
+explanation:
+"Tonal resolution is a defining function of the recapitulation."
+}
+
+];
+
+
+function generateFormSet(){
+
+    currentForm =
+    shuffle(formBank)
+    .slice(0,10);
+
+    const container =
+    document.getElementById(
+        "formQuestions"
+    );
+
+    container.innerHTML = "";
+
+
+    currentForm.forEach(function(q,index){
+
+        container.innerHTML += `
+
+        <div class="card" id="formCard${index}">
+
+        <h3>
+        ${index+1}. ${q.q}
+        </h3>
+
+        ${
+            q.choices.map(function(choice,i){
+
+                return `
+
+                <label
+                style="margin:7px 0;
+                padding:8px;
+                border:1px solid var(--border);
+                border-radius:8px">
+
+                <input
+                type="radio"
+                name="form${index}"
+                value="${i}">
+
+                ${choice}
+
+                </label>
+
+                `;
+
+            }).join("")
+        }
+
+        <div class="actions">
+
+        <button
+        class="btn"
+        onclick="checkForm(${index})">
+        Feedback
+        </button>
+
+        </div>
+
+        <div
+        class="feedback"
+        id="formFeedback${index}">
+        </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+
+function checkForm(index){
+
+    const q =
+    currentForm[index];
+
+    const selected =
+    document.querySelector(
+        `input[name="form${index}"]:checked`
+    );
+
+    const feedback =
+    document.getElementById(
+        "formFeedback"+index
+    );
+
+
+    if(!selected){
+
+        feedback.innerHTML =
+        "Choose an answer first.";
+
+        feedback.className =
+        "feedback show warn";
+
+        return false;
+
+    }
+
+
+    const correct =
+    Number(selected.value)
+    === q.answer;
+
+
+    if(correct){
+
+        feedback.innerHTML =
+        "<strong>Correct.</strong> "
+        + q.explanation;
+
+        feedback.className =
+        "feedback show good";
+
+    }else{
+
+        feedback.innerHTML =
+        "<strong>Review.</strong> "
+        + q.explanation;
+
+        feedback.className =
+        "feedback show bad";
+
+        addMistake(
+            "Form analysis"
+        );
+
+    }
+
+    return correct;
+
+}
+
+
+function gradeForm(){
+
+    let correct = 0;
+
+    currentForm.forEach(
+        function(q,index){
+
+            if(checkForm(index)){
+                correct++;
+            }
+
+        }
+    );
+
+    alert(
+        "Form score: "
+        + correct
+        + "/"
+        + currentForm.length
+    );
+
+}
+
+
+/* =========================================================
+MOCK EXAM
+========================================================= */
+
+function generateMock(){
+
+    const figured =
+    figuredBassBank[
+        Math.floor(
+            Math.random() *
+            figuredBassBank.length
+        )
+    ];
+
+    const melody =
+    melodyBank[
+        Math.floor(
+            Math.random() *
+            melodyBank.length
+        )
+    ];
+
+    const analysis =
+    analysisBank[
+        Math.floor(
+            Math.random() *
+            analysisBank.length
+        )
+    ];
+
+    const form =
+    shuffle(formBank)
+    .slice(0,3);
+
+
+    document.getElementById(
+        "mockList"
+    ).innerHTML = `
+
+    <div class="card">
+
+    <h3>
+    Part 1 — Figured Bass
+    </h3>
+
+    <p>
+    Key: <strong>${figured.key}</strong>
+    </p>
+
+    <p>
+
+    ${
+        figured.chords.map(
+            c=>
+            `${c.bass} (${c.figure})`
+        ).join(" → ")
+    }
+
+    </p>
+
+    <p class="small">
+    On paper, realize this in four voices.
+    Check ranges, spacing, doubling, parallels,
+    leading tones, and chordal sevenths.
+    </p>
+
+    </div>
+
+
+    <div class="card">
+
+    <h3>
+    Part 2 — Melody Harmonization
+    </h3>
+
+    <p>
+    Key: <strong>${melody.key}</strong>
+    </p>
+
+    <p>
+    Soprano:
+    <strong>
+    ${melody.melody.join(" – ")}
+    </strong>
+    </p>
+
+    <p class="small">
+    On paper: choose harmonies, bass line,
+    then alto and tenor.
+    End with a convincing cadence.
+    </p>
+
+    </div>
+
+
+    <div class="card">
+
+    <h3>
+    Part 3 — Harmonic Analysis
+    </h3>
+
+    <p>
+    Key:
+    <strong>
+    ${analysis.key}
+    </strong>
+    </p>
+
+    ${
+        analysis.chords.map(
+            (c,i)=>
+            `<p>${i+1}. ${c.notes}</p>`
+        ).join("")
+    }
+
+    <p class="small">
+    Label each Roman numeral/inversion
+    and identify the cadence.
+    </p>
+
+    </div>
+
+
+    <div class="card">
+
+    <h3>
+    Part 4 — Form
+    </h3>
+
+    <ol>
+
+    ${
+        form.map(
+            q=>
+            `<li style="margin-bottom:10px">${q.q}</li>`
+        ).join("")
+    }
+
+    </ol>
+
+    </div>
+
+
+    <div class="warning">
+
+    <strong>
+    Mock rule:
+    </strong>
+
+    Do all four parts before opening the individual
+    practice tabs to check your answers.
+
+    </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+MISTAKE LOG
+========================================================= */
+
+function renderMistakeLog(){
+
+    const entries =
+    Object.entries(
+        mistakeCounts
+    )
+    .sort(
+        (a,b)=>b[1]-a[1]
+    );
+
+
+    if(entries.length === 0){
+
+        document.getElementById(
+            "mistakeLog"
+        ).innerHTML = `
+
+        <div class="success">
+
+        No recorded mistakes yet.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "mistakeLog"
+    ).innerHTML = `
+
+    <table>
+
+    <tr>
+    <th>Topic</th>
+    <th>Misses</th>
+    <th>Priority</th>
+    </tr>
+
+    ${
+        entries.map(function(entry){
+
+            const topic =
+            entry[0];
+
+            const count =
+            entry[1];
+
+            let priority =
+            "Low";
+
+            if(count >= 3){
+                priority = "High";
+            }
+            else if(count >= 2){
+                priority = "Medium";
+            }
+
+            return `
+
+            <tr>
+
+            <td>
+            ${topic}
+            </td>
+
+            <td>
+            ${count}
+            </td>
+
+            <td>
+            ${priority}
+            </td>
+
+            </tr>
+
+            `;
+
+        }).join("")
+    }
+
+    </table>
+
+    <div class="warning">
+
+    Tonight, spend your next review block on the
+    <strong>top two categories</strong> in this table.
+
+    </div>
+
+    `;
+
+}
+
+
+function clearMistakes(){
+
+    Object.keys(
+        mistakeCounts
+    )
+    .forEach(
+        key=>
+        delete mistakeCounts[key]
+    );
+
+    renderMistakeLog();
+
+}
+
+
+/* =========================================================
+RESET EVERYTHING
+========================================================= */
+
+function newAll(){
+
+    generateFundamentals();
+    newFiguredBass();
+    newMelody();
+    newAnalysis();
+    generateFormSet();
+    generateMock();
+
+    alert(
+        "Fresh exercises generated."
+    );
+
+}
+
+
+/* =========================================================
+INITIALIZE
+========================================================= */
+
+generateFundamentals();
+newFiguredBass();
+newMelody();
+newAnalysis();
+generateFormSet();
+generateMock();
+
+</script>
+
+</body>
+</html>
