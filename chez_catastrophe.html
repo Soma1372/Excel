@@ -136,7 +136,7 @@ const catEvents=["🔥 Oven temperature: 487°F and climbing","🐀 Unidentified
 const inspectorEvents={2340:"🚗 Inspector has parked outside.",1800:"🚶 Inspector is walking toward the entrance.",1320:"🚪 Inspector is trying the front door.",900:"📋 Inspector is writing something down. Nobody knows what.",480:"💨 Inspector is asking why there is smoke coming from the wine cellar.",180:"👁️ Inspector has made eye contact through the window."};
 const emergencyAfter={2:["🚨 KITCHEN EVENT","Ze pasta water has boiled over onto ze keyboard.<br>Ze keyboard now displays only formulas."],5:["🚨 KITCHEN EVENT","Ze soufflé has collapsed. Chef Maxime blames VLOOKUP.<br>Nobody knows why. Nobody asks."],11:["🚨 KITCHEN EVENT","Someone has filtered ze ReservationData to 'Party of 47.'<br>Nobody at Chez Catastrophe seats 47. Nobody."]};
 
-let S={idx:0,wrong:0,firstTry:0,streak:0,longest:0,attemptWrong:false,keys:[],ach:new Set(),time:2700,timer:null,questionActive:false,stationStart:0,wrongByStation:{},vlookupWrong:false,tf:{},sequence:null,build:[],match:{},catAssign:{},boss:0,idleTimers:[],selectedDrag:null};
+let S={idx:0,wrong:0,firstTry:0,streak:0,longest:0,attemptWrong:false,keys:[],ach:new Set(),time:2700,timer:null,questionActive:false,stationStart:0,wrongByStation:{},vlookupWrong:false,tf:{},sequence:null,build:[],match:{},catAssign:{},boss:0,idleTimers:[],selectedDrag:null,tutorialKey:false};
 
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
 function footer(){return `<div class="footer">${COPYRIGHT}</div>`}
@@ -153,8 +153,112 @@ function feedback(ok,text){document.querySelector(".feedbackHost").innerHTML=`<d
 function complete(text){clearIdle();S.questionActive=false;if(!S.attemptWrong){S.firstTry++;S.streak++;S.longest=Math.max(S.longest,S.streak);if(S.streak===3)toast("🔥 <b>ON FIRE</b><br>Chef: You may possess… something resembling competence.");if(S.streak===5)toast("🔥🔥 <b>EXCEL MENACE</b><br>Chef: Do not let zis go to your head.");if(S.streak===8){achievement("pivot_warlord","Pivot Warlord");toast("🔥🔥🔥 <b>PIVOT WARLORD</b><br>Chef: I have never said zis. …Acceptable.")}}S.keys.push(stations[S.idx].key);let id=stations[S.idx].id;if(id===3)achievement("no_ref","No More #REF!");if(id===4)achievement("son_of_slicer","Son of a Slicer");if(id===9)achievement("pivot_thickens","The Pivot Thickens");if(id===9&&!S.attemptWrong)achievement("sommelier","The Sommelier Approves");if(id===3&&S.firstTry===3)achievement("mise_en_place","Mise en Place");if((Date.now()-S.stationStart)/1000<15)achievement("sous_vide","Sous Vide Speed");updateHUD();renderSidebarOnly();feedback(true,text)}
 function fail(text){recordWrong();feedback(false,text)}
 
-function startGame(){document.getElementById("topbar").classList.remove("hidden");startTimer();overlay("🔒 THE DOOR SLAMS SHUT","Chef Maxime: “You don't leave until ze data is clean, ze dashboard is built, and ze reports are ready for ze health inspector. Every station is locked. You solve ze puzzle, you get ze key. Fail? You wash dishes. FOR ETERNITY.”",3200,renderStation)}
-function renderHome(){document.getElementById("app").innerHTML=`<div class="screen"><section class="hero"><div class="kicker">CHEZ CATASTROPHE</div><h1>An Excel Escape Room.</h1><div class="tag">In a Restaurant. On Fire.</div><div class="introCard">You are a new data analyst trapped inside the world's most chaotic fine-dining restaurant. Chef Maxime Beaudesastre has locked every door. The health inspector arrives in <b>45 minutes</b>. Thirteen stations stand between you and freedom.<br><button class="cta" onclick="startGame()">ENTER CHEZ CATASTROPHE 🔥</button></div></section>${footer()}</div>`}
+function startTutorialTimer(){
+ clearInterval(S.timer);
+ S.time=2700;
+ updateHUD();
+ S.timer=setInterval(()=>{if(S.time>0){S.time--;updateHUD()}},1000)
+}
+function showTutorial(){
+ document.getElementById("topbar").classList.remove("hidden");
+ S.tutorialKey=false;
+ S.wrong=0;
+ S.streak=0;
+ S.firstTry=0;
+ S.keys=[];
+ S.time=2700;
+ updateHUD();
+ startTutorialTimer();
+ document.getElementById("app").innerHTML=`<div class="screen">
+   <div class="tutorialWrap">
+     <aside class="tutorialSide">
+       <div class="sideTitle">Orientation</div>
+       <div class="tutorialNote"><b>⏱ Timer</b><br>The clock is visibly running. During the real escape, Chef considers this motivational.</div>
+       <div class="tutorialNote"><b>🔥 Catastrophe Meter</b><br>Wrong answers make it more dramatic. It is theatrical, not fatal. The game continues.</div>
+       <div class="sideTitle" style="margin-top:16px">Practice Key Inventory</div>
+       <div style="text-align:center;padding:8px"><span id="practiceKey" class="practiceKey">🗝️</span><div id="practiceEngraving" style="font-size:.72rem;color:#7f7565;margin-top:4px">LOCKED</div></div>
+       <div class="tutorialNote"><b>Real game:</b><br>13 rooms. 13 real keys. This practice key counts toward none of them.</div>
+     </aside>
+     <main class="panel">
+       <div class="stationHead"><div><div class="act">ZERO-STAKES ORIENTATION</div><div class="room">Before Service</div><div class="topic">How the escape room works</div></div><div class="typePill">PRACTICE</div></div>
+       <div class="chefBox"><div class="chefEmoji">👨‍🍳</div><div><div class="chefName">Chef Maxime Beaudesastre</div><div class="chefStatus">JACKET: IMMACULATE · DIGNITY: INTACT</div><div class="chefText">Before we begin, a test. Ze simplest possible test. What is ze name of zis restaurant?</div></div></div>
+       <div class="question">
+         <p class="situation">Click one answer. Wrong answers show you how feedback works, but <b>do not</b> add a catastrophe.</p>
+         <button class="option" onclick="tutorialAnswer(this,0)">Chez Catastrophe</button>
+         <button class="option" onclick="tutorialAnswer(this,1)">MediTrack Analytics</button>
+         <button class="option" onclick="tutorialAnswer(this,2)">The Olive Garden</button>
+         <button class="option" onclick="tutorialAnswer(this,3)">Excel Academy</button>
+         <div id="tutorialFeedback" class="tutorialFeedback">Chef is waiting. This is currently the calmest he will be all evening.</div>
+         <div style="margin-top:16px">
+           <button class="skipBtn" onclick="finishTutorial()">Skip Tutorial</button>
+         </div>
+       </div>
+     </main>
+   </div>${footer()}</div>`;
+ window.scrollTo({top:0,behavior:"smooth"})
+}
+function tutorialAnswer(btn,choice){
+ const feedback=document.getElementById("tutorialFeedback");
+ if(choice===0){
+   document.querySelectorAll(".option").forEach(x=>x.disabled=true);
+   btn.classList.add("correct");
+   S.tutorialKey=true;
+   const key=document.getElementById("practiceKey");
+   key.classList.add("earned");
+   document.getElementById("practiceEngraving").textContent="ORIENTATION";
+   feedback.innerHTML=`<div style="color:#b9ddb9"><b>Correct.</b> Chef Maxime reluctantly confirms that you know where you are.</div><br>🗝️ <b>Practice key earned:</b> ORIENTATION<br><span style="color:#918875">It does not count toward the 13 real keys.</span><br><button class="nextBtn" style="margin-top:12px" onclick="finishTutorial()">View Restaurant Map</button>`;
+   return;
+ }
+ const lines=[
+   "",
+   "ZAT IS A HOSPITAL. We are a RESTAURANT. Mon dieu.",
+   "I am going to pretend you did not say zat.",
+   "You are not wrong but you are also very wrong."
+ ];
+ btn.classList.add("wrong");
+ setTimeout(()=>btn.classList.remove("wrong"),650);
+ feedback.innerHTML=`<b>Chef Maxime:</b> ${lines[choice]}<br><br><span style="color:#b8a77c">Notice: the Catastrophe Meter did not move. Tutorial mistakes are free. Chef's judgment is not.</span>`;
+}
+function finishTutorial(){
+ clearInterval(S.timer);
+ S.time=2700;
+ S.wrong=0;
+ S.streak=0;
+ S.firstTry=0;
+ S.keys=[];
+ updateHUD();
+ showMapFlythrough()
+}
+function showMapFlythrough(){
+ const rooms=stations.map((s,i)=>`<div class="flyRoom" id="fly${i}">🔒 ${s.id}. ${esc(s.room)}</div>`).join("");
+ document.getElementById("app").innerHTML=`<div class="screen"><section class="hero" style="padding-bottom:10px"><div class="kicker">RESTAURANT MAP</div><h2 style="font-size:2.5rem;margin:.25em 0">Thirteen Locks Between You and Freedom</h2><div class="tag">Chef Maxime has been busy.</div></section><div class="mapFly"><div style="text-align:center;color:#a89a80">A quick tour of tonight's extremely reasonable workplace.</div><div class="flyGrid">${rooms}</div><div id="flyCaption" style="text-align:center;margin-top:16px;color:#d5b45c">🔒 Every room is locked.</div></div>${footer()}</div>`;
+ let i=0;
+ const step=700;
+ const iv=setInterval(()=>{
+   document.querySelectorAll(".flyRoom").forEach((el,j)=>{el.classList.toggle("active",j===i);if(j<i)el.classList.add("passed")});
+   const room=stations[i];
+   document.getElementById("flyCaption").textContent=`Station ${room.id}: ${room.room}`;
+   i++;
+   if(i>=stations.length)clearInterval(iv)
+ },step);
+ setTimeout(()=>startGame(),10000)
+}
+function startGame(){
+ clearInterval(S.timer);
+ S.time=2700;
+ S.wrong=0;
+ S.firstTry=0;
+ S.streak=0;
+ S.longest=0;
+ S.attemptWrong=false;
+ S.keys=[];
+ S.idx=0;
+ updateHUD();
+ document.getElementById("topbar").classList.remove("hidden");
+ startTimer();
+ overlay("🔒 THE DOOR SLAMS SHUT","Chef Maxime: “You don't leave until ze data is clean, ze dashboard is built, and ze reports are ready for ze health inspector. Every station is locked. You solve ze puzzle, you get ze key. Fail? You wash dishes. FOR ETERNITY.”",3200,renderStation)
+}
+function renderHome(){document.getElementById("app").innerHTML=`<div class="screen"><section class="hero"><div class="kicker">CHEZ CATASTROPHE</div><h1>An Excel Escape Room.</h1><div class="tag">In a Restaurant. On Fire.</div><div class="introCard">You are a new data analyst trapped inside the world's most chaotic fine-dining restaurant. Chef Maxime Beaudesastre has locked every door. The health inspector arrives in <b>45 minutes</b>. Thirteen stations stand between you and freedom.<br><button class="cta" onclick="showTutorial()">ENTER CHEZ CATASTROPHE 🔥</button></div></section>${footer()}</div>`}
 function sidebarHTML(){return `<aside class="sidebar"><div class="sideTitle">Restaurant Map</div>${stations.map((s,i)=>`<div class="mapNode ${i<S.idx?"solved":i===S.idx?"current":""}">${i<S.idx?"✅":i===S.idx?"◉":"🔒"} ${s.id}. ${esc(s.room)}</div>`).join("")}<div class="sideTitle" style="margin-top:16px">Key Inventory</div><div class="keys">${stations.map((s,i)=>`<span class="key ${i<S.keys.length?"earned":""}" title="${esc(i<S.keys.length?S.keys[i]:"Locked")}">🗝️</span>`).join("")}</div></aside>`}
 function renderSidebarOnly(){let old=document.querySelector(".sidebar");if(old)old.outerHTML=sidebarHTML()}
 function continuityChef(s){if(s.id===6)return s.chef+" The $312,847 Weekend Revenue you just found is already sitting here. Do not make me regret remembering it.";if(s.id===7)return "Ze dashboard we just fixed needs a chart. "+s.chef.replace("Ze dashboard needs a chart. ","");if(s.id===8)return "Ze chart you selected in ze plating table. Now make it presentable. "+s.chef;if(s.id===9)return "Remember ze IngredientStock Table from ze freezer? Ze same data discipline matters now. "+s.chef;if(s.id===11)return "Ze Profitable formula from ze garnish station. Now imagine someone entering bad source data underneath it. I have seen it. I have lived it. "+s.chef;return s.chef}
