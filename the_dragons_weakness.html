@@ -129,6 +129,76 @@ function toast(msg,ms=2500){document.getElementById("toastHost").innerHTML=`<div
 function overlay(title,body,ms=2300,cb){const d=document.createElement("div");d.className="overlay";d.innerHTML=`<div class="overlayCard"><h2>${title}</h2><div>${body}</div><div class="footer">${COPYRIGHT}</div></div>`;document.body.appendChild(d);setTimeout(()=>{d.remove();cb&&cb()},ms)}
 function updateHUD(){if(!document.getElementById("score"))return;document.getElementById("score").textContent=S.score;document.getElementById("streak").textContent=S.streak;document.getElementById("weakCount").textContent=S.earned.length;let widths=[0,25,50,75,100],names=["Dubious","Adequate","Promising","Irritatingly Competent","Worthy"];document.getElementById("estFill").style.width=widths[S.est]+"%";document.getElementById("estStage").textContent=names[S.est]}
 function advanceEst(){let target=Math.min(4,Math.floor(S.firstTry/2.5));if(target>S.est){S.est=target;let lines=["","You have answered correctly. I am trying not to be surprised.","Promising. I use the word reluctantly.","You continue to exceed the very modest expectations I established for you.","Worthy. It is not a word I use often. Or lightly."];toast(`<b>Sphinx:</b> ${lines[S.est]}`,3000);if(S.est>=3)S.ach.add("Irritatingly Competent")}updateHUD()}
+
+function showBriefing() {
+  document.getElementById("app").innerHTML = `
+  <div class="screen">
+    <section class="hero">
+      <div class="kicker">BEFORE YOU ENTER THE MOUNTAIN</div>
+      <h2 style="font-family:Cinzel,serif;color:#9fe0d6;margin-bottom:6px">
+        What This Is
+      </h2>
+    </section>
+    <div style="max-width:720px;margin:0 auto;padding:0 16px 40px">
+
+      <div class="openingScroll" style="margin-bottom:22px">
+        This game covers Weeks 1 and 2 of your Copilot in Excel course — 
+        verification mindset, data preparation, and effective prompting. 
+        Ten trials stand between you and Varrax. Each one the Sphinx gives 
+        you maps directly to a skill you need to work responsibly with 
+        Copilot in real work. This is not a quiz. It is a rehearsal.
+      </div>
+
+      <div class="panel" style="padding:20px;margin-bottom:18px">
+        <h3 style="font-family:Cinzel,serif;color:#c9a227;margin-top:0">
+          What You Are Doing
+        </h3>
+        <ul style="line-height:2;padding-left:18px;color:#d4cfc7">
+          <li>Answer each of the Sphinx's ten trials to earn a weakness 
+          from Varrax's scroll</li>
+          <li>The more weaknesses you earn, the better equipped you are 
+          when you face Varrax in his lair</li>
+          <li>Miss too many trials and you face the dragon 
+          under-prepared — exactly like presenting unverified Copilot 
+          output to leadership</li>
+        </ul>
+      </div>
+
+      <div class="panel" style="padding:20px;margin-bottom:28px">
+        <h3 style="font-family:Cinzel,serif;color:#c9a227;margin-top:0">
+          What You Will Be Able to Do After
+        </h3>
+        <ul style="line-height:2;padding-left:18px;color:#d4cfc7">
+          <li>Spot when a Copilot formula has used the wrong range, 
+          made a hidden assumption, or returned a confident result 
+          that does not match the data</li>
+          <li>Prepare a dataset so Copilot has named tables, clear 
+          column names, consistent categories, and documented blanks 
+          before you start prompting</li>
+          <li>Write a prompt that gives Copilot the specificity, 
+          context, scope, and iteration it needs — and leaves it 
+          nothing to guess</li>
+          <li>Apply the right level of verification to the right 
+          situation — not more than needed, never less than required</li>
+        </ul>
+      </div>
+
+      <div style="text-align:center">
+        <div style="color:#8a8070;font-size:.85rem;margin-bottom:14px">
+          🦁 &nbsp;"The mountain is waiting. 
+          So, unfortunately, is Varrax."
+        </div>
+        <button class="cta" onclick="startGame()">
+          Enter the Mountain
+        </button>
+      </div>
+
+    </div>
+    ${footer()}
+  </div>`;
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
 function startGame(){document.getElementById("topbar").classList.remove("hidden");renderStation()}
 function renderHome(){document.getElementById("app").innerHTML=`<div class="screen"><section class="hero"><div class="kicker">A COPILOT KNOWLEDGE QUEST</div><h1>THE DRAGON'S WEAKNESS</h1><div class="subtitle">Verification. Preparation. Prompting.</div><div class="openingScroll">Varrax the Unchecked has terrorized the Kingdom of Analyst for seven years.<br>Every formula he touches returns a number.<br>Every number looks correct.<br>No one has verified a single one.<br><br>One Sphinx guards the mountain pass.<br>She knows his weaknesses.<br><b>Earn them.</b>
 <div style="margin-top:22px;text-align:left">
@@ -141,7 +211,7 @@ function renderHome(){document.getElementById("app").innerHTML=`<div class="scre
     <div style="line-height:1.6">He is not wrong about the numbers. He is wrong about you turning back. Come. There are ten things he fears. I will teach you all of them.</div>
   </div>
 </div>
-<button class="cta" onclick="startGame()">BEGIN THE TRIAL</button></div></section>${footer()}</div>`}
+<button class="cta" onclick="showBriefing()">BEGIN THE TRIAL</button></div></section>${footer()}</div>`}
 function sidebarHTML(){
  const estNames=["Dubious","Adequate","Promising","Irritatingly Competent","Worthy"];
  const estComments=[
