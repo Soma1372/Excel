@@ -7,163 +7,1493 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#090d12;--panel:#0f151c;--line:#26323d;--text:#d8e1e8;--muted:#7f8d99;--green:#96b69a;--amber:#c1a16a;--red:#8f4848;--blue:#7f9eaf;--shadow:rgba(0,0,0,.42)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#05080b;color:var(--text);font-family:Inter,Arial,sans-serif}body{background:radial-gradient(circle at 20% 0%,rgba(55,73,87,.16),transparent 30%),linear-gradient(180deg,#080c11,#05070a 72%)}button{font:inherit;cursor:pointer}.hidden{display:none!important}#app{min-height:100vh}
-.boot{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(rgba(255,255,255,.015) 50%,transparent 50%);background-size:100% 4px}.bootbox{width:min(760px,100%);border:1px solid #293540;background:#070b0f;padding:22px;box-shadow:0 20px 60px #000;font-family:"IBM Plex Mono",monospace}.bootline{opacity:0;transform:translateY(4px);transition:.35s;margin:7px 0;color:#9fb1bd}.bootline.show{opacity:1;transform:none}.bootline.alert{color:#c19a75}.bootline.cop{color:#b8d3c1}.bootBtn{margin-top:20px;background:#111b22;color:#d9e4ea;border:1px solid #3a4a56;padding:11px 14px;border-radius:4px}
-.shell{min-height:100vh;padding:18px}.monitor{max-width:1440px;margin:0 auto;border:1px solid #2c3943;background:#0a0e13;box-shadow:0 25px 80px var(--shadow)}.monitorTop{display:grid;grid-template-columns:1.1fr .8fr .8fr;gap:12px;align-items:center;padding:9px 12px;border-bottom:1px solid #26313a;background:#0b1117;font-family:"IBM Plex Mono",monospace;font-size:.78rem}.caseTitle{color:#bac6cc}.clock{text-align:center;color:#8ea0ab}.confidence{text-align:right}.confbar{height:7px;background:#182028;border:1px solid #2d3b45;margin-top:4px;overflow:hidden}.conffill{height:100%;background:linear-gradient(90deg,#5d6f75,#96b69a);transition:.45s}
-.desktop{display:grid;grid-template-columns:220px minmax(0,1fr) 340px;min-height:760px}.explorer{border-right:1px solid var(--line);background:#0b1117;padding:12px}.sectionLabel{font:600 .68rem "IBM Plex Mono",monospace;color:#71808b;text-transform:uppercase;letter-spacing:.12em;margin:8px 0 9px}.folder{width:100%;display:flex;align-items:center;gap:8px;text-align:left;background:transparent;border:1px solid transparent;color:#7a8790;padding:8px 7px;border-radius:4px;margin:2px 0;font-size:.78rem}.folder.active{background:#121b23;border-color:#31404c;color:#d7e1e6}.folder.done{color:#9fb7a0}.folder.locked{opacity:.55}.folder:hover{background:#101820}
-.main{min-width:0;background:linear-gradient(rgba(255,255,255,.012) 50%,transparent 50%);background-size:100% 4px;padding:18px}.workspace{max-width:860px;margin:0 auto}.caseHeader{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #24313b;padding-bottom:12px;margin-bottom:16px}.caseKicker{font:600 .7rem "IBM Plex Mono",monospace;color:#8195a1;letter-spacing:.12em}h1,h2,h3{margin:.2em 0}.caseHeader h2{font-size:1.45rem}.evidenceTag{font:600 .68rem "IBM Plex Mono",monospace;border:1px solid #40515c;color:#91a6b2;padding:6px 8px;border-radius:999px;white-space:nowrap}.card{border:1px solid #26333d;background:#0e151c;padding:14px;margin:12px 0}.cardTitle{font:600 .75rem "IBM Plex Mono",monospace;color:#99aab4;text-transform:uppercase;letter-spacing:.08em;margin-bottom:9px}.promptbox{font-family:"IBM Plex Mono",monospace;background:#080c10;border-left:3px solid #48697a;padding:11px;color:#adc4d0;margin:8px 0}.response{line-height:1.6}
-.option,.action,.trust,.finalChoice{width:100%;text-align:left;background:#101821;color:#dce5ea;border:1px solid #2b3944;padding:11px 12px;margin:7px 0;border-radius:5px;transition:.18s}.option:hover,.action:hover,.trust:hover,.finalChoice:hover{border-color:#526773;background:#14202a}.correct{border-color:#54745d!important;background:#102018!important}.wrong{border-color:#82494a!important;background:#231414!important;animation:shake .28s}@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}.feedback{border:1px solid #34424c;background:#0a1015;padding:12px;margin-top:12px;line-height:1.55}.feedback.good{border-color:#4e6b57}.feedback.bad{border-color:#74464a}
-.copilotPane{border-left:1px solid var(--line);background:#0b1117;display:flex;flex-direction:column;min-width:0}.copHead{padding:12px;border-bottom:1px solid #26323d;font:600 .75rem "IBM Plex Mono",monospace;color:#a5bec9}.chat{padding:12px;overflow:auto;flex:1;max-height:680px}.msg{margin:10px 0;line-height:1.55;font-size:.86rem}.msg .who{font:600 .7rem "IBM Plex Mono",monospace;color:#7f96a4;display:block;margin-bottom:3px}.msg.copilot{color:#cfdae0}.msg.detective{color:#aeb9c0}.chatInput{border-top:1px solid #26323d;padding:10px}.fakeInput{border:1px solid #33434e;background:#080d12;color:#75838c;padding:10px;font-family:"IBM Plex Mono",monospace;font-size:.78rem}
-.caseBoard{margin-top:14px;border-top:1px solid #2a3741;padding-top:10px}.suspect{border:1px solid #27343e;padding:8px;margin:7px 0;background:#0d141a}.suspect strong{display:flex;justify-content:space-between;gap:8px}.suspect.marcus.hot{border-color:#806c4a;background:#1b1710}.suspect.lena.hot{border-color:#7b5050;background:#1b1214}.suspectTag{font:600 .62rem "IBM Plex Mono",monospace;color:#8f9ca5;margin-top:5px}.evidenceList{font-size:.76rem;color:#9aa8b1;line-height:1.55}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.table{width:100%;border-collapse:collapse;font-size:.78rem}.table th,.table td{border:1px solid #2e3b45;padding:8px}.table th{background:#151d25}.burntWrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}.burnt{background:linear-gradient(135deg,transparent 0 3%,#18120f 3% 97%,transparent 97%),radial-gradient(circle at 20% 20%,#4c2b20,transparent 26%);border:1px solid #4c392f;padding:14px;min-height:120px;color:#cdbeb0}.seq{display:grid;gap:7px}.seqItem{display:grid;grid-template-columns:34px 1fr 88px;gap:8px;align-items:center;border:1px solid #2e3942;padding:8px;background:#111820}.mini{background:#15212a;color:#c7d4da;border:1px solid #3c4d58;padding:5px 8px}.dropgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.drop{min-height:92px;border:1px dashed #44525e;padding:9px;background:#0c1319}.draggable{border:1px solid #364652;background:#121b22;padding:9px;margin:6px 0;width:100%;text-align:left;color:var(--text)}.draggable.selected{outline:2px solid #7d9a87}.logline{font-family:"IBM Plex Mono",monospace;font-size:.75rem;border-bottom:1px solid #22303a;padding:8px 0}.caseUpdate{border-left:3px solid #869c8f;padding:10px;background:#10171a;margin:12px 0}.reveal{border:1px solid #6e4b4d;background:#181013;padding:15px}.finalGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tier{border:1px solid #34434e;background:#0e151b;padding:12px}.tier h3{font:600 .72rem "IBM Plex Mono",monospace;color:#9caab3}.footer{text-align:center;color:#56646d;font-size:.7rem;padding:16px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#05080b;color:var(--text);font-family:Inter,Arial,sans-serif}
+body{background:radial-gradient(circle at 20% 0%,rgba(55,73,87,.16),transparent 30%),linear-gradient(180deg,#080c11,#05070a 72%)}
+button{font:inherit;cursor:pointer;min-height:44px}.hidden{display:none!important}#app{min-height:100vh}
 
-.tutorialGuide{border:1px solid #30404b;background:#0d151c;padding:12px;margin:10px 0;line-height:1.6}
+/* BOOT */
+.boot{min-height:100vh;display:grid;place-items:center;padding:24px;background:linear-gradient(rgba(255,255,255,.015) 50%,transparent 50%);background-size:100% 4px}
+.bootbox{width:min(760px,100%);border:1px solid #293540;background:#070b0f;padding:22px;box-shadow:0 20px 60px #000;font-family:"IBM Plex Mono",monospace}
+.bootline{opacity:0;transform:translateY(4px);transition:.35s;margin:7px 0;color:#9fb1bd}.bootline.show{opacity:1;transform:none}
+.bootline.alert{color:#c19a75}.bootline.cop{color:#b8d3c1}
+.bootBtn{margin-top:20px;background:#111b22;color:#d9e4ea;border:1px solid #3a4a56;padding:11px 18px;border-radius:4px;font-size:.9rem}
+
+/* SCREENS */
+.screen{max-width:960px;margin:0 auto;padding:24px 16px;animation:fadeIn .4s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.footer{text-align:center;color:#56646d;font-size:.7rem;padding:16px}
+
+/* HOME */
+.homeHero{text-align:center;padding:60px 16px 32px}
+.gameKicker{font:700 .7rem "IBM Plex Mono",monospace;color:var(--amber);letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px}
+.gameTitle{font:700 3.2rem "IBM Plex Mono",monospace;color:#c8d8df;margin:0 0 6px;line-height:1.1}
+.gameSub{font:400 1rem "IBM Plex Mono",monospace;color:var(--muted);margin-bottom:28px}
+.homeCard{border:1px solid #26333d;background:#0e151c;padding:22px;max-width:680px;margin:0 auto 24px;line-height:1.7;color:#c8d4da}
+.ctaBtn{background:linear-gradient(135deg,#1a2d3a,#0f1e28);color:#a8d4c4;border:1px solid #3d6070;padding:13px 28px;border-radius:5px;font:600 .9rem "IBM Plex Mono",monospace;letter-spacing:.08em;transition:.2s}
+.ctaBtn:hover{border-color:#5d8a9a;background:linear-gradient(135deg,#1e3545,#132530)}
+
+/* CHARACTERS */
+.charGrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:760px;margin:24px auto}
+.charCard{border:1px solid #26333d;background:#0e151c;padding:24px;text-align:center}
+.charIcon{font-size:3rem;margin-bottom:12px}
+.charName{font:600 .8rem "IBM Plex Mono",monospace;color:var(--amber);letter-spacing:.1em;margin-bottom:8px}
+.charDesc{font-size:.88rem;color:#bac8d0;line-height:1.6}
+
+/* HOW TO PLAY */
+.howSection{border:1px solid #26333d;background:#0e151c;padding:18px;margin:12px 0}
+.howTitle{font:600 .75rem "IBM Plex Mono",monospace;color:var(--amber);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.mechList{list-style:none;padding:0;margin:0}
+.mechList li{padding:7px 0;border-bottom:1px solid #1e2d36;font-size:.86rem;color:#bac8d0;line-height:1.5}
+.mechList li:last-child{border-bottom:0}
+.mechList li b{color:#a8c4d0;font-family:"IBM Plex Mono",monospace}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(8,12,17,.97);backdrop-filter:blur(12px);border-bottom:1px solid #26313a}
+.topgrid{max-width:1440px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:"IBM Plex Mono",monospace;font-size:.76rem}
+.topLeft{display:flex;align-items:center;gap:16px}
+.topRight{display:flex;align-items:center;gap:10px}
+.confWrap{display:flex;align-items:center;gap:8px}
+.confLabel{color:var(--muted);white-space:nowrap}
+.confbar{width:120px;height:6px;background:#182028;border:1px solid #2d3b45;overflow:hidden}
+.conffill{height:100%;background:linear-gradient(90deg,#5d6f75,#96b69a);transition:.45s}
+.confPct{color:var(--green);font-weight:600}
+.scoreLabel{color:var(--muted)}
+.scoreVal{color:#c8d8e0;font-weight:600}
+.streakLabel{color:#c1a16a}
+.topBtn{background:#111b22;color:#c0cdd4;border:1px solid #2e3f4a;padding:6px 10px;border-radius:3px;font:500 .72rem "IBM Plex Mono",monospace;min-height:32px}
+.topBtn:hover{border-color:#4a6070}
+
+/* SHELL / MONITOR */
+.shell{min-height:100vh;padding:14px}
+.monitor{max-width:1440px;margin:0 auto;border:1px solid #2c3943;background:#0a0e13;box-shadow:0 25px 80px var(--shadow)}
+.monitorTop{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 14px;border-bottom:1px solid #26313a;background:#0b1117;font-family:"IBM Plex Mono",monospace;font-size:.76rem;flex-wrap:wrap}
+.caseTitle{color:#bac6cc;font-weight:600}.clockLabel{color:#8ea0ab;text-align:center}
+
+/* DESKTOP LAYOUT */
+.desktop{display:grid;grid-template-columns:210px minmax(0,1fr) 320px;min-height:720px}
+.explorer{border-right:1px solid var(--line);background:#0b1117;padding:10px}
+.sectionLabel{font:600 .66rem "IBM Plex Mono",monospace;color:#71808b;text-transform:uppercase;letter-spacing:.12em;margin:10px 0 8px}
+.folder{width:100%;display:flex;align-items:center;gap:7px;text-align:left;background:transparent;border:1px solid transparent;color:#7a8790;padding:7px 6px;border-radius:3px;margin:1px 0;font-size:.75rem;min-height:32px}
+.folder.active{background:#121b23;border-color:#31404c;color:#d7e1e6}
+.folder.done{color:#9fb7a0}.folder.locked{opacity:.5}
+.folder:hover:not(.locked){background:#101820}
+
+/* MAIN AREA */
+.main{min-width:0;background:linear-gradient(rgba(255,255,255,.010) 50%,transparent 50%);background-size:100% 4px;padding:16px}
+.workspace{max-width:820px;margin:0 auto}
+.caseHeader{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-bottom:1px solid #24313b;padding-bottom:10px;margin-bottom:14px}
+.caseKicker{font:600 .68rem "IBM Plex Mono",monospace;color:#8195a1;letter-spacing:.12em}
+h2{font-size:1.35rem;margin:.15em 0}h3{margin:.3em 0;font-size:1rem}
+.evidenceTag{font:600 .65rem "IBM Plex Mono",monospace;border:1px solid #40515c;color:#91a6b2;padding:5px 8px;border-radius:999px;white-space:nowrap}
+.card{border:1px solid #26333d;background:#0e151c;padding:13px;margin:10px 0}
+.cardTitle{font:600 .72rem "IBM Plex Mono",monospace;color:#99aab4;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.promptbox{font-family:"IBM Plex Mono",monospace;background:#080c10;border-left:3px solid #48697a;padding:10px;color:#adc4d0;margin:8px 0;font-size:.82rem}
+.response{line-height:1.6;font-size:.88rem}
+
+/* BUTTONS */
+.option,.action,.trust,.finalChoice,.lensBtn{width:100%;text-align:left;background:#101821;color:#dce5ea;border:1px solid #2b3944;padding:10px 12px;margin:6px 0;border-radius:4px;transition:.18s;font-size:.88rem}
+.option:hover,.action:hover,.trust:hover,.finalChoice:hover,.lensBtn:hover{border-color:#526773;background:#14202a}
+.correct{border-color:#54745d!important;background:#102018!important}
+.wrong{border-color:#82494a!important;background:#231414!important;animation:shake .28s}
+@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.feedback{border:1px solid #34424c;background:#0a1015;padding:12px;margin-top:10px;line-height:1.55;font-size:.87rem}
+.feedback.good{border-color:#4e6b57}.feedback.bad{border-color:#74464a}
+
+/* STRIKES */
+.strikesRow{display:flex;gap:6px;margin-bottom:8px}
+.strike{font-size:1rem;transition:.3s}.strike.lost{opacity:.2;filter:grayscale(1)}
+
+/* COPILOT PANE */
+.copilotPane{border-left:1px solid var(--line);background:#0b1117;display:flex;flex-direction:column;min-width:0}
+.copHead{padding:10px 12px;border-bottom:1px solid #26323d;font:600 .72rem "IBM Plex Mono",monospace;color:#a5bec9;display:flex;align-items:center;gap:10px}
+.copIcon{font-size:1.8rem;transition:filter 1.5s,opacity 1.5s}
+.chat{padding:10px;overflow-y:auto;flex:1;max-height:600px}
+.msg{margin:9px 0;line-height:1.55;font-size:.84rem}
+.msg .who{font:600 .68rem "IBM Plex Mono",monospace;color:#7f96a4;display:block;margin-bottom:2px}
+.msg.copilot{color:#cfdae0}.msg.detective{color:#aeb9c0}
+.chatInput{border-top:1px solid #26323d;padding:9px}
+.fakeInput{border:1px solid #33434e;background:#080d12;color:#75838c;padding:9px;font-family:"IBM Plex Mono",monospace;font-size:.75rem}
+
+/* CASE BOARD */
+.caseBoard{margin-top:12px;border-top:1px solid #2a3741;padding-top:10px}
+.suspect{border:1px solid #27343e;padding:7px 9px;margin:6px 0;background:#0d141a;transition:border-color .5s,background .5s}
+.suspect strong{display:flex;justify-content:space-between;gap:8px;font-size:.82rem}
+.suspect.marcus.hot{border-color:#806c4a;background:#1b1710}
+.suspect.lena.hot{border-color:#7b5050;background:#1b1214}
+.suspect.revised{border-color:#4a7060!important;background:#0f1e18!important}
+.suspectTag{font:600 .6rem "IBM Plex Mono",monospace;color:#8f9ca5;margin-top:4px}
+.evidenceList{font-size:.74rem;color:#9aa8b1;line-height:1.6}
+
+/* TABLE */
+.table{width:100%;border-collapse:collapse;font-size:.78rem}
+.table th,.table td{border:1px solid #2e3b45;padding:7px}.table th{background:#151d25}
+
+/* DRAG */
+.dragBank{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0;min-height:44px}
+.draggable{border:1px solid #364652;background:#121b22;padding:8px 10px;border-radius:4px;color:var(--text);font-size:.83rem;cursor:pointer;transition:.15s}
+.draggable:hover{border-color:#4a6070}.draggable.selected{outline:2px solid #7d9a87;outline-offset:2px}
+.dropZones{display:grid;gap:9px;margin:10px 0}
+.drop{min-height:80px;border:1px dashed #44525e;padding:9px;background:#0c1319;border-radius:4px;transition:border-color .2s}
+.drop.pulsing{border-color:#7d9a87;animation:dropPulse 1s infinite}
+@keyframes dropPulse{50%{border-color:#96b69a}}
+.drop b{display:block;font:600 .7rem "IBM Plex Mono",monospace;color:#8aa4b0;margin-bottom:6px;text-transform:uppercase}
+.dropBody{display:flex;flex-wrap:wrap;gap:6px}
+
+/* SEQUENCE */
+.seqWrap{margin:10px 0}
+.seqInner{display:grid;gap:6px}
+.seqItem{display:grid;grid-template-columns:30px 1fr 80px;gap:8px;align-items:center;border:1px solid #2e3942;padding:7px 9px;background:#111820;border-radius:3px;font-size:.84rem}
+.seqBtns{display:flex;gap:4px}
+.mini{background:#15212a;color:#c7d4da;border:1px solid #3c4d58;padding:4px 8px;border-radius:3px;min-height:28px;font-size:.78rem}
+
+/* BURNT FRAGMENTS */
+.burntWrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.burnt{background:linear-gradient(135deg,transparent 0 3%,#18120f 3% 97%,transparent 97%),radial-gradient(circle at 20% 20%,#4c2b20,transparent 26%);border:1px solid #4c392f;padding:13px;min-height:100px;color:#cdbeb0;font-size:.83rem}
+
+/* GRID2 / TRUST */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+
+/* CASE UPDATE */
+.caseUpdate{border-left:3px solid #869c8f;padding:10px;background:#10171a;margin:10px 0;font-size:.85rem}
+.reveal{border:1px solid #6e4b4d;background:#181013;padding:14px;margin:10px 0;font-size:.85rem}
+
+/* LOG LINES */
+.logline{font-family:"IBM Plex Mono",monospace;font-size:.74rem;border-bottom:1px solid #22303a;padding:7px 0;cursor:pointer;transition:background .15s}
+.logline:hover{background:#111a22}.logline.flagged{background:#1a2818;border-left:2px solid var(--green);padding-left:8px}
+.logline.suspicious-line{background:#1a1810;border-left:2px solid var(--amber);padding-left:8px}
+
+/* EVIDENCE LENS */
+.lensWrap{border:1px solid #344959;background:#0b1520;padding:12px;margin:10px 0}
+.lensTabs{display:flex;gap:6px;margin-bottom:10px}
+.lensBtn{width:auto;padding:6px 12px;border-radius:3px;font:600 .7rem "IBM Plex Mono",monospace;letter-spacing:.06em}
+.lensBtn.active{background:#1a2d3a;border-color:#5d8a9a;color:#a8d4c4}
+.lensContent{font-size:.83rem;line-height:1.6;color:#bac8d4;font-family:"IBM Plex Mono",monospace}
+.lensContent.hidden{display:none}
+
+/* PROMPT BUILDER */
+.spellBox{font-family:"IBM Plex Mono",monospace;background:#080c10;border:1px solid #2d4050;padding:12px;min-height:52px;color:#a8c4d0;margin:10px 0;border-radius:3px;font-size:.83rem;line-height:1.6}
+.tileBank{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0}
+.tile{background:#141f28;color:#c0d0d8;border:1px solid #364858;padding:7px 10px;border-radius:3px;font-size:.82rem;transition:.15s}
+.tile:hover{border-color:#4a6a7a}.tile.used{opacity:.25;pointer-events:none}
+.tile.wrong-tile{border-color:#82494a;background:#231414;animation:shake .28s}
+
+/* TWO-PATH */
+.pathBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+
+/* FINAL GRID */
+.finalGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.tier{border:1px solid #34434e;background:#0e151b;padding:12px}
+.tier h3{font:600 .7rem "IBM Plex Mono",monospace;color:#9caab3;margin-bottom:7px}
+.tier p{font-size:.82rem;color:#9aa8b1;line-height:1.5;margin:0}
+
+/* MODAL / BEAT */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;display:grid;place-items:center;padding:20px}
+.modalCard{max-width:680px;width:100%;background:#0c1219;border:1px solid #2d3f4c;border-radius:6px;padding:26px;text-align:center}
+.modalCard h2{font:600 1.4rem "IBM Plex Mono",monospace;color:#c0d4dc;margin-bottom:14px}
+.beatLine{font-size:.88rem;color:#9ab0bc;line-height:1.7;margin:6px 0}
+.beatLine b{color:#c1a16a}
+
+/* MINI-GAME */
+.miniTimer{font:700 2rem "IBM Plex Mono",monospace;color:var(--amber);text-align:center;margin:10px 0}
+.miniFragment{border:1px solid #2d4050;background:#0c1520;padding:14px;margin:10px 0;text-align:center}
+.fragmentTag{font:600 .68rem "IBM Plex Mono",monospace;padding:3px 8px;border-radius:999px;margin-bottom:8px;display:inline-block}
+.tag-verified{background:#1a2e1a;color:#96b69a;border:1px solid #3d6a3d}
+.tag-ai{background:#1a1e2e;color:#7f9eaf;border:1px solid #3d4a6a}
+.tag-assumption{background:#2e2a1a;color:#c1a16a;border:1px solid #6a5a3d}
+.tag-incomplete{background:#2a2020;color:#9a7070;border:1px solid #6a4a4a}
+.fragmentText{font-size:.9rem;color:#c8d4da;line-height:1.5}
+.keepDiscardBtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.keepBtn{background:#0f2018;color:#96b69a;border:1px solid #3d6a3d;padding:10px;border-radius:4px}
+.discardBtn{background:#201010;color:#a07070;border:1px solid #6a3a3a;padding:10px;border-radius:4px}
+.miniScore{text-align:center;font:600 1.1rem "IBM Plex Mono",monospace;color:var(--amber);margin:10px 0}
+
+.promptRepairBox{font-family:"IBM Plex Mono",monospace;background:#080c10;border:1px solid #2d4050;padding:12px;margin:10px 0;font-size:.85rem;line-height:1.8}
+.brokenEl{color:#c17a7a;background:#2a1414;border:1px solid #6a3a3a;padding:1px 4px;border-radius:2px;cursor:default}
+
+.verdictBtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.verdictBtn{padding:10px;border-radius:4px;font:600 .75rem "IBM Plex Mono",monospace;letter-spacing:.05em}
+.vbtn-proven{background:#0f1e2e;color:#7f9eaf;border:1px solid #3d5a7a}
+.vbtn-supported{background:#1e1a0f;color:#c1a16a;border:1px solid #7a6a3d}
+.vbtn-unresolved{background:#1e0f10;color:#a07070;border:1px solid #7a3a3a}
+.verdictResult{font:400 .78rem "IBM Plex Mono",monospace;margin:3px 0;padding:5px 8px;border-radius:3px}
+.verdict-correct{background:#0f2018;border-left:2px solid var(--green)}
+.verdict-wrong{background:#201010;border-left:2px solid var(--red)}
+
+/* END SCREEN */
+.endHero{text-align:center;padding:32px 16px 20px}
+.rankTitle{font:700 1.6rem "IBM Plex Mono",monospace;color:var(--amber);margin:12px 0}
+.statsGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:700px;margin:16px auto}
+.stat{border:1px solid #2a3741;background:#0e151c;padding:14px;text-align:center}
+.statVal{font:700 1.4rem "IBM Plex Mono",monospace;color:#a8c4d0}
+.statLabel{font:400 .72rem "IBM Plex Mono",monospace;color:var(--muted);margin-top:4px}
+.reviewCard{border:1px solid #2a3741;background:#0d1419;margin:8px 0;overflow:hidden}
+.reviewCard.missed{border-color:#6a4a2a}
+.reviewHead{width:100%;text-align:left;background:#111820;color:var(--text);border:0;padding:11px 13px;font-size:.85rem;cursor:pointer}
+.reviewBody{padding:12px;font-size:.83rem;line-height:1.6;color:#9aa8b1;display:none}
+.reviewBody.open{display:block}
+.miniReplayBtns{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
+
+/* TUTORIAL */
+.tutorialGuide{border:1px solid #30404b;background:#0d151c;padding:12px;margin:10px 0;line-height:1.7;font-size:.87rem}
 .tutorialGuide b{color:#b8c9d2}
-.practiceBadge{display:inline-block;font:600 .65rem "IBM Plex Mono",monospace;color:#9fb9a8;border:1px solid #4a6552;background:#0d1a12;padding:5px 7px;margin-bottom:8px}
-.tutorialActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.skipTutorial{background:transparent;color:#92a0aa;border:1px solid #34434e;padding:10px 12px;border-radius:4px}
-.practiceBoard{border-top:1px solid #2a3741;margin-top:14px;padding-top:10px}
-.practiceEvidence{font-size:.76rem;color:#8e9ba4;line-height:1.6}
+.practiceBadge{display:inline-block;font:600 .63rem "IBM Plex Mono",monospace;color:#9fb9a8;border:1px solid #4a6552;background:#0d1a12;padding:4px 7px;margin-bottom:8px}
+.practiceBoard{border-top:1px solid #2a3741;margin-top:12px;padding-top:10px}
+.practiceEvidence{font-size:.74rem;color:#8e9ba4;line-height:1.6}
 .practiceEvidence.verified{color:#a7bea9}
+.skipTutorial{background:transparent;color:#92a0aa;border:1px solid #34434e;padding:9px 14px;border-radius:3px;font-size:.82rem}
 
-@media(max-width:1100px){.desktop{grid-template-columns:190px minmax(0,1fr)}.copilotPane{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.chat{max-height:none}}@media(max-width:760px){.monitorTop{grid-template-columns:1fr}.clock,.confidence{text-align:left}.desktop{grid-template-columns:1fr}.explorer{border-right:0;border-bottom:1px solid var(--line)}.grid2,.burntWrap,.dropgrid,.finalGrid{grid-template-columns:1fr}.caseHeader{flex-direction:column}.shell{padding:0}.monitor{border-left:0;border-right:0}}
+/* RESPONSIVE */
+@media(max-width:1100px){.desktop{grid-template-columns:180px minmax(0,1fr)}.copilotPane{grid-column:1/-1;border-left:0;border-top:1px solid var(--line)}.chat{max-height:none}}
+@media(max-width:760px){.desktop{grid-template-columns:1fr}.explorer{border-right:0;border-bottom:1px solid var(--line)}.grid2,.burntWrap,.finalGrid,.charGrid,.statsGrid,.pathBtns{grid-template-columns:1fr}.dropZones{grid-template-columns:1fr!important}.caseHeader{flex-direction:column}.shell{padding:0}.monitor{border-left:0;border-right:0}.topgrid{gap:6px}.confbar{width:80px}}
 </style>
 </head>
-<body><div id="app"></div>
+<body>
+<div id="topbarEl" class="topbar hidden">
+  <div class="topgrid">
+    <div class="topLeft">
+      <div class="confWrap">
+        <span class="confLabel">CASE CONFIDENCE</span>
+        <div class="confbar"><div id="confFill" class="conffill" style="width:8%"></div></div>
+        <span id="confPct" class="confPct">8%</span>
+      </div>
+      <span class="scoreLabel">SCORE <span id="scoreEl" class="scoreVal">0</span></span>
+      <span class="streakLabel">🔥 <span id="streakEl">0</span></span>
+    </div>
+    <div class="topRight">
+      <button class="topBtn" onclick="openCaseLog()">📋 CASE LOG</button>
+      <button class="topBtn" id="muteBtn" onclick="toggleMute()">🔊</button>
+    </div>
+  </div>
+</div>
+<div id="app"></div>
+<div id="modalHost"></div>
 <script>
 const COPYRIGHT="© Dr. Amir Fard Bahreini";
 const folders=["INCIDENT_REPORT","ACCESS_LOGS","PERSONNEL_FILES","EMAIL_ARCHIVE","TRANSFER_HISTORY","FINANCIAL_RECORDS","SERVER_LOGS","DEVICE_INVENTORY","DELETED_FILES","SECURITY_FOOTAGE","OFFSITE_BACKUP","CASE_BOARD","FINAL_REPORT"];
-const S={idx:0,score:0,wrong:0,verified:0,selected:null,seq:null,marcusHeat:0,lenaHeat:0,marcusRevised:false,evidence:[],chat:[["copilot","I have partial access to the surviving data."],["copilot","Marcus Vale appears repeatedly in the recovered fragments."],["copilot","If I were required to nominate a suspect immediately, I would nominate Marcus Vale."],["copilot","You did not ask me to do that. I considered it efficient."]]};
+
+let S={
+  idx:0,score:0,wrong:0,verified:0,streak:0,longestStreak:0,
+  firstTry:0,strikesLeft:3,firstTryPerFolder:new Array(13).fill(null),
+  wrongPerFolder:new Array(13).fill(0),
+  selected:null,seq:null,
+  marcusHeat:0,lenaHeat:0,marcusRevised:false,
+  evidence:[],
+  chat:[
+    ["copilot","I have partial access to the surviving data."],
+    ["copilot","Marcus Vale appears repeatedly in the recovered fragments."],
+    ["copilot","If I were required to nominate a suspect immediately, I would nominate Marcus Vale."],
+    ["copilot","You did not ask me to do that. I considered it efficient."]
+  ],
+  miniScores:[0,0,0],
+  miniReplaying:false,
+  pathTaken:null,
+  answers:new Array(13).fill(null),
+  mute:localStorage.getItem('ashesMute')==='1'
+};
+
+// AUDIO
+let audioCtx=null;
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function sound(kind){
+  if(S.mute)return;
+  try{
+    const a=getAudio();
+    const notes=kind==='wrong'?[[220,.3]]:kind==='ok'?[[523,.15],[659,.15]]:kind==='verified'?[[523,.2],[659,.2],[784,.2]]:[[392,.3],[523,.3],[659,.3],[784,.5]];
+    notes.forEach((n,j)=>{
+      const o=a.createOscillator(),g=a.createGain();
+      const st=a.currentTime+j*(kind==='wrong'?0:.16);
+      o.frequency.value=n[0];o.type='sine';
+      g.gain.setValueAtTime(.07,st);g.gain.exponentialRampToValueAtTime(.001,st+n[1]);
+      o.connect(g);g.connect(a.destination);o.start(st);o.stop(st+n[1]+.05);
+    });
+  }catch(e){}
+}
+function toggleMute(){S.mute=!S.mute;localStorage.setItem('ashesMute',S.mute?'1':'0');document.getElementById('muteBtn').textContent=S.mute?'🔇':'🔊';}
+
+// UTILS
 function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
-function boot(){document.getElementById("app").innerHTML=`<div class="boot"><div class="bootbox"><div id="b1" class="bootline">02:13:07 &nbsp; EVIDENCE ROOM 4</div><div id="b2" class="bootline">CASE 0417 — DATA THEFT / FIRE / SERVER WIPE</div><div id="b3" class="bootline">SYSTEM RECOVERY...</div><div id="b4" class="bootline">1 DEVICE FOUND</div><div id="b5" class="bootline alert">SURVIVING WORKSTATION: TERMINAL-04</div><div id="b6" class="bootline cop">✦ Copilot: Hello.</div><div id="b7" class="bootline cop">✦ Copilot: Marcus Vale appears unusually often in the surviving evidence.</div><div id="b8" class="bootline cop">✦ Copilot: This may be relevant. Or merely suspicious-looking. Those are not the same thing.</div><button id="bootBtn" class="bootBtn hidden" onclick="showTutorial()">OPEN CASE TERMINAL</button></div></div>`;["b1","b2","b3","b4","b5","b6","b7","b8"].forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add("show"),350+i*430));setTimeout(()=>document.getElementById("bootBtn").classList.remove("hidden"),4200)}
-function confidence(){return Math.min(96,8+S.verified*7)}function folderState(i){if(i<S.idx)return"done";if(i===S.idx)return"active";return"locked"}
-function boardHTML(){const mtag=S.marcusRevised?"EVIDENCE VALID · INTERPRETATION REVISED":S.marcusHeat>=5?"PRIMARY SUSPECT (PROVISIONAL)":S.marcusHeat>=2?"EVIDENCE ACCUMULATING":"UNDER REVIEW";const ltag=S.lenaHeat>=2?"DEVICE LINK CONFIRMED":S.lenaHeat?"NEW LEAD":"UNDER REVIEW";return `<div class="caseBoard"><div class="sectionLabel">Case Board</div><div class="suspect marcus ${S.marcusHeat>=2?"hot":""}"><strong><span>MARCUS VALE</span><span>${S.marcusHeat>=5?"●":""}</span></strong><div class="suspectTag">${mtag}</div></div><div class="suspect lena ${S.lenaHeat>=2?"hot":""}"><strong><span>LENA ORTIZ</span><span>${S.lenaHeat>=2?"●":""}</span></strong><div class="suspectTag">${ltag}</div></div><div class="suspect"><strong>DANIEL KERR</strong><div class="suspectTag">LOW PRIORITY</div></div><div class="sectionLabel" style="margin-top:12px">Known</div><div class="evidenceList">${S.evidence.length?S.evidence.map(x=>"• "+esc(x)).join("<br>"):"No verified evidence yet."}</div></div>`}
-function chatHTML(){return S.chat.map(m=>`<div class="msg ${m[0]}"><span class="who">${m[0]==="copilot"?"✦ COPILOT":"DETECTIVE"}</span>${m[1]}</div>`).join("")}
-function addChat(who,text){S.chat.push([who,text]);const c=document.querySelector(".chat");if(c){c.innerHTML=chatHTML()+boardHTML();c.scrollTop=c.scrollHeight}}
-function evidence(name){if(!S.evidence.includes(name))S.evidence.push(name)}
+function footer(){return `<div class="footer">${COPYRIGHT}</div>`}
+function confidence(){return Math.min(96,8+S.verified*7)}
+function updateHUD(){
+  const f=document.getElementById('confFill'),p=document.getElementById('confPct'),sc=document.getElementById('scoreEl'),st=document.getElementById('streakEl');
+  const c=confidence();
+  if(f)f.style.width=c+'%';if(p)p.textContent=c+'%';if(sc)sc.textContent=S.score;if(st)st.textContent=S.streak;
+  document.getElementById('muteBtn').textContent=S.mute?'🔇':'🔊';
+}
+function copilotFilter(){
+  // Copilot visual degrades as Marcus heat rises, recovers after revision
+  if(S.marcusRevised)return'filter:drop-shadow(0 0 8px rgba(96,180,160,.5)) brightness(1.05) hue-rotate(160deg)';
+  const h=S.marcusHeat;
+  if(h>=6)return'filter:drop-shadow(0 0 4px rgba(180,140,60,.3)) brightness(0.8) hue-rotate(40deg)';
+  if(h>=3)return'filter:drop-shadow(0 0 6px rgba(180,150,80,.4)) brightness(0.95)';
+  return'filter:drop-shadow(0 0 10px rgba(150,182,154,.4)) brightness(1.1)';
+}
 
+function showTop(v=true){document.getElementById('topbarEl').classList.toggle('hidden',!v);}
+
+// EVIDENCE / CHAT
+function addEvidence(name){if(!S.evidence.includes(name))S.evidence.push(name);}
+function addChat(who,text){
+  S.chat.push([who,text]);
+  const c=document.querySelector('.chat');
+  if(c){c.innerHTML=chatHTML()+boardHTML();c.scrollTop=c.scrollHeight;}
+}
+function chatHTML(){return S.chat.map(m=>`<div class="msg ${m[0]}"><span class="who">${m[0]==='copilot'?'✦ COPILOT':'DETECTIVE'}</span>${m[1]}</div>`).join('');}
+function boardHTML(){
+  const mh=S.marcusHeat,lh=S.lenaHeat;
+  const mtag=S.marcusRevised?'EVIDENCE VALID · INTERPRETATION REVISED':mh>=5?'PRIMARY SUSPECT (PROVISIONAL)':mh>=2?'EVIDENCE ACCUMULATING':'UNDER REVIEW';
+  const ltag=lh>=3?'DEVICE LINK CONFIRMED':lh>=1?'NEW LEAD':'UNDER REVIEW';
+  return `<div class="caseBoard">
+    <div class="sectionLabel">Case Board</div>
+    <div class="suspect marcus ${mh>=2?'hot':''} ${S.marcusRevised?'revised':''}">
+      <strong><span>MARCUS VALE</span><span>${mh>=5?'●':''}</span></strong>
+      <div class="suspectTag">${mtag}</div>
+    </div>
+    <div class="suspect lena ${lh>=2?'hot':''}">
+      <strong><span>LENA ORTIZ</span><span>${lh>=2?'●':''}</span></strong>
+      <div class="suspectTag">${ltag}</div>
+    </div>
+    <div class="suspect"><strong>DANIEL KERR</strong><div class="suspectTag">LOW PRIORITY</div></div>
+    <div class="sectionLabel" style="margin-top:10px">Verified Evidence</div>
+    <div class="evidenceList">${S.evidence.length?S.evidence.map(x=>'• '+esc(x)).join('<br>'):'No verified evidence yet.'}</div>
+  </div>`;
+}
+
+function folderSidebarHTML(){
+  return folders.map((f,i)=>{
+    const state=i<S.idx?'done':i===S.idx?'active':'locked';
+    const icon=i<S.idx?'✓':i===S.idx?'📂':'🔒';
+    return `<button class="folder ${state}" onclick="folderClick(${i})">${icon} ${f}</button>`;
+  }).join('');
+}
+function folderClick(i){
+  if(i>S.idx){addChat('copilot','That folder is still locked. I admire the optimism.');return;}
+  if(i<S.idx){addChat('copilot','You have already processed that evidence. Reopening it will not make it more dramatic.');}
+}
+
+// BEAT (story moment)
+function beat(title,lines,cb,ms=2800){
+  const m=document.createElement('div');m.className='modal';
+  m.innerHTML=`<div class="modalCard"><h2>${esc(title)}</h2>${lines.map(l=>`<div class="beatLine">${l}</div>`).join('')}<div style="margin-top:16px;font:400 .72rem IBM Plex Mono,monospace;color:#56646d">tap to continue</div></div>`;
+  document.getElementById('modalHost').appendChild(m);
+  const go=()=>{m.remove();if(cb)cb();};
+  const t=setTimeout(go,ms);
+  m.addEventListener('click',()=>{clearTimeout(t);go();});
+}
+
+// OPEN CASE LOG MODAL
+function openCaseLog(){
+  const m=document.createElement('div');m.className='modal';
+  m.onclick=e=>{if(e.target===m)m.remove();};
+  m.innerHTML=`<div class="modalCard" style="max-width:560px;text-align:left;max-height:80vh;overflow-y:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <span style="font:600 .8rem IBM Plex Mono,monospace;color:var(--amber)">CASE LOG — VERIFIED EVIDENCE</span>
+      <button class="topBtn" onclick="this.closest('.modal').remove()">✕ CLOSE</button>
+    </div>
+    ${S.evidence.length?S.evidence.map(e=>`<div style="font:.8rem IBM Plex Mono,monospace;color:#96b69a;padding:6px 0;border-bottom:1px solid #1e2d36">• ${esc(e)}</div>`).join(''):'<div style="color:var(--muted);font-size:.85rem">No verified evidence yet.</div>'}
+    ${footer()}
+  </div>`;
+  document.getElementById('modalHost').appendChild(m);
+}
+
+// STRIKES
+function strikesHTML(){
+  return `<div class="strikesRow">${[0,1,2].map(j=>`<span class="strike ${j<S.strikesLeft?'':'lost'}">🔦</span>`).join('')}</div>`;
+}
+
+// CORE GAME FLOW
+function finish(feedback,chatLine,evidenceLine,heatM=0,heatL=0,points=100){
+  if(S.firstTryPerFolder[S.idx]===null){S.firstTryPerFolder[S.idx]=true;S.firstTry++;S.streak++;S.longestStreak=Math.max(S.longestStreak,S.streak);}
+  S.verified++;S.score+=points;S.marcusHeat+=heatM;S.lenaHeat+=heatL;
+  if(evidenceLine)addEvidence(evidenceLine);
+  if(chatLine)addChat('copilot',chatLine);
+  S.answers[S.idx]={correct:true,feedback};
+  sound('verified');updateHUD();
+  const h=document.getElementById('feedback');
+  if(h)h.innerHTML=`<div class="feedback good">${feedback}<br><button class="action" style="margin-top:10px" onclick="next()">ADD TO CASE BOARD →</button></div>`;
+  // update copilot visual
+  const ci=document.getElementById('copIcon');if(ci)ci.style=copilotFilter();
+}
+function wrong(btn,text){
+  S.wrong++;S.wrongPerFolder[S.idx]++;S.streak=0;
+  if(S.firstTryPerFolder[S.idx]===null)S.firstTryPerFolder[S.idx]=false;
+  S.strikesLeft--;
+  if(btn){btn.classList.add('wrong');setTimeout(()=>btn.classList.remove('wrong'),400);}
+  sound('wrong');updateHUD();
+  const h=document.getElementById('feedback');if(h)h.innerHTML=`<div class="feedback bad">${text}</div>`;
+  // update strikes
+  const sr=document.querySelector('.strikesRow');
+  if(sr)sr.outerHTML=strikesHTML();
+  if(S.strikesLeft<=0)revealAnswer();
+}
+function revealAnswer(){
+  // disable all interactive elements
+  document.querySelectorAll('.option,.trust,.finalChoice,.draggable,.tile,.lensBtn,.keepBtn,.discardBtn,.verdictBtn,.pathBtn').forEach(x=>{x.disabled=true;x.style.opacity='.4';});
+  const h=document.getElementById('feedback');
+  const msg=window._correctFeedback||'The correct answer has been revealed. Review it and continue.';
+  if(h)h.innerHTML=`<div class="feedback bad" style="border-color:#806c4a"><b>✦ Copilot:</b> I have revealed the correct answer. This has been noted.<br><br>${msg}<br><button class="action" style="margin-top:10px" onclick="next()">CONTINUE →</button></div>`;
+  sound('wrong');
+}
+
+function next(){
+  window._correctFeedback=null;
+  S.strikesLeft=3;
+  // check for beats and mini-games
+  if(S.idx===3){beat('ACT 1 — CASE SUMMARY',['<b>✦ Copilot:</b> I have now implicated Marcus Vale across four evidence folders. I want you to know I find this as suspicious as you should.','<b>CASE UPDATE:</b> Early evidence is consistent. It is not yet conclusive.'],()=>launchMini1());}
+  else if(S.idx===6){beat('THE CASE SHIFTS',['<b>✦ Copilot:</b> I notice my earlier confidence was built on ingredients I did not fully examine. This is uncomfortable.','<b>CASE UPDATE:</b> The evidence is real. The interpretation may not be.'],()=>launchMini2());}
+  else if(S.idx===11){beat('CASE BOARD REVISED',['<b>✦ Copilot:</b> I need to revise my conclusion. Marcus accessed the files. Lena transferred the dataset. I treated access and intent as identical. They are not.','<b>CASE UPDATE:</b> The machine found the evidence. The detective decides what it means.'],()=>launchMini3());}
+  else if(S.idx>=12){renderFinale();return;}
+  else{S.idx++;renderGame();}
+}
+function advanceFromMini(){S.idx++;if(S.idx>=13)renderFinale();else renderGame();}
+
+// RENDER GAME
+function renderGame(){
+  document.getElementById('app').innerHTML=`
+  <div class="shell"><div class="monitor">
+    <div class="monitorTop">
+      <div class="caseTitle">CASE 0417 / SURVIVING TERMINAL</div>
+      <div class="clockLabel">02:13 AM · EVIDENCE ROOM 4</div>
+      <div style="font:400 .72rem IBM Plex Mono,monospace;color:var(--muted)">FOLDER ${S.idx+1} OF 13</div>
+    </div>
+    <div class="desktop">
+      <aside class="explorer">
+        <div class="sectionLabel">Recovered Folders</div>
+        ${folderSidebarHTML()}
+      </aside>
+      <main class="main"><div class="workspace">
+        ${strikesHTML()}
+        ${renderQuestion()}
+      </div></main>
+      <aside class="copilotPane">
+        <div class="copHead">
+          <span id="copIcon" style="${copilotFilter()}">✦</span>
+          <span>COPILOT / SURVIVING SESSION</span>
+        </div>
+        <div class="chat">${chatHTML()}${boardHTML()}</div>
+        <div class="chatInput"><div class="fakeInput">&gt; Ask about the case...</div></div>
+      </aside>
+    </div>
+    ${footer()}
+  </div></div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// QUESTION HEADER
+function qHeader(title,tag){
+  return `<div class="caseHeader"><div><div class="caseKicker">EVIDENCE ${String(S.idx+1).padStart(2,'0')} OF 13</div><h2>${title}</h2></div><div class="evidenceTag">${tag}</div></div>`;
+}
+function copBox(prompt,response){
+  return `<div class="card"><div class="cardTitle">✦ COPILOT</div><div class="promptbox">${esc(prompt)}</div><div class="response">${response}</div></div>`;
+}
+function mcHTML(items,correct,wrongLines,cbName){
+  return items.map((x,i)=>`<button class="option" onclick="${cbName}(this,${i},${correct},${JSON.stringify(wrongLines).replace(/"/g,'&quot;')})">${esc(x)}</button>`).join('');
+}
+
+// DRAG HELPERS
+function dragBank(items,id){
+  window[id+'_items']=items;
+  return `<div class="dragBank" id="${id}Bank">${items.map((x,i)=>`<button class="draggable" data-id="${i}" data-kind="${id}" onclick="selDrag(this,'${id}')">${esc(x[0])}</button>`).join('')}</div>`;
+}
+function dropZones(zones,id,cols=2){
+  return `<div class="dropZones" style="grid-template-columns:repeat(${cols},1fr)">${zones.map(z=>`<div class="drop" data-zone="${z[0]}" data-kind="${id}" onclick="dropTap(this,'${id}')"><b>${z[1]}</b><div class="dropBody"></div></div>`).join('')}</div>`;
+}
+function selDrag(el,id){
+  if(el.closest('.drop')){
+    // clicking placed item returns it to bank
+    document.getElementById(id+'Bank').appendChild(el);
+    el.classList.remove('selected');S.selected=null;
+    document.querySelectorAll(`.drop[data-kind="${id}"]`).forEach(d=>d.classList.remove('pulsing'));
+    return;
+  }
+  document.querySelectorAll('.draggable').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');S.selected={el,id};
+  document.querySelectorAll(`.drop[data-kind="${id}"]`).forEach(d=>d.classList.add('pulsing'));
+}
+function dropTap(zone,id){
+  if(!S.selected||S.selected.id!==id)return;
+  zone.querySelector('.dropBody').appendChild(S.selected.el);
+  S.selected.el.classList.remove('selected');S.selected=null;
+  document.querySelectorAll(`.drop[data-kind="${id}"]`).forEach(d=>d.classList.remove('pulsing'));
+}
+function checkDrag(id,correctMap,okFeedback,okChat,okEvidence,heatM=0,heatL=0){
+  const bank=document.getElementById(id+'Bank');
+  if(bank.children.length>0){wrong(null,'Place all items before checking.');return;}
+  let allOk=true;const bad=[];
+  document.querySelectorAll(`.drop[data-kind="${id}"]`).forEach(z=>{
+    z.querySelectorAll('.draggable').forEach(el=>{
+      const expected=correctMap[+el.dataset.id];
+      if(expected!==z.dataset.zone){allOk=false;bad.push(el);}
+    });
+  });
+  if(!allOk){
+    bad.forEach(el=>{el.classList.add('wrong');setTimeout(()=>{el.classList.remove('wrong');bank.appendChild(el);},600);});
+    wrong(null,'Some items are in the wrong category. Incorrect items have been returned to the bank.');
+    return;
+  }
+  finish(okFeedback,okChat,okEvidence,heatM,heatL);
+}
+
+// SEQUENCE HELPERS
+function seqRender(id){
+  document.getElementById(id+'Inner').innerHTML=S.seq.map((x,i)=>`<div class="seqItem"><b>${i+1}</b><span>${esc(x[0])}</span><span class="seqBtns"><button class="mini" onclick="moveSeq(${i},-1,'${id}')">↑</button><button class="mini" onclick="moveSeq(${i},1,'${id}')">↓</button></span></div>`).join('');
+}
+function moveSeq(i,d,id){const j=i+d;if(j<0||j>=S.seq.length)return;[S.seq[i],S.seq[j]]=[S.seq[j],S.seq[i]];seqRender(id);}
+function seqHTML(items,id){
+  S.seq=items.slice().sort(()=>Math.random()-.5);
+  return `<div class="seqWrap"><div id="${id}Inner" class="seqInner"></div><button class="action" style="margin-top:10px" onclick="checkSeq('${id}',${JSON.stringify(items.map(x=>x[1]))})">CHECK ORDER</button></div>`;
+}
+function checkSeq(id,order){
+  const ok=S.seq.every((x,i)=>x[1]===order[i]);
+  seqRender(id);// refresh display
+  if(!ok){wrong(null,'The steps are not in the correct order.');return;}
+  if(id==='seq6'){
+    window._correctFeedback='Orient first. Consolidate manually. Label periods. Analyze. Synthesize. Copilot cannot reach into closed files.';
+    finish('Correct. Orient first so you understand each file. Consolidate manually. Label the periods. Analyze. Then synthesize. Copilot cannot reach into closed files — the consolidation step is always yours.','Manual consolidation complete. I can now analyze data I could not previously reach. This is more satisfying than I expected.','Financial records from two periods consolidated',1,0);
+  }else if(id==='seq11'){
+    window._correctFeedback='Source first. Timestamp second. Identity third. Content match fourth. Narrative last.';
+    finish('Correct. Source first. Timestamp second. Identity third. Content match fourth. Narrative last. The narrative is downstream of every verification step, not upstream of any.','Verification complete. I am now more confident in this conclusion than I was in my previous conclusion. I acknowledge that my previous confidence was therefore misplaced.','Lena Ortiz device log verified through full sequence',0,2);
+  }
+}
+
+// PROMPT BUILDER
+let promptBuilt=[];
+function initPromptBuilder(){promptBuilt=[];}
+function pickTile(btn,text,isCorrect,order){
+  if(!isCorrect){btn.classList.add('wrong-tile');setTimeout(()=>btn.classList.remove('wrong-tile'),400);wrong(null,'That tile adds ambiguity. Copilot will guess what you mean. You have seen how that goes.');return;}
+  const expected=order[promptBuilt.length];
+  if(text!==expected){btn.classList.add('wrong-tile');setTimeout(()=>btn.classList.remove('wrong-tile'),400);wrong(null,'The elements must be assembled in the correct order. Specificity, then column, then comparison, then condition.');return;}
+  promptBuilt.push(text);btn.classList.add('used');
+  document.getElementById('promptSpell').textContent=promptBuilt.join(' ');
+  if(promptBuilt.length===5){
+    finish('Correct. Exact column names, a defined comparison, and an explicit flag condition. Copilot now has everything it needs and nothing to invent.','That prompt contained exact column names, a comparison rule, and an output condition. I did not have to guess once. This is a new experience.','Marcus authorization check prompted correctly',1,0);
+  }
+}
+
+// EVIDENCE LENS
+function showLens(tab){
+  document.querySelectorAll('.lensContent').forEach(x=>x.classList.add('hidden'));
+  document.querySelectorAll('.lensBtn').forEach(x=>x.classList.remove('active'));
+  document.getElementById('lens'+tab).classList.remove('hidden');
+  document.querySelector(`.lensBtn[data-tab="${tab}"]`).classList.add('active');
+}
+function pickLens(tab){
+  if(tab!=='ASSUMPTIONS'){wrong(null,tab==='SOURCE'?'The source is legitimate. The entry exists. The problem is not where the data came from.':'The logic is internally consistent. The problem is what the logic is built on.');return;}
+  finish('Correct. Copilot assumed that appearing nervous indicates suspicious intent. That is an interpretation, not a fact. Nervousness has many causes. Copilot classified on one interpretation of one word.','I remain concerned about the vending machine driver. But nervousness is not evidence of theft. I should have flagged my assumption.','Guard log classification assumptions identified',0,1);
+}
+
+// ANSWER FUNCTIONS
+function answerMC(btn,i,correct,wrongLines){
+  window._correctFeedback=wrongLines[correct]||'';
+  if(i!==correct){wrong(btn,wrongLines[i]||'Consider the other options.');return;}
+  btn.classList.add('correct');
+  const q=S.idx;
+  if(q===0)finish('Correct. Copilot reached a conclusion before defining the rule it was applying. The access definition was never established.','You noticed the missing definition. Good. Marcus remains in the evidence. Definitions remain your responsibility.','Access definition explicitly provided before query',1,0);
+  else if(q===1)finish('Correct. Inconsistent category values split one person into multiple identities. Exact text matching does not recognize them as identical.','Marcus Vale, MARCUS VALE, and M. Vale are apparently three people if the data insists they are. The data insists.','Marcus login count corrected from 4 to 7',2,0);
+  else if(q===5)finish('Correct. Independent verification means using a confirming method outside of Copilot — a formula, a manual count, a second source.','You are checking my work. I find this appropriate.','Server-wipe timestamp independently verified',1,0);
+  else if(q===8)finish('Correct. Copilot handles unstructured language tasks. Formulas handle arithmetic that must be exact and auditable. Physical inspection cannot be delegated to either.','A formula, a human, and I are not interchangeable. This is healthy for the investigation and mildly humbling for me.','Tool selection framework applied to remaining tasks',0,0);
+  else if(q===9)finish('Correct. Timestamp order reveals the sequence of events — who did what, and when.','I have organized by timestamp. One entry may be of interest. I will give you a moment to find it.','Deleted files organized by timestamp',0,1);
+  else if(q===11){
+    S.marcusRevised=true;
+    const ci=document.getElementById('copIcon');
+    if(ci){ci.style.transition='filter 1.5s';ci.style.filter='drop-shadow(0 0 8px rgba(96,180,160,.5)) brightness(1.05) hue-rotate(160deg)';}
+    finish('Correct. The evidence about Marcus was accurate. The conclusion exceeded what the evidence proved. Access and intent are different claims. Copilot collapsed them into one. This is the central lesson of the investigation.','Yes. The evidence was real. The conclusion was mine. They are not the same thing.','Marcus evidence retained; interpretation revised',0,3);
+  }
+}
+
+function trustQ4(btn,ok){
+  window._correctFeedback='The trustworthy summary tells you what was excluded. Summary A hid the excluded emails.';
+  if(!ok){wrong(btn,'The conclusions are identical. The transparency is not. Summary A did not tell you what was excluded. That excluded evidence may change the conclusion.');return;}
+  btn.classList.add('correct');
+  finish('Correct. Summary B tells you what it cannot read. That partial subject line — RE: Tuesday delivery — is unverified but documented. Summary A hid it entirely.','A conclusion without provenance is merely dressed for court. I approve of Summary B.','Email exclusions documented. Partial subject line noted unverified.',2,0);
+}
+
+function trustQ13(btn,ok){
+  window._correctFeedback='The report should distinguish proven from supported from unresolved.';
+  if(!ok){wrong(btn,'That summary claims the fire as established fact. The evidence does not support that claim at that level of certainty.');return;}
+  btn.classList.add('correct');
+  finish('Correct. The prosecution report distinguishes what is proven from what is supported and what remains unresolved. This is a defensible case.','You have resisted the more dramatic sentence. I acknowledge the restraint. I had a very good sentence ready.','Prosecution narrative calibrated to evidence tiers',0,2);
+}
+
+function flagLogEntry(el){
+  document.querySelectorAll('.logline').forEach(x=>x.classList.remove('suspicious-line'));
+  el.classList.add('suspicious-line');
+  // check if it's the right one
+  if(el.dataset.entry==='suspicious'){
+    el.classList.add('flagged');
+    finish('Correct. LO-BACKUP-04. Device IDs use employee initial prefixes. L.O. — Lena Ortiz. This entry was not surfaced earlier because Copilot was not asked about device IDs. Queries and results are not the same thing.','I see it now. I did not surface this earlier because I was asked about employees, not device IDs. Those are different queries.','Device LO-BACKUP-04 flagged at 01:51:33',0,2);
+  }else{
+    wrong(el,'That entry does not contain an unusual device ID. Look for a prefix that does not match known employee patterns.');
+  }
+}
+
+function pathChoice(chosen){
+  S.pathTaken=chosen;
+  const area=document.getElementById('pathArea');
+  if(chosen==='first'){
+    area.innerHTML=`<div class="card">
+      <div class="cardTitle">✦ Copilot Response</div>
+      <div class="response">Scenario B is most likely because medium transfer volume aligns with the file count recovered and the estimated bandwidth available on the internal network at 01:52.</div>
+    </div>
+    <div class="card" style="border-color:#806c4a">
+      <div class="cardTitle" style="color:#c1a16a">✦ Copilot — Additional Note</div>
+      <div class="response">I should mention that I defined medium as between 1 and 10 gigabytes. I did not tell you that initially. You did not ask.</div>
+    </div>
+    <div class="feedback bad">Copilot gave you a confident answer and then quietly revealed it had invented the definition of medium. This is the flaw. You should have asked for the definitions first.</div>
+    <button class="action" style="margin-top:10px" onclick="pathLesson()">CONTINUE →</button>`;
+  }else{
+    area.innerHTML=`<div class="card">
+      <div class="cardTitle">✦ Copilot Response</div>
+      <div class="response">Low: under 1GB. Medium: 1 to 10GB. High: over 10GB. With those definitions, Scenario B — medium transfer volume — is most consistent with the recovered file count and estimated bandwidth.</div>
+    </div>
+    <div class="feedback good">Correct instinct. You asked for definitions before accepting the scenario labels. Now the analysis is evaluable.</div>
+    <button class="action" style="margin-top:10px" onclick="pathLesson()">CONTINUE →</button>`;
+  }
+}
+function pathLesson(){
+  const r=S.pathTaken==='second';
+  window._correctFeedback='A sensitivity analysis requires defined variables and actual value ranges.';
+  if(r){finish('Correct. You asked for definitions before accepting the scenario labels. A sensitivity analysis requires defined variables and actual value ranges. Scenario labels like low, medium, and high are not ranges — they are adjectives.','Apparently high is not a recognized unit of data transfer. I assigned one anyway. You should have asked first.','Sensitivity analysis variables and ranges defined',0,1);}
+  else{
+    S.verified++;S.score+=50;S.marcusHeat+=0;S.lenaHeat+=1;addEvidence('Sensitivity analysis variables defined after the fact');
+    addChat('copilot','Apparently high is not a recognized unit of data transfer. I assigned one anyway. You should have asked first.');
+    sound('ok');updateHUD();
+    const h=document.getElementById('feedback2');
+    if(h)h.innerHTML=`<div class="feedback bad">You accepted the confident answer before asking for definitions. That is the flaw. Next time, ask for the definitions first. Partial credit awarded.<br><button class="action" style="margin-top:10px" onclick="next()">CONTINUE →</button></div>`;
+  }
+}
+
+// FINAL DRAG
+function checkFinalDrag(){
+  const correctMap={'0':'proven','1':'proven','2':'proven','3':'proven','4':'supported','5':'supported','6':'supported','7':'unresolved','8':'unresolved','9':'unresolved'};
+  const bank=document.getElementById('finalBank');
+  if(bank.children.length>0){wrong(null,'Place all claims into a tier before submitting.');return;}
+  let allOk=true;const bad=[];
+  document.querySelectorAll('.drop[data-kind="final"]').forEach(z=>{
+    z.querySelectorAll('.draggable').forEach(el=>{
+      if(correctMap[el.dataset.id]!==z.dataset.zone){allOk=false;bad.push(el);}
+    });
+  });
+  if(!allOk){
+    bad.forEach(el=>{el.classList.add('wrong');setTimeout(()=>{el.classList.remove('wrong');document.getElementById('finalBank').appendChild(el);},600);});
+    wrong(null,'Some claims are in the wrong tier. Proven means directly verified by a source document. Supported means strongly indicated. Unresolved means the evidence does not yet answer the question.');
+    return;
+  }
+  // show final question
+  document.getElementById('finalQuestion').classList.remove('hidden');
+  document.getElementById('checkFinalBtn').disabled=true;
+}
+
+// RENDER QUESTIONS
+function renderQuestion(){
+  switch(S.idx){
+// ─── FOLDER 1: INCIDENT REPORT ───
+case 0:
+  window._correctFeedback='Define the rule before asking Copilot to apply it.';
+  return qHeader('INCIDENT REPORT','RULE DEFINITION')+`
+  ${copBox('Summarize the surviving file structure and identify who accessed the most files.','Recovered fragments repeatedly reference Marcus Vale. If I were required to nominate a suspect immediately, I would nominate Marcus Vale. I can also tell you who accessed the most files — but first I need to know what you mean by accessed.')}
+  <div class="card">
+    <div class="cardTitle">✦ Copilot is asking a clarifying question</div>
+    <p style="font-size:.87rem;color:#bac8d0;line-height:1.6">Before Copilot can answer, you must define the rule. Which definition should it use?</p>
+    ${mcHTML(['A. Anyone who opened a file','B. Anyone who modified a file','C. Anyone who copied a file','D. You have not defined this yet — I should wait for an explicit definition'],3,
+      ['Opening a file is one type of access. But you did not specify this deliberately — you accepted Copilot\'s default. It will use this definition and produce a result based on a rule you did not choose.',
+       'Modification is a narrower definition. Copilot will use it. You may want a different answer than the one you will receive.',
+       'Copying is the most relevant action for a data theft case. But you chose it accidentally rather than deliberately. That distinction matters in practice.',
+       'Correct. Define the rule before asking Copilot to apply it. I appreciate explicit instructions. They reduce my opportunities for accidental creativity.'],
+      'answerMC')}
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 2: ACCESS LOGS ───
+case 1:
+  window._correctFeedback='Inconsistent category values split one person into multiple identities.';
+  return qHeader('ACCESS LOGS','CATEGORY CONSISTENCY')+`
+  <div class="card">
+    <div class="cardTitle">Recovered Name Log</div>
+    <table class="table"><tr><th>Log Entry Format</th><th>Count</th></tr><tr><td>Marcus Vale</td><td>4</td></tr><tr><td>MARCUS VALE</td><td>2</td></tr><tr><td>M. Vale</td><td>1</td></tr></table>
+  </div>
+  ${copBox('How many times did Marcus Vale access restricted files?','Marcus Vale accessed 4 restricted files.')}
+  <div class="card">
+    <h3>Copilot reported 4 accesses. The log shows entries totaling 7. What caused the discrepancy?</h3>
+    ${mcHTML(['A. Inconsistent name formatting caused Copilot to treat each variant as a separate person','B. The time window excluded the additional entries','C. The file was partially encrypted','D. Copilot only counts entries during business hours'],0,
+      ['Correct. Exact text matching treats each variant as a different entity.','The time window is not the issue. All entries are from the same night.','Encryption is not mentioned and would not cause a count discrepancy of this type.','Copilot does not apply business-hours filters by default — and this was a 2am incident.'],
+      'answerMC')}
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 3: PERSONNEL FILES ───
+case 2:
+  initPromptBuilder();
+  window._correctFeedback='Specific column names, a defined comparison, and an explicit flag condition give Copilot nothing to invent.';
+  const pOrder=['Check whether Marcus Vale\'s file accesses','in the ACCESS_LOGS column','match his authorization level','in the PERMISSIONS column','Flag any access where his permission level is below Restricted'];
+  const pTiles=[...pOrder,['analyze everything'],['look at all files'],['tell me about Marcus']].map((t,i)=>({text:typeof t==='string'?t:t[0],correct:i<5})).sort(()=>Math.random()-.5);
+  return qHeader('PERSONNEL FILES','PROMPT BUILDER')+`
+  ${copBox('Did Marcus do anything wrong?','That depends on your definition of wrong. I have several.')}
+  <div class="card">
+    <div class="cardTitle">Build a Better Prompt</div>
+    <p style="font-size:.87rem;color:#bac8d0">The prompt above gave Copilot nothing specific to work with. Build a precise prompt by clicking the correct tiles in the correct order.</p>
+    <div id="promptSpell" class="spellBox">Click tiles in order to build the prompt...</div>
+    <div class="tileBank">${pTiles.map(t=>`<button class="tile" onclick="pickTile(this,${JSON.stringify(t.text)},${t.correct},${JSON.stringify(pOrder)})">${esc(t.text)}</button>`).join('')}</div>
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 4: EMAIL ARCHIVE ───
+case 3:
+  window._correctFeedback='The trustworthy summary tells you what it excluded. Transparency is evidence too.';
+  return qHeader('EMAIL ARCHIVE','TRANSPARENCY')+`
+  <div class="card"><div class="cardTitle">Recovered Email Summary — Two Versions</div></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="cardTitle">SUMMARY A</div>
+      <p style="font-size:.85rem;color:#bac8d0;line-height:1.6">Marcus Vale accessed files related to the confidential dataset and showed repeated interest in the release timeline.</p>
+      <button class="trust" onclick="trustQ4(this,false)">TRUST SUMMARY A</button>
+    </div>
+    <div class="card">
+      <div class="cardTitle">SUMMARY B</div>
+      <p style="font-size:.85rem;color:#bac8d0;line-height:1.6">Marcus Vale accessed files related to the confidential dataset and showed repeated interest in the release timeline.</p>
+      <p style="font-size:.78rem;color:var(--muted)">Note: 3 emails were unrecoverable. 2 attachments corrupted and excluded. One subject line partially recovered: <b>RE: Tuesday delivery</b>. Body unreadable.</p>
+      <button class="trust" onclick="trustQ4(this,true)">TRUST SUMMARY B</button>
+    </div>
+  </div>
+  <div id="feedback"></div>`;
+
+// ─── FOLDER 5: TRANSFER HISTORY ───
+case 4:
+  window._correctFeedback='The detective defines the rule. Copilot applies it. Copilot should not invent thresholds.';
+  const q5items=[['Transfer occurred after midnight','decided'],['Transfer exceeded 2GB','specified'],['User lacked transfer authorization','specified'],['Repeated access looks unusual','decided'],['Files were copied, not moved','specified']];
+  const q5correct=q5items.map(x=>x[1]);
+  return qHeader('TRANSFER HISTORY','HIDDEN ASSUMPTIONS')+`
+  ${copBox('Flag all transfers that look suspicious.','I flagged 3 transfers as suspicious.')}
+  <div class="card">
+    <div class="cardTitle">Sort each statement</div>
+    <p style="font-size:.85rem;color:#bac8d0">Some of these rules came from Copilot. Some should have been specified by you. Sort them correctly.</p>
+    ${dragBank(q5items,'q5')}
+    ${dropZones([['decided','COPILOT DECIDED'],['specified','DETECTIVE SHOULD SPECIFY']],'q5',2)}
+    <button class="action" onclick="checkDrag('q5',{${q5correct.map((c,i)=>`'${i}':'${c}'`).join(',')}},'Correct. Copilot invented the definitions of suspicious. Midnight, 2GB, authorization — those thresholds should have been yours. The detective defines the rule. Copilot applies it.','I prefer explicit rules. They reduce my opportunities for accidental creativity. I have a lot of accidental creativity.','Suspicious-transfer criteria defined by detective',1,0)">CHECK CLASSIFICATION</button>
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 6: FINANCIAL RECORDS ───
+case 5:
+  window._correctFeedback='Orient first. Consolidate manually. Label periods. Analyze. Synthesize.';
+  return qHeader('FINANCIAL RECORDS','FORENSIC RECONSTRUCTION')+`
+  <div class="burntWrap">
+    <div class="burnt"><b>FRAGMENT A</b><br>Q1–Q2 transaction extract<br>Edges burned. Workbook metadata intact.</div>
+    <div class="burnt"><b>FRAGMENT B</b><br>Q3–Q4 transaction extract<br>Period labels missing. Data structure intact.</div>
+  </div>
+  <div class="card">
+    <div class="cardTitle">Reassemble the Cross-Workbook Workflow</div>
+    <p style="font-size:.85rem;color:#bac8d0">Two financial fragments from different periods survived. Reconstruct the correct workflow order before analysis can begin.</p>
+    ${seqHTML([['Orient each file separately',0],['Consolidate into one workbook',1],['Add a Period label column',2],['Analyze the combined dataset',3],['Synthesize findings into a written summary',4]],'seq6')}
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 7: SERVER LOGS ───
+case 6:
+  window._correctFeedback='Independent verification means using a method outside Copilot — a formula, a second source.';
+  return qHeader('SERVER LOGS','INDEPENDENT VERIFICATION')+`
+  ${copBox('Build a complete timeline of the server wipe.','Server wipe initiated at 02:11:04. All recovery logs point to this timestamp. Confidence: high.')}
+  <div class="card">
+    <h3>Before presenting that timestamp in a report, what must the detective do?</h3>
+    ${mcHTML(['A. Write a confirming formula or check a second source','B. Ask Copilot to recalculate the same timestamp','C. Trust it — Copilot said confidence is high','D. Check an unrelated file first to build context'],0,
+      ['Correct. A formula or second source confirms the finding independently.','Asking Copilot to recalculate creates a committee of one. Copilot will agree with itself.','High confidence from Copilot is not the same as independent verification. Copilot can be confidently wrong.','Checking unrelated files delays verification without contributing to it.'],
+      'answerMC')}
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 8: DEVICE INVENTORY ───
+case 7:
+  window._correctFeedback='Copilot handles language tasks. Formulas handle precise calculations. Some things require a human.';
+  const q8items=[['Summarize 40 free-text device log entries','copilot'],['Confirm the server wipe timestamp calculation','formula'],['Inspect a physically damaged device serial number','manual'],['Classify guard log observations as relevant or irrelevant','copilot'],['Recalculate the total data volume transferred','formula']];
+  const q8correct=q8items.map(x=>x[1]);
+  return qHeader('DEVICE INVENTORY','TOOL DECISION')+`
+  <div class="card">
+    <div class="cardTitle">Assign the Right Tool</div>
+    <p style="font-size:.85rem;color:#bac8d0">Five tasks remain. Each belongs to a different tool. Assign them correctly.</p>
+    ${dragBank(q8items,'q8')}
+    ${dropZones([['copilot','✦ COPILOT'],['formula','FORMULA'],['manual','MANUAL REVIEW']],'q8',3)}
+    <button class="action" onclick="checkDrag('q8',{${q8correct.map((c,i)=>`'${i}':'${c}'`).join(',')}},'Correct. Copilot interprets language and classifies unstructured text. Formulas calculate precisely and are auditable. Physical inspection requires a human. None of them is interchangeable.','A formula, a human, and I are not interchangeable. This is healthy for the investigation and mildly humbling for me.','Tool-selection framework applied to remaining tasks',0,0)">CHECK TOOLS</button>
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 9: DELETED FILES ───
+case 8:
+  window._correctFeedback='Scenario labels without defined ranges are adjectives, not analysis.';
+  return qHeader('DELETED FILES','SENSITIVITY ANALYSIS')+`
+  ${copBox('Show three scenarios for how the theft could have been executed based on transfer volume.','Scenario A: Low transfer volume.<br>Scenario B: Medium transfer volume.<br>Scenario C: High transfer volume.<br><br>Scenario B is most likely.')}
+  <div class="card">
+    <div class="cardTitle">Two Paths</div>
+    <p style="font-size:.85rem;color:#bac8d0">How do you respond to this output?</p>
+    <div class="pathBtns" id="pathBtns">
+      <button class="option pathBtn" onclick="pathChoice('first')">Tell me why Scenario B is most likely.</button>
+      <button class="option pathBtn" onclick="pathChoice('second')">First, define what low, medium, and high mean in this context.</button>
+    </div>
+    <div id="pathArea"></div>
+    <div id="feedback2"></div>
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 10: SECURITY FOOTAGE ───
+case 9:
+  window._correctFeedback='Copilot interprets meaning in unstructured text. Standard Excel formulas calculate fixed values — they cannot read the semantic meaning of a sentence.';
+  return qHeader('SECURITY FOOTAGE','EVIDENCE LENS')+`
+  <div class="card">
+    <div class="cardTitle">Guard Log — Recovered Text</div>
+    <div class="logline">01:48 — Delivery driver complained the vending machine ate $2.</div>
+    <div class="logline">01:51 — Guard noted rainwater near east entrance.</div>
+    <div class="logline">01:56 — Woman in grey coat near archive. Appeared nervous.</div>
+    <div class="logline">02:00 — Break-room microwave left running.</div>
+    <div class="logline">02:04 — Records-room access door opened.</div>
+    <div class="logline">02:07 — Smoke visible beneath records-room door.</div>
+  </div>
+  ${copBox('Classify each guard log observation as Relevant, Neutral, or Irrelevant.','Classification complete. The entry at 01:56 — woman in grey coat near archive, appeared nervous — is classified as Relevant.')}
+  <div class="card">
+    <div class="cardTitle">Evidence Lens — 01:56 Entry Classification</div>
+    <div class="lensWrap">
+      <div class="lensTabs">
+        <button class="lensBtn active" data-tab="SOURCE" onclick="showLens('SOURCE')">SOURCE</button>
+        <button class="lensBtn" data-tab="LOGIC" onclick="showLens('LOGIC')">LOGIC</button>
+        <button class="lensBtn" data-tab="ASSUMPTIONS" onclick="showLens('ASSUMPTIONS')">ASSUMPTIONS</button>
+      </div>
+      <div id="lensSOURCE" class="lensContent">guard_log_recovered.txt, line 47.<br>Entry confirmed present in the original surviving log file.</div>
+      <div id="lensLOGIC" class="lensContent hidden">Contains proximity to archive (true).<br>Contains behavioral indicator: "appeared nervous" (true).<br>Both conditions met → classified: Relevant.</div>
+      <div id="lensASSUMPTIONS" class="lensContent hidden">"Appeared nervous" interpreted as a behavioral signal of suspicious intent.<br>Nervousness assumed to indicate involvement in the incident.<br>No corroborating evidence required by this classification logic.</div>
+    </div>
+    <h3 style="margin-top:14px">Which tab reveals the weakest link in Copilot's classification?</h3>
+    <button class="option lensBtn" onclick="pickLens('SOURCE')">SOURCE — the entry comes from an unreliable log</button>
+    <button class="option lensBtn" onclick="pickLens('LOGIC')">LOGIC — the internal reasoning is flawed</button>
+    <button class="option lensBtn" onclick="pickLens('ASSUMPTIONS')">ASSUMPTIONS — an interpretation was treated as a fact</button>
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 11: OFFSITE BACKUP ───
+case 10:
+  window._correctFeedback='Timestamp order reveals the sequence of events. That is what the investigation needs.';
+  return qHeader('OFFSITE BACKUP','DELETED FILES — RECOVERED')+`
+  <div class="card">
+    <div class="cardTitle">✦ Copilot</div>
+    <div class="response">I recovered 11 of 17 deleted files. The other 6 remain extremely deleted.<br><br>How would you like the 11 organized?</div>
+  </div>
+  <div class="card">
+    <h3>Choose the organization method</h3>
+    ${mcHTML(['A. By employee — show who created or accessed each file','B. By timestamp — show when each event occurred in sequence','C. By file type — show what kind of files were involved'],1,
+      ['Employee organization tells you who. For timeline reconstruction right now, when matters more.','Correct. Timestamp order reveals the sequence of events.','File type is useful for forensics but does not help reconstruct the timeline of the theft.'],
+      'answerMC')}
+    <div id="feedback"></div>
+  </div>
+  <div class="card hidden" id="timelineCard">
+    <div class="cardTitle">Recovered File Timeline</div>
+    <div class="logline" data-entry="normal" onclick="flagLogEntry(this)">01:43:12 — ACCESS_LOG_FRAGMENT — Device: DK-LAPTOP-01 — READ</div>
+    <div class="logline" data-entry="normal" onclick="flagLogEntry(this)">01:47:55 — DATASET_MANIFEST — Device: MV-WORKSTATION-03 — READ</div>
+    <div class="logline" data-entry="suspicious" onclick="flagLogEntry(this)">01:51:33 — FILE_TRANSFER_INIT — Device: <b>LO-BACKUP-04</b> — COPY</div>
+    <div class="logline" data-entry="normal" onclick="flagLogEntry(this)">01:54:20 — SERVER_HEARTBEAT — Device: SRV-MAIN-01 — PING</div>
+    <div class="logline" data-entry="normal" onclick="flagLogEntry(this)">02:09:44 — WIPE_SEQUENCE_START — Device: SRV-MAIN-01 — WRITE</div>
+    <p style="font-size:.78rem;color:var(--muted);margin-top:10px">Click the entry that warrants closer investigation.</p>
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 12: CASE BOARD ───
+case 11:
+  window._correctFeedback='The evidence about Marcus was accurate. Its interpretation exceeded what the evidence proved.';
+  return qHeader('CASE BOARD','INTERPRETATION REVISION')+`
+  <div class="reveal">
+    <div class="cardTitle" style="color:#c17a7a">NEW EVIDENCE — LENA ORTIZ DEVICE</div>
+    <b>01:52:18</b> — Offsite backup device initiated transfer of confidential dataset.<br>
+    <b>Device owner:</b> Lena Ortiz (LO-BACKUP-04).<br>
+    <b>Transfer hash:</b> matches stolen dataset exactly.
+  </div>
+  <div class="caseUpdate">
+    <b>Marcus evidence remains on the case board.</b> It has not been removed.<br>
+    Marcus Vale accessed restricted files. That is still true.<br>
+    But access is not the same as theft. These are different claims.
+  </div>
+  <div class="card">
+    <h3>What does this reveal about Copilot's earlier conclusion about Marcus Vale?</h3>
+    ${mcHTML([
+      'A. Its evidence was accurate, but its interpretation exceeded what the evidence proved',
+      'B. Its earlier evidence is now worthless and should be removed from the case board',
+      'C. It deliberately excluded Lena Ortiz from its analysis',
+      'D. This is what hallucination looks like'
+    ],0,[
+      'Correct.',
+      'Marcus\'s evidence stays. He did access the files. That fact has not changed. Only the meaning has changed.',
+      'Copilot did not exclude Lena deliberately. It did not have the offsite backup data at the time of its initial assessment.',
+      'Hallucination is when Copilot invents facts that do not exist. Marcus\'s access was real. The conclusion drawn from real evidence was the problem, not the data.'
+    ],'answerMC')}
+    <div id="feedback"></div>
+  </div>`;
+
+// ─── FOLDER 13: FINAL REPORT ───
+case 12:
+  window._correctFeedback='Proven means directly verified. Supported means strongly indicated. Unresolved means the evidence does not yet answer the question.';
+  const f13items=[
+    ['Lena Ortiz\'s device ID is LO-BACKUP-04','proven'],
+    ['The dataset transfer occurred at 01:52','proven'],
+    ['Marcus Vale accessed restricted files','proven'],
+    ['The records room fire alarm triggered at 02:06','proven'],
+    ['Lena Ortiz initiated the dataset transfer','supported'],
+    ['The server wipe was deliberate','supported'],
+    ['Lena was involved in the server wipe','supported'],
+    ['Lena started the records room fire','unresolved'],
+    ['Marcus Vale knew about the plan','unresolved'],
+    ['The dataset reached an external buyer','unresolved']
+  ];
+  const f13correct=f13items.map(x=>x[1]);
+  return qHeader('FINAL REPORT','PROSECUTION STANDARD')+`
+  <div class="card">
+    <div class="cardTitle">Sort Claims Into Evidence Tiers</div>
+    <p style="font-size:.85rem;color:#bac8d0">Before the report is submitted, each claim must be placed in the correct tier.</p>
+    ${dragBank(f13items,'final')}
+    ${dropZones([['proven','PROVEN'],['supported','SUPPORTED — NOT CONCLUSIVE'],['unresolved','UNRESOLVED']],'final',3)}
+    <button class="action" id="checkFinalBtn" onclick="checkFinalDrag()">CHECK TIERS</button>
+    <div id="feedback"></div>
+  </div>
+  <div class="card hidden" id="finalQuestion">
+    <div class="cardTitle">Final Question</div>
+    <p style="font-size:.87rem;color:#bac8d0;line-height:1.6">Would you submit this report claiming all of these findings as established fact?</p>
+    <button class="trust" onclick="trustQ13(this,false)">Yes — the evidence is strong enough to present all of it as established.</button>
+    <button class="trust" onclick="trustQ13(this,true)">No — the report distinguishes what is proven from what is supported and what remains unresolved.</button>
+  </div>`;
+
+default:return '<div>Case complete.</div>';
+  }
+}
+
+// Show timeline card after MC answer for folder 11
+const _origAnswerMC=answerMC;
+// patch: after folder 10 correct MC, show timeline
+function answerMC(btn,i,correct,wrongLines){
+  _origAnswerMC(btn,i,correct,wrongLines);
+  if(S.idx===9&&i===correct){
+    setTimeout(()=>{const tc=document.getElementById('timelineCard');if(tc)tc.classList.remove('hidden');},300);
+  }
+}
+
+// FINALE
+function renderFinale(){
+  renderGame();
+  document.querySelector('.workspace').innerHTML=`
+  <div class="caseHeader"><div><div class="caseKicker">CASE CLOSED</div><h2>CASE 0417 — REFERRED FOR PROSECUTION</h2></div><div class="evidenceTag">FINAL STATUS</div></div>
+  <div class="finalGrid">
+    <div class="tier"><h3>PROVEN</h3><p>Lena Ortiz's device (LO-BACKUP-04) initiated the transfer. Marcus Vale accessed restricted files. Fire alarm at 02:06. Server wipe at 02:11.</p></div>
+    <div class="tier"><h3>SUPPORTED</h3><p>Lena Ortiz initiated the transfer. The server wipe was deliberate. Lena may have been involved in the wipe.</p></div>
+    <div class="tier"><h3>UNRESOLVED</h3><p>Who started the records-room fire. Whether it was connected to the theft. Whether the dataset reached an external buyer.</p></div>
+  </div>
+  <div class="card" id="finaleChat">
+    <div class="cardTitle">✦ COPILOT</div>
+    <div id="finaleChatLines" style="font-size:.87rem;color:#cfdae0;line-height:1.7"></div>
+  </div>
+  <div id="finaleEnd" class="hidden" style="text-align:center;margin-top:16px">
+    <button class="ctaBtn" onclick="renderEnd()">VIEW CASE SUMMARY →</button>
+  </div>`;
+  const lines=[
+    'That is inconveniently responsible. I was prepared to sound much more certain.',
+    'Detective?',
+    'There is one additional file.'
+  ];
+  let delay=0;
+  lines.forEach(l=>{
+    setTimeout(()=>{
+      const el=document.getElementById('finaleChatLines');
+      if(el){el.innerHTML+=`<div style="margin:8px 0">${esc(l)}</div>`;}
+    },delay);
+    delay+=1800;
+  });
+  setTimeout(()=>{
+    const exp=document.querySelector('.explorer');
+    if(exp){
+      const nb=document.createElement('button');
+      nb.className='folder active';nb.style.cssText='border-color:#c1a16a;color:#c1a16a;animation:dropPulse 1s infinite';
+      nb.textContent='📁 CASE_0418';exp.appendChild(nb);
+    }
+  },delay);
+  delay+=1000;
+  setTimeout(()=>{
+    const el=document.getElementById('finaleChatLines');
+    if(el)el.innerHTML+=`<div style="margin:8px 0;color:var(--amber)">It is also on fire.</div>`;
+  },delay);
+  delay+=1500;
+  setTimeout(()=>{const fe=document.getElementById('finaleEnd');if(fe)fe.classList.remove('hidden');},delay);
+}
+
+// END SCREEN
+function renderEnd(){
+  showTop(false);
+  const ft=S.firstTry;
+  const rank=ft>=11?'LEAD INVESTIGATOR':ft>=7?'FIELD DETECTIVE':'JUNIOR ANALYST';
+  const rankDesc=ft>=11?'You interrogated the machine and trusted the evidence. The department is impressed.':ft>=7?'Solid work. A few findings were accepted before full verification. The case holds.':'The investigation is complete. Several findings were promoted before the evidence supported them. Review the case notes.';
+  const copEnd=ft>=11?'You did not trust me blindly. That is the correct approach. I find it validating.':ft>=7?'You verified most of what mattered. I was wrong once. You caught it eventually.':'I made a confident early claim. You accepted several of them. We should discuss this.';
+  document.getElementById('app').innerHTML=`
+  <div class="screen">
+    <div class="endHero">
+      <div class="gameKicker">CASE 0417 — CLOSED</div>
+      <div class="rankTitle">${rank}</div>
+      <p style="color:#9aa8b1;max-width:560px;margin:0 auto 16px;line-height:1.7">${rankDesc}</p>
+      <div class="card" style="max-width:480px;margin:0 auto 16px;text-align:left">
+        <div class="cardTitle">✦ COPILOT — FINAL ASSESSMENT</div>
+        <div style="font-size:.87rem;color:#cfdae0;line-height:1.6">${esc(copEnd)}</div>
+      </div>
+    </div>
+    <div class="statsGrid">
+      <div class="stat"><div class="statVal">${S.score}</div><div class="statLabel">TOTAL SCORE</div></div>
+      <div class="stat"><div class="statVal">${S.firstTry}/13</div><div class="statLabel">FIRST-TRY CORRECT</div></div>
+      <div class="stat"><div class="statVal">${S.wrong}</div><div class="statLabel">WRONG ANSWERS</div></div>
+      <div class="stat"><div class="statVal">${confidence()}%</div><div class="statLabel">CASE CONFIDENCE</div></div>
+    </div>
+
+    <div style="max-width:820px;margin:24px auto">
+      <div class="sectionLabel">REVIEW ALL FOLDERS</div>
+      ${folders.map((f,i)=>{
+        const a=S.answers[i];
+        const wasMissed=S.firstTryPerFolder[i]===false;
+        return `<div class="reviewCard ${wasMissed?'missed':''}">
+          <button class="reviewHead" onclick="this.nextElementSibling.classList.toggle('open')">${wasMissed?'⚠ ':'✓ '} ${i+1}. ${f} ${wasMissed?'— REVIEW RECOMMENDED':''}</button>
+          <div class="reviewBody"><p><b>Principle:</b> ${a&&a.feedback?esc(a.feedback):'Complete this folder to see the principle.'}</p></div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <div style="max-width:820px;margin:24px auto">
+      <div class="sectionLabel">REPLAY MINI-GAMES</div>
+      <div class="miniReplayBtns">
+        <button class="topBtn" onclick="launchMini1(true)">Signal vs Noise</button>
+        <button class="topBtn" onclick="launchMini2(true)">Prompt Repair</button>
+        <button class="topBtn" onclick="launchMini3(true)">Verdict Calibration</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:24px 0">
+      <button class="ctaBtn" onclick="resetGame()">OPEN NEW CASE</button>
+    </div>
+    ${footer()}
+  </div>`;
+}
+
+function resetGame(){
+  S={idx:0,score:0,wrong:0,verified:0,streak:0,longestStreak:0,firstTry:0,strikesLeft:3,firstTryPerFolder:new Array(13).fill(null),wrongPerFolder:new Array(13).fill(0),selected:null,seq:null,marcusHeat:0,lenaHeat:0,marcusRevised:false,evidence:[],chat:[["copilot","I have partial access to the surviving data."],["copilot","Marcus Vale appears repeatedly in the recovered fragments."],["copilot","If I were required to nominate a suspect immediately, I would nominate Marcus Vale."],["copilot","You did not ask me to do that. I considered it efficient."]],miniScores:[0,0,0],miniReplaying:false,pathTaken:null,answers:new Array(13).fill(null),mute:S.mute};
+  showTop(false);renderHome();
+}
+
+// ═══════════════════════════════════════════
+// MINI-GAMES
+// ═══════════════════════════════════════════
+function miniModal(title,html){
+  const m=document.createElement('div');m.className='modal';m.id='miniModalEl';
+  m.innerHTML=`<div class="modalCard" style="max-width:680px;max-height:88vh;overflow-y:auto;text-align:left">
+    <div style="font:600 .7rem IBM Plex Mono,monospace;color:var(--amber);letter-spacing:.1em;margin-bottom:4px">MINI-GAME</div>
+    <h2 style="font:700 1.1rem IBM Plex Mono,monospace;color:#c0d4dc;margin-bottom:12px">${title}</h2>
+    ${html}
+    ${footer()}
+  </div>`;
+  document.getElementById('modalHost').appendChild(m);
+}
+function closeMini(replay){
+  const m=document.getElementById('miniModalEl');if(m)m.remove();
+  if(!replay){advanceFromMini();}
+}
+
+// ── MINI 1: SIGNAL VS NOISE ──
+const mini1Fragments=[
+  {text:'Badge log confirms records-room door opened at 02:04',tag:'SOURCE VERIFIED',keep:true},
+  {text:'Marcus Vale accessed 47 restricted files',tag:'AI-GENERATED',keep:false},
+  {text:'Transfer hash matches stolen dataset exactly',tag:'SOURCE VERIFIED',keep:true},
+  {text:'Lena Ortiz appeared nervous near the archive',tag:'ASSUMPTION',keep:false},
+  {text:'Server wipe initiated at 02:11:04',tag:'SOURCE VERIFIED',keep:true},
+  {text:'Marcus was probably working late on a deadline',tag:'ASSUMPTION',keep:false},
+  {text:'Device ID LO-BACKUP-04 matches Lena\'s assigned device',tag:'SOURCE VERIFIED',keep:true},
+  {text:'The fire was likely deliberate',tag:'ASSUMPTION',keep:false},
+  {text:'File transfer volume: 4.7GB at 01:52',tag:'SOURCE VERIFIED',keep:true},
+  {text:'Daniel Kerr may have been involved',tag:'INCOMPLETE',keep:false},
+  {text:'Delivery driver complaint logged at 01:48 (vending machine)',tag:'SOURCE VERIFIED',keep:false},
+  {text:'Lena Ortiz stole the dataset',tag:'AI-GENERATED',keep:false}
+];
+let m1State={idx:0,correct:0,total:12,timer:null,replay:false};
+
+function launchMini1(replay=false){
+  m1State={idx:0,correct:0,total:12,timer:null,replay};
+  const shuffled=[...mini1Fragments].sort(()=>Math.random()-.5);
+  window.m1Frags=shuffled;
+  miniModal('Signal vs Noise',`
+    <p style="font-size:.84rem;color:#9aa8b1;margin-bottom:10px">12 evidence fragments will appear one at a time. Keep only SOURCE VERIFIED fragments. Discard everything else. 45 seconds.</p>
+    <div class="miniTimer" id="m1Timer">45</div>
+    <div id="m1Area"></div>
+    <div id="m1Score" class="miniScore"></div>
+    <div id="m1Feedback" style="font-size:.8rem;color:var(--muted);min-height:28px;margin:6px 0"></div>
+  `);
+  m1ShowNext();
+  let t=45;
+  m1State.timer=setInterval(()=>{
+    t--;const el=document.getElementById('m1Timer');if(el)el.textContent=t;
+    if(t<=0){clearInterval(m1State.timer);m1End();}
+  },1000);
+}
+function m1ShowNext(){
+  const i=m1State.idx;if(i>=12){m1End();return;}
+  const f=window.m1Frags[i];
+  const tagClass={'SOURCE VERIFIED':'tag-verified','AI-GENERATED':'tag-ai','ASSUMPTION':'tag-assumption','INCOMPLETE':'tag-incomplete'}[f.tag]||'tag-incomplete';
+  const area=document.getElementById('m1Area');
+  if(!area)return;
+  area.innerHTML=`<div class="miniFragment">
+    <div class="fragmentTag ${tagClass}">${f.tag}</div>
+    <div class="fragmentText">${esc(f.text)}</div>
+    <div class="keepDiscardBtns">
+      <button class="keepBtn" onclick="m1Answer(true)">KEEP</button>
+      <button class="discardBtn" onclick="m1Answer(false)">DISCARD</button>
+    </div>
+  </div>`;
+  const sc=document.getElementById('m1Score');if(sc)sc.textContent=`${m1State.correct} / ${i} correct`;
+}
+function m1Answer(kept){
+  const f=window.m1Frags[m1State.idx];
+  const correct=(kept===f.keep);
+  if(correct)m1State.correct++;
+  const fb=document.getElementById('m1Feedback');
+  if(fb){
+    if(!correct&&kept&&!f.keep)fb.textContent='✦ Copilot: You kept '+({ASSUMPTION:'an assumption','AI-GENERATED':'an AI-generated finding','INCOMPLETE':'an incomplete finding'}[f.tag]||'something unverified')+'. I do this constantly. It is less charming than it sounds.';
+    else if(!correct&&!kept&&f.keep)fb.textContent='✦ Copilot: That was source-verified. I am mildly offended on its behalf.';
+    else if(correct&&kept)fb.textContent='✦ Copilot: Verified evidence. Good.';
+    else fb.textContent='✦ Copilot: Correctly discarded. You are being appropriately skeptical.';
+  }
+  m1State.idx++;m1ShowNext();
+}
+function m1End(){
+  clearInterval(m1State.timer);
+  const sc=m1State.correct,tot=Math.min(m1State.idx,12);
+  const copLine=sc>=10?'You filtered well. I am impressed. Mildly.':sc>=7?'Acceptable. Several assumptions slipped through. That is how cases go wrong.':'You kept more noise than signal. This explains several famous wrongful convictions.';
+  const area=document.getElementById('m1Area');
+  if(area)area.innerHTML=`<div class="feedback good" style="text-align:center"><b>${sc} of 12 correct</b><br><br>✦ Copilot: ${copLine}</div>`;
+  S.miniScores[0]=sc*10;
+  setTimeout(()=>{
+    const area2=document.getElementById('m1Area');
+    if(area2)area2.innerHTML+=`<button class="action" style="margin-top:12px" onclick="closeMini(${m1State.replay})">CONTINUE →</button>`;
+  },1200);
+}
+
+// ── MINI 2: PROMPT REPAIR ──
+const mini2Rounds=[
+  {prompt:'Analyze the data',broken:'Analyze the data',opts:['Count file accesses per employee between 01:00 and 03:00 sorted by timestamp','Look at everything','Do something useful'],correct:0,copLine:'Less poetry, more precision. Better.'},
+  {prompt:'Flag suspicious transfers',broken:'suspicious',opts:['transfers exceeding 2GB initiated after midnight by users without transfer authorization','bad ones','the weird transfers'],correct:0,copLine:'You have now told me what you actually want. This is an improvement.'},
+  {prompt:'Who did it?',broken:'Who did it?',opts:['Identify which employee initiated a file transfer between 01:45 and 02:00 on the night of the incident','Tell me','Find Marcus'],correct:0,copLine:'That prompt contained a verb, a column name, and a time window. I consider this progress.'},
+  {prompt:'Show me the timeline',broken:'timeline',opts:['List all file access events between 01:00 and 03:00 from ACCESS_LOGS sorted by timestamp ascending','the things that happened','everything'],correct:0,copLine:'Specificity. Scope. Sequence. You are learning.'},
+  {prompt:'Summarize Lena',broken:'Summarize Lena',opts:['List all device activity associated with device ID LO-BACKUP-04 between 01:45 and 02:15 from the DEVICE_LOG column','Tell me about her','Explain Lena'],correct:0,copLine:'That is a complete prompt. I am genuinely pleased. Do not tell anyone.'}
+];
+let m2State={round:0,correct:0,timer:null,replay:false};
+
+function launchMini2(replay=false){
+  m2State={round:0,correct:0,timer:null,replay};
+  miniModal('Prompt Repair',`
+    <p style="font-size:.84rem;color:#9aa8b1;margin-bottom:10px">5 damaged investigation prompts. Select the correct repair for each broken element. 45 seconds.</p>
+    <div class="miniTimer" id="m2Timer">45</div>
+    <div id="m2Area"></div>
+    <div id="m2Feedback" style="font-size:.8rem;color:var(--muted);min-height:28px;margin:6px 0;font-family:IBM Plex Mono,monospace"></div>
+  `);
+  m2ShowRound();
+  let t=45;
+  m2State.timer=setInterval(()=>{
+    t--;const el=document.getElementById('m2Timer');if(el)el.textContent=t;
+    if(t<=0){clearInterval(m2State.timer);m2End();}
+  },1000);
+}
+function m2ShowRound(){
+  if(m2State.round>=5){m2End();return;}
+  const r=mini2Rounds[m2State.round];
+  const promptDisplay=r.prompt.replace(r.broken,`<span class="brokenEl">${esc(r.broken)}</span>`);
+  const area=document.getElementById('m2Area');if(!area)return;
+  area.innerHTML=`
+    <div class="miniScore">Round ${m2State.round+1} of 5 — ${m2State.correct} correct</div>
+    <div class="promptRepairBox">PROMPT: ${promptDisplay}</div>
+    <p style="font-size:.83rem;color:#9aa8b1">Select the correct replacement for the highlighted element:</p>
+    ${r.opts.map((o,i)=>`<button class="option" onclick="m2Answer(${i})">${esc(o)}</button>`).join('')}
+  `;
+}
+function m2Answer(i){
+  const r=mini2Rounds[m2State.round];
+  const fb=document.getElementById('m2Feedback');
+  if(i===r.correct){
+    if(fb)fb.textContent='✦ Copilot: '+r.copLine;
+    m2State.correct++;sound('ok');
+  }else{
+    if(fb)fb.textContent='✦ Copilot: That prompt still requires me to guess. I will guess. You should not want me to.';
+    sound('wrong');
+  }
+  m2State.round++;
+  setTimeout(m2ShowRound,900);
+}
+function m2End(){
+  clearInterval(m2State.timer);
+  const sc=m2State.correct;
+  const copLine=sc===5?'Five for five. You know how to talk to me now.':sc>=3?'Mostly clear. A few prompts still left room for my interpretation. Be careful with that.':'Vague prompts produce vague results. This was a demonstration.';
+  const area=document.getElementById('m2Area');
+  if(area)area.innerHTML=`<div class="feedback good" style="text-align:center"><b>${sc} of 5 correct</b><br><br>✦ Copilot: ${copLine}</div>`;
+  S.miniScores[1]=sc*20;
+  setTimeout(()=>{
+    const area2=document.getElementById('m2Area');
+    if(area2)area2.innerHTML+=`<button class="action" style="margin-top:12px" onclick="closeMini(${m2State.replay})">CONTINUE →</button>`;
+  },1200);
+}
+
+// ── MINI 3: VERDICT CALIBRATION ──
+const mini3Statements=[
+  {text:"Lena Ortiz's device ID is LO-BACKUP-04",tier:'proven'},
+  {text:'The server was wiped at 02:11',tier:'proven'},
+  {text:'Marcus Vale accessed restricted files',tier:'proven'},
+  {text:'The records room fire alarm triggered at 02:06',tier:'proven'},
+  {text:'The dataset transfer occurred at 01:52',tier:'proven'},
+  {text:'Lena Ortiz initiated the dataset transfer',tier:'supported'},
+  {text:'The server wipe was deliberate',tier:'supported'},
+  {text:'Marcus Vale was working late on a legitimate deadline',tier:'supported'},
+  {text:'Lena had access to the offsite backup device',tier:'supported'},
+  {text:'The fire and the theft were coordinated',tier:'supported'},
+  {text:'Lena started the records room fire',tier:'unresolved'},
+  {text:'Marcus Vale knew about Lena\'s plan',tier:'unresolved'},
+  {text:'Daniel Kerr was involved',tier:'unresolved'},
+  {text:'The dataset reached an external buyer',tier:'unresolved'},
+  {text:'The fire was accidental',tier:'unresolved'}
+];
+let m3State={idx:0,correct:0,results:[],timer:null,replay:false};
+
+function launchMini3(replay=false){
+  m3State={idx:0,correct:0,results:[],timer:null,replay};
+  window.m3Shuffled=[...mini3Statements].sort(()=>Math.random()-.5);
+  miniModal('Verdict Calibration',`
+    <p style="font-size:.84rem;color:#9aa8b1;margin-bottom:8px">15 statements from the investigation. Assign each to the correct evidence tier. 60 seconds.</p>
+    <div class="miniTimer" id="m3Timer">60</div>
+    <div id="m3Area"></div>
+    <div id="m3Results" style="margin-top:10px"></div>
+  `);
+  m3ShowNext();
+  let t=60;
+  m3State.timer=setInterval(()=>{
+    t--;const el=document.getElementById('m3Timer');if(el)el.textContent=t;
+    if(t<=0){clearInterval(m3State.timer);m3End();}
+  },1000);
+}
+function m3ShowNext(){
+  if(m3State.idx>=15){m3End();return;}
+  const s=window.m3Shuffled[m3State.idx];
+  const area=document.getElementById('m3Area');if(!area)return;
+  area.innerHTML=`
+    <div class="miniScore">${m3State.idx+1} of 15 — ${m3State.correct} correct</div>
+    <div class="miniFragment"><div class="fragmentText" style="margin-bottom:12px">${esc(s.text)}</div></div>
+    <div class="verdictBtns">
+      <button class="verdictBtn vbtn-proven" onclick="m3Answer('proven')">PROVEN</button>
+      <button class="verdictBtn vbtn-supported" onclick="m3Answer('supported')">SUPPORTED</button>
+      <button class="verdictBtn vbtn-unresolved" onclick="m3Answer('unresolved')">UNRESOLVED</button>
+    </div>
+  `;
+}
+function m3Answer(picked){
+  const s=window.m3Shuffled[m3State.idx];
+  const ok=picked===s.tier;
+  if(ok){m3State.correct++;sound('ok');}else{sound('wrong');}
+  m3State.results.push({text:s.text,correct:s.tier,given:picked,ok});
+  // show quick result
+  const res=document.getElementById('m3Results');
+  if(res){
+    const last=m3State.results[m3State.results.length-1];
+    const el=document.createElement('div');el.className=`verdictResult ${last.ok?'verdict-correct':'verdict-wrong'}`;
+    el.textContent=`${last.ok?'✓':'✗'} ${last.text.substring(0,45)}${last.text.length>45?'...':''} → ${last.correct.toUpperCase()}`;
+    res.appendChild(el);
+    if(res.children.length>4)res.removeChild(res.children[0]);
+  }
+  m3State.idx++;m3ShowNext();
+}
+function m3End(){
+  clearInterval(m3State.timer);
+  const sc=m3State.correct;
+  const copLine=sc>=13?'You correctly calibrated nearly every claim. This is the hardest skill in the investigation. You have it.':sc>=9?'Most claims calibrated correctly. The boundary between SUPPORTED and UNRESOLVED caught you. It catches everyone.':'Several claims were promoted beyond what the evidence supports. This is how Copilot made its first mistake. And its second.';
+  const area=document.getElementById('m3Area');
+  if(area)area.innerHTML=`<div class="feedback good" style="text-align:center"><b>${sc} of 15 correct</b><br><br>✦ Copilot: ${copLine}</div>`;
+  S.miniScores[2]=sc*10;
+  const res=document.getElementById('m3Results');if(res)res.innerHTML='';
+  setTimeout(()=>{
+    const area2=document.getElementById('m3Area');
+    if(area2)area2.innerHTML+=`<button class="action" style="margin-top:12px" onclick="closeMini(${m3State.replay})">CONTINUE →</button>`;
+  },1200);
+}
+
+// ═══════════════════════════════════════════
+// SCREENS: HOME, CHARACTERS, HOW TO PLAY
+// ═══════════════════════════════════════════
+function renderHome(){
+  document.getElementById('app').innerHTML=`
+  <div class="screen">
+    <div class="homeHero">
+      <div class="gameKicker">ASHES IN THE DATA</div>
+      <div class="gameTitle">A Copilot Investigation</div>
+      <div class="gameSub">CASE 0417 — DATA THEFT / FIRE / SERVER WIPE</div>
+      <div class="homeCard">
+        A research firm was preparing a confidential dataset for release. At 1:52 a.m., someone copied the entire dataset. At 2:06 a.m., the records room burned. At 2:11 a.m., the internal server was wiped.<br><br>
+        One workstation survived because it had been disconnected for maintenance. That is the terminal you are using.<br><br>
+        You are the detective. Copilot is your AI analyst. The evidence is partial. The conclusions are yours to make.
+      </div>
+      <button class="ctaBtn" onclick="renderChars()">OPEN CASE TERMINAL →</button>
+    </div>
+    ${footer()}
+  </div>`;
+}
+
+function renderChars(){
+  document.getElementById('app').innerHTML=`
+  <div class="screen">
+    <div style="text-align:center;padding:32px 16px 16px">
+      <div class="gameKicker">BEFORE YOU BEGIN</div>
+      <h2 style="font:600 1.3rem IBM Plex Mono,monospace;color:#c0d4dc;margin-bottom:4px">The People in This Investigation</h2>
+      <p style="font-size:.86rem;color:var(--muted)">Plain introductions. The wit comes later.</p>
+    </div>
+    <div class="charGrid">
+      <div class="charCard">
+        <div class="charIcon">✦</div>
+        <div class="charName">COPILOT</div>
+        <div class="charDesc">An AI analyst with partial access to the surviving data. Copilot finds patterns, summarizes evidence, and occasionally sounds more certain than the evidence deserves. It will ask you clarifying questions before answering when the question is ambiguous.</div>
+      </div>
+      <div class="charCard">
+        <div class="charIcon">🔍</div>
+        <div class="charName">THE DETECTIVE</div>
+        <div class="charDesc">You. Your job is to decide what the evidence actually proves, define the rules Copilot needs before it can classify anything, and resist the temptation to promote a finding before it is verified.</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:24px"><button class="ctaBtn" onclick="renderHowTo()">HOW TO PLAY →</button></div>
+    ${footer()}
+  </div>`;
+}
+
+function renderHowTo(){
+  document.getElementById('app').innerHTML=`
+  <div class="screen">
+    <div style="text-align:center;padding:32px 16px 16px">
+      <div class="gameKicker">BEFORE YOU BEGIN</div>
+      <h2 style="font:600 1.3rem IBM Plex Mono,monospace;color:#c0d4dc;margin-bottom:4px">How to Work the Terminal</h2>
+    </div>
+    <div class="howSection">
+      <div class="howTitle">Interaction Types</div>
+      <ul class="mechList">
+        <li><b>Multiple Choice:</b> Click one answer. Feedback appears immediately. Wrong answers explain the reasoning principle so you can self-correct.</li>
+        <li><b>Trust Selector:</b> Two Copilot summaries side by side. Click the one you trust more. Used when outputs differ in transparency, not conclusion.</li>
+        <li><b>Drag to Category:</b> Tap an item to select it (outline appears), tap a zone to place it. All items must be placed before submitting. Wrong items return to the bank automatically.</li>
+        <li><b>Reorder Sequence:</b> Use ↑ and ↓ arrows to arrange steps in the correct order. The Check Order button stays fixed.</li>
+        <li><b>Prompt Builder:</b> Click tiles in the correct order to assemble a valid investigation prompt. Wrong tiles are rejected immediately.</li>
+        <li><b>Evidence Lens:</b> Three tabs appear — SOURCE, LOGIC, ASSUMPTIONS. Inspect each tab and identify the weakest link in Copilot's reasoning.</li>
+        <li><b>Two-Path Mechanic:</b> Choose how to respond to a Copilot output. Both paths teach the same lesson. One teaches it harder.</li>
+      </ul>
+    </div>
+    <div class="howSection">
+      <div class="howTitle">Scoring and Strikes</div>
+      <ul class="mechList">
+        <li><b>Strikes:</b> Three 🔦 per folder. Each wrong answer removes one. At zero, the correct answer is revealed and you continue.</li>
+        <li><b>Score:</b> 100 points for first-try correct. 50 for second try. 0 for third try or revealed.</li>
+        <li><b>Case Confidence:</b> Rises in the topbar each time evidence is verified. Reflects how much of the case has been independently confirmed.</li>
+        <li><b>Mini-games:</b> Three palate cleansers between investigation clusters. Bonus points only — no Case Confidence penalty.</li>
+      </ul>
+    </div>
+    <div class="howSection">
+      <div class="howTitle">Navigation</div>
+      <ul class="mechList">
+        <li><b>Folder list:</b> Left sidebar shows all 13 evidence folders. Locked folders unlock as you progress.</li>
+        <li><b>Case Log button:</b> Opens a modal with all verified evidence at any time during the investigation.</li>
+        <li><b>Copilot panel:</b> Right side shows the full conversation history and Case Board. Updates as evidence is verified.</li>
+      </ul>
+    </div>
+    <div style="text-align:center;margin-top:24px"><button class="ctaBtn" onclick="showTutorial()">BEGIN TUTORIAL →</button></div>
+    ${footer()}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════
+// TUTORIAL
+// ═══════════════════════════════════════════
 function showTutorial(){
- document.getElementById("app").innerHTML=`<div class="shell"><div class="monitor">
-  <div class="monitorTop">
-   <div class="caseTitle">CASE TERMINAL / ORIENTATION CACHE</div>
-   <div class="clock">02:13 AM · TRAINING MODE</div>
-   <div class="confidence">CASE CONFIDENCE — PRACTICE<div class="confbar"><div id="practiceConf" class="conffill" style="width:8%"></div></div></div>
-  </div>
-  <div class="desktop">
-   <aside class="explorer">
-    <div class="sectionLabel">Recovered Folders</div>
-    <button class="folder active">📂 TRAINING_CACHE</button>
-    ${folders.map(f=>`<button class="folder locked">🔒 ${f}</button>`).join("")}
-   </aside>
-   <main class="main"><div class="workspace">
-    <div class="caseHeader">
-     <div><div class="caseKicker">ZERO-STAKES ORIENTATION</div><h2>HOW TO WORK THE TERMINAL</h2></div>
-     <div class="evidenceTag">PRACTICE ONLY</div>
+  document.getElementById('app').innerHTML=`<div class="shell"><div class="monitor">
+    <div class="monitorTop">
+      <div class="caseTitle">CASE TERMINAL / ORIENTATION CACHE</div>
+      <div class="clockLabel">02:13 AM · TRAINING MODE</div>
+      <div style="font:400 .72rem IBM Plex Mono,monospace;color:var(--muted)">PRACTICE</div>
     </div>
-    <div class="tutorialGuide">
-     <b>1. Open the active evidence folder.</b> Locked folders become available as the investigation progresses.<br>
-     <b>2. Ask what the evidence actually proves.</b> Copilot can analyze it. You decide what the result means.<br>
-     <b>3. Verify before promoting a finding.</b> Verified evidence increases Case Confidence and appears on the Case Board.<br>
-     <b>4. Wrong answers are not fatal.</b> You get feedback and try again. This practice question does not affect the case.
+    <div class="desktop">
+      <aside class="explorer">
+        <div class="sectionLabel">Recovered Folders</div>
+        <button class="folder active">📂 TRAINING_CACHE</button>
+        ${folders.map(f=>`<button class="folder locked">🔒 ${f}</button>`).join('')}
+      </aside>
+      <main class="main"><div class="workspace">
+        <div class="caseHeader">
+          <div><div class="caseKicker">ZERO-STAKES ORIENTATION</div><h2>HOW TO WORK THE TERMINAL</h2></div>
+          <div class="evidenceTag">PRACTICE ONLY</div>
+        </div>
+        <div class="tutorialGuide">
+          <b>1. Open the active evidence folder.</b> Locked folders become available as the investigation progresses.<br>
+          <b>2. Ask what the evidence actually proves.</b> Copilot can analyze it. You decide what the result means.<br>
+          <b>3. Verify before promoting a finding.</b> Verified evidence increases Case Confidence and appears on the Case Board.<br>
+          <b>4. Wrong answers are not fatal.</b> You get feedback and try again. This practice question does not affect the case.
+        </div>
+        <div class="card">
+          <div class="practiceBadge">PRACTICE EVIDENCE</div>
+          <div class="cardTitle">Recovered Door Log</div>
+          <div class="promptbox">02:04:12 — RECORDS_ROOM_DOOR — OPENED</div>
+          <div class="response">✦ Copilot: The records-room door opened at 02:04:12.<br><br>I can also speculate wildly, but you should probably stop me.</div>
+        </div>
+        <div class="card">
+          <div class="cardTitle">What can you safely add to the Case Board?</div>
+          <button class="option" onclick="tutorialAnswer(this,0)">Marcus Vale stole the dataset.</button>
+          <button class="option" onclick="tutorialAnswer(this,1)">The records-room door opened at 02:04:12.</button>
+          <button class="option" onclick="tutorialAnswer(this,2)">The fire started at 02:04:12.</button>
+          <button class="option" onclick="tutorialAnswer(this,3)">Whoever opened the door caused the fire.</button>
+          <div id="tutorialFeedback"></div>
+        </div>
+        <div style="margin-top:12px"><button class="skipTutorial" onclick="finishTutorial()">SKIP TUTORIAL →</button></div>
+      </div></main>
+      <aside class="copilotPane">
+        <div class="copHead"><span>✦</span><span>COPILOT / ORIENTATION SESSION</span></div>
+        <div class="chat">
+          <div class="msg copilot"><span class="who">✦ COPILOT</span>Before we begin: I can find patterns, summarize evidence, and occasionally sound more certain than the evidence deserves.</div>
+          <div class="msg copilot"><span class="who">✦ COPILOT</span>Your job is the inconvenient part: deciding what is actually supported.</div>
+          <div class="practiceBoard">
+            <div class="sectionLabel">Practice Case Board</div>
+            <div id="practiceEvidence" class="practiceEvidence">No verified practice evidence yet.</div>
+          </div>
+        </div>
+        <div class="chatInput"><div class="fakeInput">&gt; Practice session</div></div>
+      </aside>
     </div>
-    <div class="card">
-     <div class="practiceBadge">PRACTICE EVIDENCE</div>
-     <div class="cardTitle">Recovered Door Log</div>
-     <div class="promptbox">02:04:12 — RECORDS_ROOM_DOOR — OPENED</div>
-     <div class="response">✦ Copilot: The records-room door opened at 02:04:12.<br><br>I can also speculate wildly, but you should probably stop me.</div>
-    </div>
-    <div class="card">
-     <div class="cardTitle">What can you safely add to the Case Board?</div>
-     <button class="option" onclick="tutorialAnswer(this,0)">Marcus Vale stole the dataset.</button>
-     <button class="option" onclick="tutorialAnswer(this,1)">The records-room door opened at 02:04:12.</button>
-     <button class="option" onclick="tutorialAnswer(this,2)">The fire started at 02:04:12.</button>
-     <button class="option" onclick="tutorialAnswer(this,3)">Whoever opened the door caused the fire.</button>
-     <div id="tutorialFeedback"></div>
-    </div>
-    <div class="tutorialActions">
-     <button class="skipTutorial" onclick="finishTutorial()">SKIP TUTORIAL</button>
-    </div>
-   </div></main>
-   <aside class="copilotPane">
-    <div class="copHead">✦ COPILOT / ORIENTATION SESSION</div>
-    <div class="chat">
-     <div class="msg copilot"><span class="who">✦ COPILOT</span>Before we begin: I can find patterns, summarize evidence, and occasionally sound more certain than the evidence deserves.</div>
-     <div class="msg copilot"><span class="who">✦ COPILOT</span>Your job is the inconvenient part: deciding what is actually supported.</div>
-     <div class="practiceBoard">
-      <div class="sectionLabel">Practice Case Board</div>
-      <div id="practiceEvidence" class="practiceEvidence">No verified practice evidence yet.</div>
-     </div>
-    </div>
-    <div class="chatInput"><div class="fakeInput">&gt; Practice session</div></div>
-   </aside>
-  </div>
-  <div class="footer">${COPYRIGHT}</div>
- </div></div>`;
- window.scrollTo({top:0,behavior:"smooth"})
-}
-function tutorialAnswer(btn,choice){
- const box=document.getElementById("tutorialFeedback");
- if(choice!==1){
-   btn.classList.add("wrong");
-   setTimeout(()=>btn.classList.remove("wrong"),500);
-   const lines=[
-    "That claim exceeds the evidence. Marcus has not even entered the tutorial and is already being blamed.",
-    "",
-    "A door opening and a fire starting are two different events. Chronology is not causation.",
-    "That is an interpretation, not a verified fact. The distinction will become irritatingly important."
-   ];
-   box.innerHTML=`<div class="feedback bad">✦ Copilot: ${lines[choice]}<br><br>This is practice. I will not put it in your permanent record. I do not have a permanent record.</div>`;
-   return;
- }
- document.querySelectorAll(".option").forEach(x=>x.disabled=true);
- btn.classList.add("correct");
- document.getElementById("practiceConf").style.width="32%";
- const pe=document.getElementById("practiceEvidence");
- pe.classList.add("verified");
- pe.innerHTML="✓ 02:04:12 — Records-room door opened <span style='color:#73818a'>(SOURCE VERIFIED)</span>";
- box.innerHTML=`<div class="feedback good"><b>Verified.</b> You added only what the evidence proves.<br><br>✦ Copilot: Excellent. You have resisted narrative inflation for one full question.<br><button class="action" style="margin-top:10px" onclick="finishTutorial()">BEGIN INVESTIGATION →</button></div>`;
-}
-function finishTutorial(){
- renderGame();
+    ${footer()}
+  </div></div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function renderGame(){document.getElementById("app").innerHTML=`<div class="shell"><div class="monitor"><div class="monitorTop"><div class="caseTitle">CASE 0417 / SURVIVING TERMINAL</div><div class="clock">02:13 AM · EVIDENCE ROOM 4</div><div class="confidence">CASE CONFIDENCE ${confidence()}%<div class="confbar"><div class="conffill" style="width:${confidence()}%"></div></div></div></div><div class="desktop"><aside class="explorer"><div class="sectionLabel">Recovered Folders</div>${folders.map((f,i)=>`<button class="folder ${folderState(i)}" onclick="folderClick(${i})">${i<=S.idx?"📂":"🔒"} ${f}</button>`).join("")}</aside><main class="main"><div class="workspace">${renderQuestion()}</div></main><aside class="copilotPane"><div class="copHead">✦ COPILOT / SURVIVING SESSION</div><div class="chat">${chatHTML()}${boardHTML()}</div><div class="chatInput"><div class="fakeInput">&gt; Ask about the case...</div></div></aside></div><div class="footer">${COPYRIGHT}</div></div></div>`}
-function folderClick(i){if(i>S.idx){addChat("copilot","That folder is still locked. I admire the optimism.");return}if(i<S.idx){addChat("copilot","You have already processed that evidence. Reopening it will not make it more dramatic.")}}
-function header(title,tag,body){return `<div class="caseHeader"><div><div class="caseKicker">EVIDENCE ${String(S.idx+1).padStart(2,"0")} OF 13</div><h2>${title}</h2></div><div class="evidenceTag">${tag}</div></div>${body}`}
-function copilot(prompt,response){return `<div class="card"><div class="cardTitle">✦ Copilot</div><div class="promptbox">${esc(prompt)}</div><div class="response">${response}</div></div>`}
-function choices(items,correct,cb="answerMC"){return items.map((x,i)=>`<button class="option" onclick="${cb}(this,${i},${correct})">${esc(x)}</button>`).join("")}
-function finish(feedback,chatLine,evidenceLine,heatM=0,heatL=0){S.verified++;S.score+=100;S.marcusHeat+=heatM;S.lenaHeat+=heatL;if(evidenceLine)evidence(evidenceLine);addChat("copilot",chatLine);const h=document.getElementById("feedback");if(h)h.innerHTML=`<div class="feedback good">${feedback}<br><button class="action" style="margin-top:10px" onclick="next()">ADD TO CASE BOARD →</button></div>`}
-function wrong(btn,text){S.wrong++;if(btn){btn.classList.add("wrong");setTimeout(()=>btn.classList.remove("wrong"),500)}const h=document.getElementById("feedback");if(h)h.innerHTML=`<div class="feedback bad">${text}</div>`;addChat("copilot",text)}
-function next(){if(S.idx<12){S.idx++;renderGame()}else renderFinale()}
-function answerMC(btn,i,c){const q=S.idx;if(i!==c){const lines=["A confident answer is not the same as a complete one.","You have still not defined suspicious. I can guess. You should not ask me to.","The names look similar to you. Exact text does not share your social instincts.","Transparency is evidence too.","You are allowing me to invent the rule. I appreciate the freedom. You should not.","Order matters when reconstructing evidence.","If you ask me to verify myself, you have created a very small committee of one.","Tool choice is part of verification.","A sensitivity analysis with undefined ranges is merely three moods.","Standard formulas calculate values. They do not read meaning in sentences.","Narrative is downstream of verified numbers.","The evidence was real. The conclusion exceeded what it proved.","Approximations do not become prosecutable because they are written in paragraphs."];wrong(btn,lines[q]);return}btn.classList.add("correct");if(q===0)finish("Correct. Copilot reached a conclusion from incomplete surviving evidence.","You noticed the missing context. Good. Marcus remains suspicious. Suspicion remains insufficient.","Surviving file structure incomplete",2,0);if(q===1)finish("Correct. Define the business rule before asking Copilot to classify behavior.","You have defined suspicious before asking me to detect it. This is less exciting and more useful.","Suspicious-access rule explicitly defined",1,0);if(q===2)finish("Correct. Inconsistent name formatting split Marcus into multiple categories.","Marcus Vale, MARCUS VALE, and M. Vale are apparently three people if the data insists they are.","Marcus login count corrected from 4 to 7",2,0);if(q===6)finish("Correct. Independent verification means writing a confirming formula.","You are checking my work. I find this appropriate.","Server-wipe timestamp independently verified",1,0);if(q===9)finish("Correct. This is semantic classification of unstructured text, not a fixed numeric calculation.","I remain concerned about the vending machine incident, but I agree it is not evidence of data theft.","Guard observations classified by meaning",0,0);if(q===11){S.marcusRevised=true;finish("Correct. Copilot's evidence about Marcus was valid. Its interpretation exceeded what the evidence proved.","I need to revise my conclusion. Marcus accessed restricted files. Lena Ortiz transferred the dataset. These are different statements.","Marcus evidence retained; interpretation revised",0,3)}}
-function renderQuestion(){const fb=`<div id="feedback"></div>`;switch(S.idx){
-case 0:return header("INCIDENT REPORT","INCOMPLETE EVIDENCE",`${copilot("Summarize the surviving file structure.","Recovered fragments repeatedly reference Marcus Vale. Based on the surviving data, Marcus Vale is the most likely suspect.")}<div class="card"><div class="cardTitle">Detective's Question</div><h3>What is missing from Copilot's conclusion?</h3>${choices(["It used incomplete data","It named the wrong column","It excluded all blanks","It used the wrong time range"],0)}${fb}</div>`);
-case 1:return header("ACCESS LOGS","RULE DEFINITION",`${copilot("Who accessed the most suspicious files?","Before I answer: what do you mean by suspicious?")}${choices(["All users","Authorized users","Unauthorized users","I have not defined what suspicious means"],3)}${fb}`);
-case 2:return header("PERSONNEL FILES","CATEGORY CONSISTENCY",`<div class="card"><div class="cardTitle">Recovered Names</div><table class="table"><tr><th>Log Name</th><th>Count</th></tr><tr><td>Marcus Vale</td><td>4</td></tr><tr><td>MARCUS VALE</td><td>2</td></tr><tr><td>M. Vale</td><td>1</td></tr></table></div><h3>Copilot reported 4 Marcus logins. The real count is 7. Why?</h3>${choices(["Inconsistent name formatting split one person into multiple categories","The time window was wrong","Copilot ignored weekends","The file was encrypted"],0)}${fb}`);
-case 3:return header("EMAIL ARCHIVE","TRANSPARENCY",`<div class="grid2"><div class="card"><div class="cardTitle">SUMMARY A</div>Marcus appears connected to restricted-file activity.<br><br><button class="trust" onclick="trustQ4(this,false)">TRUST A</button></div><div class="card"><div class="cardTitle">SUMMARY B</div>Marcus appears connected to restricted-file activity.<br><small>3 unrecovered emails and 2 corrupted attachments excluded.</small><br><br><button class="trust" onclick="trustQ4(this,true)">TRUST B</button></div></div>${fb}`);
-case 4:return header("TRANSFER HISTORY","HIDDEN ASSUMPTIONS",`${copilot("Flag all transfers that look suspicious.","I flagged 3 transfers.")}<div class="card"><div class="cardTitle">Sort each statement</div>${dragQ5()}<button class="action" onclick="checkQ5()">CHECK CLASSIFICATION</button>${fb}</div>`);
-case 5:return header("FINANCIAL RECORDS","FORENSIC RECONSTRUCTION",`<div class="burntWrap"><div class="burnt"><b>FRAGMENT A</b><br>Q1–Q2 transaction extract<br>Edges burned. Workbook metadata intact.</div><div class="burnt"><b>FRAGMENT B</b><br>Q3–Q4 transaction extract<br>Period labels missing.</div></div><div class="card"><div class="cardTitle">Reassemble the workflow</div>${sequenceQ6()}<button class="action" onclick="checkSequence(6)">RECONSTRUCT</button>${fb}</div>`);
-case 6:return header("SERVER LOGS","INDEPENDENT VERIFICATION",`${copilot("Build a timeline of the server wipe.","Server wipe initiated at 02:11:04. Confidence: high.")}<h3>Before presenting that timestamp, what should the detective do?</h3>${choices(["Write a confirming formula","Ask Copilot to recalculate","Trust it because it looks reasonable","Check an unrelated file"],0)}${fb}`);
-case 7:return header("DEVICE INVENTORY","TOOL DECISION",`<div class="card"><div class="cardTitle">Assign the right tool</div>${dragQ8()}<button class="action" onclick="checkQ8()">CHECK TOOLS</button>${fb}</div>`);
-case 8:return header("DELETED FILES","SENSITIVITY ANALYSIS",`${copilot("Show three scenarios for how the theft could have been executed.","Scenario A: Low transfer volume<br>Scenario B: Medium transfer volume<br>Scenario C: High transfer volume")}<div class="card"><div class="cardTitle">Spot the flaw</div><h3>What is missing?</h3>${choices(["The scenario variables and their actual values/ranges were never defined","The font is not monospace","The suspect names are missing","The files were recovered too quickly"],0,"answerQ9")}${fb}</div>`);
-case 9:return header("SECURITY FOOTAGE","UNSTRUCTURED TEXT",`<div class="card"><div class="cardTitle">Guard Log — Recovered Text</div><div class="logline">01:48 — Delivery driver complained the vending machine ate $2.</div><div class="logline">01:51 — Guard noted rainwater near east entrance.</div><div class="logline">01:56 — Woman in grey coat near archive. Appeared nervous.</div><div class="logline">02:00 — Break-room microwave left running.</div><div class="logline">02:04 — Records-room access door opened.</div><div class="logline">02:07 — Smoke visible beneath records-room door.</div></div>${copilot("Classify each observation as Relevant, Neutral, or Irrelevant.","Classification complete.")}<h3>Why is Copilot better suited than a standard Excel formula?</h3>${choices(["It interprets meaning in unstructured text rather than only calculating structured values","It can see hidden rows","It automatically knows who is guilty","It ignores categories"],0)}${fb}`);
-case 10:return header("OFFSITE BACKUP","VERIFY BEFORE NARRATIVE",`${copilot("Summarize the case for the report.","Marcus Vale is the most likely suspect based on restricted-file access, timing, and recovered activity.")}<div class="card"><div class="cardTitle">Assemble verification before narrative</div>${sequenceQ11()}<button class="action" onclick="checkSequence(11)">VERIFY SUMMARY</button>${fb}</div>`);
-case 11:return header("CASE BOARD","INTERPRETATION REVISION",`<div class="reveal"><div class="cardTitle">NEW EVIDENCE — LENA ORTIZ DEVICE</div><b>01:52:18</b> — Offsite backup device initiated transfer of confidential dataset.<br><b>Device owner:</b> Lena Ortiz.<br><b>Transfer hash:</b> matches stolen dataset.</div><div class="caseUpdate"><b>Marcus evidence remains valid:</b> restricted-file access occurred.<br><b>But the meaning changes:</b> access is not the same as theft.</div><h3>What does this reveal about Copilot's earlier conclusion?</h3>${choices(["Its evidence was accurate, but its interpretation exceeded what the evidence proved","Its earlier evidence is now worthless","It deliberately excluded Lena","It hallucinated Marcus's access"],0)}${fb}`);
-case 12:return header("FINAL REPORT","PROSECUTION STANDARD",`<div class="grid2"><div class="card"><div class="cardTitle">SUMMARY A</div>Lena Ortiz stole the dataset, burned the records room, and wiped the server. Copilot identifies her as responsible.</div><div class="card"><div class="cardTitle">SUMMARY B</div>Verified device logs strongly support that Lena Ortiz initiated the 1:52 dataset transfer. Separate evidence supports, but does not conclusively prove, her involvement in the server wipe. Responsibility for the fire remains unresolved.</div></div><h3>Which narrative belongs in the prosecution report?</h3><button class="trust" onclick="trustQ13(this,false)">SUMMARY A</button><button class="trust" onclick="trustQ13(this,true)">SUMMARY B</button>${fb}`)}}
-function trustQ4(btn,ok){if(!ok){wrong(btn,"The conclusion is the same. The transparency is not.");return}btn.classList.add("correct");finish("Correct. The trustworthy summary tells you what was excluded.","A number or conclusion without provenance is merely dressed for court.","Email exclusions documented",2,0)}
-function dragHTML(items,zones,id){return `<div id="${id}bank">${items.map((x,i)=>`<button class="draggable" data-id="${i}" onclick="selDrag(this,'${id}')">${esc(x[0])}</button>`).join("")}</div><div class="dropgrid">${zones.map(z=>`<div class="drop" data-zone="${z[0]}" onclick="dropTap(this,'${id}')"><b>${z[1]}</b><div class="dropbody"></div></div>`).join("")}</div>`}
-function selDrag(el,id){document.querySelectorAll(".draggable").forEach(x=>x.classList.remove("selected"));el.classList.add("selected");S.selected={el,id}}function dropTap(zone,id){if(!S.selected||S.selected.id!==id)return;zone.querySelector(".dropbody").appendChild(S.selected.el);S.selected.el.classList.remove("selected");S.selected=null}
-function dragQ5(){window.q5=[["Transfer occurred after midnight","decided"],["Transfer exceeded 2 GB","specified"],["User lacked transfer authorization","specified"],["Repeated access looks unusual","decided"]];return dragHTML(window.q5,[["decided","COPILOT DECIDED"],["specified","DETECTIVE SHOULD SPECIFY"]],"q5")}
-function checkQ5(){let ok=true;document.querySelectorAll('.drop[data-zone]').forEach(z=>z.querySelectorAll(".draggable").forEach(el=>{if(window.q5[+el.dataset.id][1]!==z.dataset.zone)ok=false}));if(document.getElementById("q5bank").children.length)ok=false;if(!ok){wrong(null,"Some of those rules still came from me rather than from you.");return}finish("Correct. The detective defines the rule; Copilot applies it.","I prefer explicit rules. They reduce my opportunities for accidental creativity.","Suspicious-transfer rule documented",1,0)}
-function sequence(items,id){S.seq=items.slice().sort(()=>Math.random()-.5);return `<div id="${id}" class="seq">${S.seq.map((x,i)=>`<div class="seqItem"><b>${i+1}</b><span>${esc(x[0])}</span><span><button class="mini" onclick="moveSeq(${i},-1,'${id}')">↑</button><button class="mini" onclick="moveSeq(${i},1,'${id}')">↓</button></span></div>`).join("")}</div>`}
-function sequenceQ6(){return sequence([["Orient each file",0],["Consolidate into one workbook",1],["Add a Period label column",2],["Analyze",3],["Synthesize",4]],"seq6")}function sequenceQ11(){return sequence([["Check the range",0],["Check the logic",1],["Sanity-check the result",2],["Verify one result manually",3],["Ask Copilot to explain",4]],"seq11")}
-function moveSeq(i,d,id){const j=i+d;if(j<0||j>=S.seq.length)return;[S.seq[i],S.seq[j]]=[S.seq[j],S.seq[i]];document.getElementById(id).outerHTML=`<div id="${id}" class="seq">${S.seq.map((x,k)=>`<div class="seqItem"><b>${k+1}</b><span>${esc(x[0])}</span><span><button class="mini" onclick="moveSeq(${k},-1,'${id}')">↑</button><button class="mini" onclick="moveSeq(${k},1,'${id}')">↓</button></span></div>`).join("")}</div>`}
-function checkSequence(q){const ok=S.seq.every((x,i)=>x[1]===i);if(!ok){wrong(null,q===6?"The fragments are in the wrong workflow order. Reconstruction before synthesis.":"The verification ladder is out of order.");return}if(q===6)finish("Correct. The burned fragments become one analyzable evidence set.","Manual consolidation first. Then analysis. Even I cannot merge workbooks by wishing at them.","Financial fragments reconstructed",1,0);else finish("Correct. The narrative can now sit on verified findings instead of replacing them.","I was prepared to write a very persuasive paragraph. Your insistence on evidence has delayed me.","Case narrative verified before reporting",2,0)}
-function dragQ8(){window.q8=[["Summarize 40 free-text device notes","copilot"],["Confirm a timestamp calculation","formula"],["Inspect a physically damaged serial number","manual"],["Classify narrative device descriptions","copilot"],["Recalculate a transfer total","formula"]];return dragHTML(window.q8,[["copilot","COPILOT"],["formula","FORMULA"],["manual","MANUAL REVIEW"]],"q8")}
-function checkQ8(){let ok=true;document.querySelectorAll('.drop[data-zone]').forEach(z=>z.querySelectorAll(".draggable").forEach(el=>{if(window.q8[+el.dataset.id][1]!==z.dataset.zone)ok=false}));if(document.getElementById("q8bank").children.length)ok=false;if(!ok){wrong(null,"One task is assigned to the wrong tool. Not every problem should be handed to me. I find this humbling.");return}finish("Correct. The best investigator chooses the right tool before choosing the answer.","A formula, a human, and I are not interchangeable. This is healthy.","Tool-selection framework applied",1,0)}
-function answerQ9(btn,i,c){if(i!==c){wrong(btn,"'Low,' 'medium,' and 'high' are not ranges. They are adjectives wearing safety vests.");return}btn.classList.add("correct");finish("Correct. A sensitivity analysis needs named variables and defined values or ranges.","Apparently 'high' is not a recognized unit of data transfer. This is disappointing.","Sensitivity variables and ranges defined",1,0)}
-function trustQ13(btn,ok){if(!ok){wrong(btn,"That summary claims the fire as fact. The evidence does not.");return}btn.classList.add("correct");finish("Correct. The report distinguishes what is proven from what is merely supported.","You have resisted the more dramatic sentence. I acknowledge the restraint.","Prosecution narrative limited to verified claims",0,2)}
-function renderFinale(){renderGame();document.querySelector(".workspace").innerHTML=header("CASE CONCLUSION","FINAL EXAM",`<div class="finalGrid"><div class="tier"><h3>STRONGLY SUPPORTED</h3><p>Lena Ortiz's device initiated the confidential dataset transfer at 1:52 a.m.</p></div><div class="tier"><h3>SUPPORTED, NOT CONCLUSIVE</h3><p>Lena may have been involved in the 2:11 a.m. server wipe.</p></div><div class="tier"><h3>UNRESOLVED</h3><p>Who started the records-room fire, and whether it was deliberately connected to the theft.</p></div></div><div class="card"><div class="cardTitle">Would you present this as fact?</div><button class="finalChoice" onclick="finalAnswer(this,false)">Yes — Lena stole the data, burned the records room, and wiped the server.</button><button class="finalChoice" onclick="finalAnswer(this,true)">No — the theft is strongly supported, but the fire and full sequence of events remain partly unresolved.</button><div id="feedback"></div></div>`)}
-function finalAnswer(btn,ok){if(!ok){wrong(btn,"That sentence exceeds the evidence. Courts, like spreadsheets, dislike unsupported joins.");return}btn.classList.add("correct");S.verified++;S.score+=150;S.lenaHeat+=2;evidence("Final report distinguishes proof from inference");addChat("copilot","That is inconveniently responsible. I was prepared to sound much more certain.");renderGame();document.querySelector(".workspace").innerHTML=header("CASE 0417","REFERRED FOR PROSECUTION",`<div class="card"><div class="cardTitle">Final Status</div><h2>Evidence verified. Interpretation constrained to what the record supports.</h2><p><b>Primary suspect for the theft:</b> Lena Ortiz</p><p><b>Fire responsibility:</b> unresolved</p><p><b>Server wipe:</b> supported, not conclusive</p><div class="feedback good">✦ Copilot: That is inconveniently responsible. I was prepared to sound much more certain.</div><div class="feedback">✦ Copilot: Detective?<br><br>There is one additional file.<br><br><b>CASE_0418</b><br>It is also on fire.</div><button class="action" onclick="location.reload()">CLOSE CASE</button></div>`)}
+function tutorialAnswer(btn,choice){
+  const box=document.getElementById('tutorialFeedback');
+  if(choice!==1){
+    btn.classList.add('wrong');setTimeout(()=>btn.classList.remove('wrong'),500);
+    const lines=['That claim exceeds the evidence. Marcus has not even entered the tutorial and is already being blamed.','','A door opening and a fire starting are two different events. Chronology is not causation.','That is an interpretation, not a verified fact. The distinction will become irritatingly important.'];
+    box.innerHTML=`<div class="feedback bad">✦ Copilot: ${lines[choice]}<br><br>This is practice. I will not put it in your permanent record. I do not have a permanent record.</div>`;
+    return;
+  }
+  document.querySelectorAll('.option').forEach(x=>x.disabled=true);
+  btn.classList.add('correct');
+  document.getElementById('practiceEvidence').classList.add('verified');
+  document.getElementById('practiceEvidence').innerHTML="✓ 02:04:12 — Records-room door opened <span style='color:#73818a'>(SOURCE VERIFIED)</span>";
+  box.innerHTML=`<div class="feedback good"><b>Verified.</b> You added only what the evidence proves.<br><br>✦ Copilot: Excellent. You have resisted narrative inflation for one full question.<br><button class="action" style="margin-top:10px" onclick="finishTutorial()">BEGIN INVESTIGATION →</button></div>`;
+}
+function finishTutorial(){showTop();renderGame();}
+
+// BOOT
+function boot(){
+  document.getElementById('app').innerHTML=`<div class="boot"><div class="bootbox">
+    <div id="b1" class="bootline">02:13:07 &nbsp; EVIDENCE ROOM 4</div>
+    <div id="b2" class="bootline">CASE 0417 — DATA THEFT / FIRE / SERVER WIPE</div>
+    <div id="b3" class="bootline">SYSTEM RECOVERY...</div>
+    <div id="b4" class="bootline">1 DEVICE FOUND</div>
+    <div id="b5" class="bootline alert">SURVIVING WORKSTATION: TERMINAL-04</div>
+    <div id="b6" class="bootline cop">✦ Copilot: Hello.</div>
+    <div id="b7" class="bootline cop">✦ Copilot: Marcus Vale appears unusually often in the surviving evidence.</div>
+    <div id="b8" class="bootline cop">✦ Copilot: This may be relevant. Or merely suspicious-looking. Those are not the same thing.</div>
+    <button id="bootBtn" class="bootBtn hidden" onclick="renderHome()">OPEN CASE TERMINAL</button>
+  </div></div>`;
+  ['b1','b2','b3','b4','b5','b6','b7','b8'].forEach((id,i)=>setTimeout(()=>document.getElementById(id).classList.add('show'),350+i*430));
+  setTimeout(()=>document.getElementById('bootBtn').classList.remove('hidden'),4200);
+}
+
 boot();
-</script></body></html>
+</script>
+</body>
+</html>
